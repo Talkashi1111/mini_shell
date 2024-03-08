@@ -5,7 +5,8 @@ LIBFT_DIR := libft
 INCLUDE_DIR := includes
 SRC_DIR := srcs
 BONUS_DIR := bonus
-FILES := main.c
+FILES := main.c \
+		cd_builtin.c
 SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
 BONUS_FILES :=
 CFLAGS := -Wall -Wextra -Werror -g
