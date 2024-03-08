@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/03/08 20:59:19 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/03/08 23:01:04 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,7 @@ enum {
 	USAGE_ERROR,
 	INIT_ERROR,
 };
+
+int	cd_builtin(char *path);
 
 #endif

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <marvin@42lausanne.ch>              +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 11:25:56 by tkashi            #+#    #+#             */
-/*   Updated: 2023/09/21 16:49:33 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/03/08 23:00:43 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <stdlib.h>
 #include "libft.h"
 
@@ -73,6 +74,17 @@ int	ft_apply_split(char const *s, char c, char **ret)
 	return (1);
 }
 
+/**
+ * Splits a string into an array of substrings based on
+ * a delimiter character.
+ *
+ * @param s The string to be split.
+ * @param c The delimiter character.
+ * @return An array of substrings if successful, NULL otherwise.
+ * If the allocation fails, the function returns NULL.
+ * If s is an empty string, the function returns a pointer to a
+ * 2D array containing a single NULL.
+ */
 char	**ft_split(char const *s, char c)
 {
 	char	**ret;

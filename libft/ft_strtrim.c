@@ -3,15 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <marvin@42lausanne.ch>              +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 14:30:18 by tkashi            #+#    #+#             */
-/*   Updated: 2023/10/30 18:20:45 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/03/08 23:00:13 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <stdlib.h>
+
 #include "libft.h"
 
+/**
+ * Removes leading and trailing characters specified in
+ * the 'set' parameter from the string 's1'.
+ *
+ * @param s1 The string to be trimmed.
+ * @param set The set of characters to be removed.
+ * @return A new string with leading and trailing characters removed,
+ * or NULL if memory allocation fails.
+ */
 char	*ft_strtrim(char const *s1, char const *set)
 {
 	size_t	i;
