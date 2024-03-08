@@ -1,0 +1,15 @@
+# Prerequisites
+*.d
+
+# Object files
+*.o
+
+# Libraries
+*.a
+
+# Executables
+minishell
+
+# Metafiles
+*.DS_Store
+*.vscode
