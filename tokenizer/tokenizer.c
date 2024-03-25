@@ -60,9 +60,9 @@ void	add_back_token(t_token_list **begin, t_token_list *token)
 	}
 }
 
-void	*tokenizer_error(t_token_list *begin, char *str, char err_no)
+void	*tokenizer_error(t_token_list *begin, char *str)
 {
-	if (err_no == 2)
+	if (str)
 		free(str);
 	free_token_list(begin);
 	return (NULL);
@@ -97,12 +97,12 @@ t_token_list	*tokenizer(char *str)
 			to_word_end(&end);
 		else
 			to_operator_end(&end);
-		str = ft_substr(start, 0, end - start);
+		str = ft_substr(start, 0, end - start);//to add libft not as .o files 
 		if (!str)
-			return(tokenizer_error(begin, str, 1));
+			return(tokenizer_error(begin, str));
 		token = new_token(str, type);
 		if (!token)
-			return(tokenizer_error(begin, str, 2));
+			return(tokenizer_error(begin, str));
 		add_back_token(&begin, token);
 		if (*end == '\0')
 			break ;

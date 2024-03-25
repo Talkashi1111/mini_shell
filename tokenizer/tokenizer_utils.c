@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 13:36:32 by achappui          #+#    #+#             */
-/*   Updated: 2024/03/22 13:38:13 by achappui         ###   ########.fr       */
+/*   Updated: 2024/03/23 18:14:53 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*to_end_of_quote(char *ptr, char quote_type)
 	return (saved_ptr);
 }
 
-void	to_token_start(char **start)
+void	skip_whitespace_start(char **start)//change the name of the funtion 
 {
 	while (**start == ' ' || **start == '\t' || \
 			**start == '\n' || **start == '\v' || \
@@ -71,7 +71,7 @@ void	to_word_end(char **end)
 				**end == '\n' || **end == '\v' || \
 				**end == '\f' || **end == '\r')
 			break ;
-		else if (**end == '&' && *((*end) + 1) == '&') //car on ne traite pas l'operateur &, ainsi il peut faire partie d'un mot ?
+		else if (**end == '&' && *((*end) + 1) == '&') 
 			break ;
 		else if (**end == '|')
 			break ;

@@ -34,6 +34,13 @@
 // # define END			8
 
 
+enum {
+	OK,
+	ALLOC_ERROR,
+	USAGE_ERROR,
+	INIT_ERROR,
+}; //a voir si besoin
+
 
 typedef struct s_token_list
 {
