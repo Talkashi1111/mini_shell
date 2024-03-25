@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/03/09 00:31:49 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/03/25 16:40:53 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int	main(int argc, char **argv, char **envp)
         if (!line)
             break;
         printf(COLOR_RESET "line given: %s\n", line); // TODO: Remove this line
+        
         args = ft_split(line, ' ');
         if (!args)
         {

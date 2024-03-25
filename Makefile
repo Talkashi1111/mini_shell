@@ -4,15 +4,16 @@ OBJECT_DIR := obj
 LIBFT_DIR := libft
 INCLUDE_DIR := includes
 SRC_DIR := srcs
+BUILTIN_DIR := builtin
 BONUS_DIR := bonus
 FILES := main.c \
-		cd_builtin.c
-SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
+BUILTIN_FILES := $(wildcard $(BUILTIN_DIR)/*.c)
+SRCS := $(addprefix $(SRC_DIR)/, $(FILES)) $(BUILTIN_FILES)
 BONUS_FILES :=
 CFLAGS := -Wall -Wextra -Werror -g
 IFLAGS := -I$(LIBFT_DIR) -I$(INCLUDE_DIR)
 LFLAGS := -L$(LIBFT_DIR) -lft -lreadline
-OBJECTS := $(addprefix $(OBJECT_DIR)/,$(FILES:.c=.o))
+OBJECTS := $(addprefix $(OBJECT_DIR)/,$(FILES:.c=.o)) $(addprefix $(OBJECT_DIR)/,$(BUILTIN_FILES:.c=.o))
 OBJS_WITHOUT_MAIN := $(filter-out $(OBJECT_DIR)/main.o, $(OBJECTS))
 BONUS_OBJ :=  $(addprefix $(BONUS_DIR)/,$(BONUS_FILES:.c=.o))
 CC := gcc
@@ -39,7 +40,7 @@ $(NAME): $(OBJECTS) $(LIBFT_DIR)/libft.a
 $(LIBFT_DIR)/libft.a:
 	$(MAKE) -C $(LIBFT_DIR)
 
-$(OBJECT_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJECT_DIR)/%.o: $(SRC_DIR)/%.c $(BUILTIN_DIR)/%.c 
 	mkdir -p $(OBJECT_DIR)
 	$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@ 
 
