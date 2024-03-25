@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_tokenizer.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 13:33:27 by achappui          #+#    #+#             */
-/*   Updated: 2024/03/22 13:45:55 by achappui         ###   ########.fr       */
+/*   Updated: 2024/03/25 16:30:30 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,12 @@ t_token_list	*tokenizer(char *str);
 
 void	display_token_list(t_token_list *begin)
 {
-	while (begin)
+	t_token_list *tmp;
+	tmp = begin;
+	while (tmp)
 	{
-		printf("\"%s\" ", begin->str);
-		begin = begin->next;
+		printf("\"%s\" ", tmp->str);
+		begin = tmp->next;
 	}
 	printf("\n");
 }
