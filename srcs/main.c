@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/03/25 16:40:53 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/03/29 20:29:13 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ int	main(int argc, char **argv, char **envp)
 
     (void)argc;
     (void)argv;
-    (void)envp; //TODO: remove this line after using envp
     last_exit_status = 0;
     while (TRUE) {
         line = readline(COLOR_GREEN "minishell ~ " COLOR_RESET);
@@ -81,8 +80,12 @@ int	main(int argc, char **argv, char **envp)
             free(line);
             break;
         }
-        else if (n_args == 2 && ft_strncmp(args[0], "cd", sizeof("cd") == 0))
-            last_exit_status = cd_builtin(args[1]);
+        else if (ft_strncmp(args[0], "cd", sizeof("cd")) == 0)
+            last_exit_status = cd_builtin(args, envp);
+        else if (ft_strncmp(args[0], "pwd", sizeof("pwd")) == 0)
+            last_exit_status = ft_pwd(args, envp);
+        else
+            ft_fprintf(STDERR_FILENO, "minishell: %s: command not found\n", args[0]);
         free_args(args);
         free(line);
     }
