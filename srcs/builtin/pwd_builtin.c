@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <string.h>
 #include <limits.h>
+#include <unistd.h>
 
 int ft_pwd(void)
 {

@@ -1,12 +1,11 @@
 #include "minishell.h"
 
-int ft_echo(char args)
+int ft_echo(char **args)
 {
 	int i;
 	int option_n;
-	int len;
 
-	len 
+	int n_args = count_args(args);
 
 	option_n = FALSE;
 	i = 1;

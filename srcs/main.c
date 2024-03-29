@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/03/25 16:40:53 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/03/28 13:31:37 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,6 @@ void    free_args(char **args)
     free(args);
 }
 
-int count_args(char **args)
-{
-    int i;
-
-    if (!args)
-        return (0);
-    i = 0;
-    while (args[i])
-        i++;
-    return (i);
-}
 
 int	main(int argc, char **argv, char **envp)
 {

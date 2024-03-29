@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/03/08 23:01:04 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/03/28 13:11:12 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,5 @@ enum {
 };
 
 int	cd_builtin(char *path);
-
+int count_args(char **args);
 #endif
