@@ -1,8 +1,9 @@
 #include <errno.h>
+#include <string.h>
 #include <unistd.h>
 #include "minishell.h"
 
-int ft_pwd(char *args[], char *envp[])
+int ft_pwd(void)
 {
 	char path[PATH_MAX];
 
@@ -11,6 +12,6 @@ int ft_pwd(char *args[], char *envp[])
 		ft_fprintf(STDERR_FILENO, "pwd: %s\n", strerror(errno));
 		return (errno);
 	}
-	ft_fprintf(STDOUT_FILENO, "%s\n", path);
+	ft_printf("%s\n", path);
 	return (OK);
 }
