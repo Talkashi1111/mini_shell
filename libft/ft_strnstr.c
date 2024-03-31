@@ -1,16 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*  ft_strnstr.c                                        :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <marvin@42lausanne.ch>              +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 12:21:29 by tkashi            #+#    #+#             */
-/*   Updated: 2023/10/30 15:43:30 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/03/31 19:11:06 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
+/**
+ * Searches for the first occurrence of a substring within a string, limited to a certain length.
+ *
+ * @param haystack The string to search within.
+ * @param needle The substring to search for.
+ * @param len The maximum number of characters to search within the haystack.
+ * @return A pointer to the first occurrence of the substring within the haystack, or NULL if not found.
+ */
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 {
 	size_t	i;

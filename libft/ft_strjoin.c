@@ -1,21 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin2.c                                      :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <marvin@42lausanne.ch>              +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 21:28:12 by tkashi            #+#    #+#             */
-/*   Updated: 2023/10/26 21:13:12 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/03/31 18:01:47 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
-#include <stdlib.h>
 
-char	*ft_strjoin(char const *s1, char const *s2)
+#include <stdlib.h>
+#include "libft.h"
+
+/**
+ * Concatenates two strings and returns a new string.
+ *
+ * @param s1 The first string to be concatenated.
+ * @param s2 The second string to be concatenated.
+ * @return The concatenated string, or NULL if memory allocation fails.
+ */
+char *ft_strjoin(char const *s1, char const *s2)
 {
-	char	*dest;
-	size_t	size_total;
+	char *dest;
+	size_t size_total;
 
 	size_total = ft_strlen(s1) + ft_strlen(s2) + 1;
 	dest = (char *)malloc(size_total * sizeof(char));

@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <marvin@42lausanne.ch>              +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:25:33 by tkashi            #+#    #+#             */
-/*   Updated: 2023/10/25 17:45:02 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/03/31 18:00:27 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
+/**
+ * Locates the first occurrence of the character 'c'
+ * (converted to a char) in the string 's'.
+ *
+ * @param s The string to search in.
+ * @param c The character to search for. Also could be '\0'.
+ * @return A pointer to the first occurrence of the character 'c' in the string 's',
+ *         or NULL if the character is not found.
+ */
 char	*ft_strchr(const char *s, int c)
 {
 	char	*ptr;

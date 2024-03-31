@@ -1,12 +1,13 @@
 #include "minishell.h"
 
-int ft_echo(char **args)
+int ft_echo(char *args[], char **envp[])
 {
 	int i;
 	int option_n;
+	int n_args;
 
-	int n_args = count_args(args);
-
+	(void)envp;
+	n_args = count_args(args);
 	option_n = FALSE;
 	i = 1;
 	if (n_args > 1 && ft_strncmp(args[1], "-n", sizeof("-n")) == 0)

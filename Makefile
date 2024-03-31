@@ -6,11 +6,15 @@ INCLUDE_DIR := includes
 SRC_DIR := srcs
 BONUS_DIR := bonus
 FILES := main.c \
-		builtin/echo_builtin.c \
 		builtin/cd_builtin.c \
+		builtin/echo_builtin.c \
+		builtin/env_builtin.c \
 		builtin/pwd_builtin.c \
+		builtin/export_builtin.c \
+		builtin/unset_builtin.c \
+		builtin/builtin_utils.c \
 		builtin/utils.c
-SRCS := $(addprefix $(SRC_DIR)/, $(FILES)) $(BUILTIN_FILES)
+SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
 BONUS_FILES :=
 CFLAGS := -Wall -Wextra -Werror -g
 IFLAGS := -I$(LIBFT_DIR) -I$(INCLUDE_DIR)
