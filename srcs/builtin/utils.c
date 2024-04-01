@@ -1,6 +1,14 @@
 #include <stdlib.h>
 #include "minishell.h"
 
+int	ft_isspace(char c)
+{
+	if (c == ' ' || c == '\t' || c == '\v'
+		|| c == '\r' || c == '\f' || c == '\n')
+		return (TRUE);
+	return (FALSE);
+}
+
 int count_args(char **args)
 {
     int i;

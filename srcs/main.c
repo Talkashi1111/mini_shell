@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/03/31 19:18:38 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/01 21:11:03 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	main(int argc, char **argv, char **envp)
     char    **args;
     char    **envp_cpy;
     int last_exit_status;
+    t_token_list	*token_list;
 
     (void)argc;
     (void)argv;
@@ -44,6 +45,19 @@ int	main(int argc, char **argv, char **envp)
             ft_exit(NULL, &envp_cpy);
             break;
         }
+
+        token_list = tokenizer(line);
+        if (token_list == NULL)
+            continue ;
+        display_token_list(token_list);
+        if (syntax_analyser(token_list) != OK)
+        {
+            free_token_list(token_list);
+            continue ;
+        }
+        free_token_list(token_list);
+
+
         args = ft_split(line, ' ');
         free(line);
         if (!args)
