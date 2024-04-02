@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 14:18:41 by achappui          #+#    #+#             */
-/*   Updated: 2024/03/20 14:18:41 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/01 23:36:59 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,29 @@ void	free_token_list(t_token_list *node)
 	}
 }
 
-t_token_list	*new_token()
+t_token_list	*new_token(void)
 {
 	t_token_list	*token;
 
-	token = (t_token_list *)calloc(1, sizeof(t_token_list));
+	token = (t_token_list *)ft_calloc(1, sizeof(t_token_list));
 	return (token);
+}
+
+t_token_list	*copy_token(t_token_list *token)
+{
+	t_token_list	*new_node;
+
+	new_node = new_token();
+	if (!new_node)
+		return (NULL);
+	new_node->str = ft_strdup(token->str);
+	if (!new_node->str)
+	{
+		free(new_node);
+		return (NULL);
+	}
+	new_node->type = token->type;
+	return (new_node);
 }
 
 /**

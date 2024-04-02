@@ -16,7 +16,8 @@ FILES := main.c \
 		builtin/utils.c \
 		lexer/tokenizer.c \
 		lexer/tokenizer_utils.c \
-		lexer/syntax_analyser.c
+		lexer/syntax_analyser.c \
+		parser/ast_tree_maker.c
 SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
 BONUS_FILES :=
 CFLAGS := -Wall -Wextra -Werror -g
