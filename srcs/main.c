@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/02 01:04:15 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/02 21:57:57 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	main(int argc, char **argv, char **envp)
     char    **envp_cpy;
     int last_exit_status;
     t_token_list	*token_list;
+    t_token_list    *test_wildcard;//TODO: remove this line
     t_node  *root;
 
     (void)argc;
@@ -38,6 +39,9 @@ int	main(int argc, char **argv, char **envp)
     if (!envp_cpy  || update_or_add_envp(&envp_cpy, "OLDPWD=", "") == MALLOC_ERROR)
         return (MALLOC_ERROR);
     last_exit_status = 0;
+    test_wildcard = get_wildcard("*t*"); //TODO: remove this line
+    display_token_list(test_wildcard); //TODO: remove this line
+    free_token_list(test_wildcard); //TODO: remove this line
     while (TRUE)
     {
         line = readline(COLOR_GREEN "minishell ~ " COLOR_RESET);
