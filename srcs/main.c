@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/01 21:11:03 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/02 01:04:15 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	main(int argc, char **argv, char **envp)
     char    **envp_cpy;
     int last_exit_status;
     t_token_list	*token_list;
+    t_node  *root;
 
     (void)argc;
     (void)argv;
@@ -49,12 +50,20 @@ int	main(int argc, char **argv, char **envp)
         token_list = tokenizer(line);
         if (token_list == NULL)
             continue ;
-        display_token_list(token_list);
+        display_token_list(token_list); // TODO: remove this line
         if (syntax_analyser(token_list) != OK)
         {
             free_token_list(token_list);
             continue ;
         }
+        root = tree_maker(token_list, NULL);
+        if (root == NULL)
+        {
+            free_token_list(token_list);
+            continue ;
+        }
+        display_tree(root); // TODO: remove this line
+        free_tree(root);
         free_token_list(token_list);
 
 

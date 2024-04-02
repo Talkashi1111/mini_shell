@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/01 22:05:38 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/02 01:04:53 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ enum token_type
 	PIPE,
 	OPENPAR,
 	CLOSEPAR,
+	CMD,
 };
 
 typedef struct s_token_list
@@ -60,10 +61,10 @@ typedef struct s_token_list
 typedef struct s_node
 {
 	char			type;
-	unsigned int	pipe_nb; //as-ton vraiment besoin du nombre de pipes ici dans un node
-	int				(*pipes)[2]; //as-ton vraiment besoin de malloc les pipes dans un node
-	t_token_list	*args;
 	t_token_list	*redi;
+	t_token_list	*args;
+	unsigned int	pipe_nb;
+	unsigned int	child_nb;
 	struct s_node	**child;
 }	t_node;
 
@@ -86,9 +87,16 @@ t_token_list	*tokenizer(char *str);
 char			get_token_type(char *str);
 void			to_operator_end(char **end);
 void			to_word_end(char **end);
-void			free_token_list(t_token_list *begin);
+void			free_token_list(t_token_list *node);
+t_token_list	*copy_token(t_token_list *token);
 void			skip_whitespace_start(char **start);
 void			display_token_list(t_token_list *token);
 char			syntax_analyser(t_token_list *token);
 int				ft_isspace(char c);
+
+/* parser */
+t_node	*tree_maker(t_token_list *start, t_token_list *end);
+void	display_tree(t_node *node);
+void	free_tree(t_node *node);
+
 #endif
