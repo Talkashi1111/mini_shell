@@ -1,6 +1,15 @@
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd_builtin.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/02 17:44:37 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/02 17:52:06 by achappui         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int ft_cd(char *args[], char **envp[])
@@ -14,7 +23,7 @@ int ft_cd(char *args[], char **envp[])
 		return (err);
 	if (args[1] == NULL || ft_strncmp(args[1], "~", sizeof("~")) == 0)
 	{
-		new_path = find_envp_arg(*envp, "HOME=");
+		new_path = find_envp_arg(*envp, "HOME", 0);
 		if (new_path == NULL)
 		{
 			ft_fprintf(STDERR_FILENO, "cd: HOME not set\n");
@@ -25,7 +34,7 @@ int ft_cd(char *args[], char **envp[])
 	{
 		if (ft_strncmp(args[1], "-", sizeof("-")) == 0)
 		{
-			new_path = find_envp_arg(*envp, "OLDPWD=");
+			new_path = find_envp_arg(*envp, "OLDPWD", 0);
 			if (new_path == NULL || new_path[0] == '\0')
 			{
 				ft_fprintf(STDERR_FILENO, "cd: OLDPWD not set\n");

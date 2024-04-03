@@ -3,9 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/02 23:46:31 by achappui         ###   ########.fr       */
 /*   Updated: 2024/04/02 21:55:05 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -15,6 +16,21 @@
 
 # include <limits.h>
 # include "libft.h"
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <unistd.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 # ifndef PATH_MAX
 #  define PATH_MAX 4096
@@ -68,6 +84,15 @@ typedef struct s_node
 	struct s_node	**child;
 }	t_node;
 
+typedef struct s_minishell
+{
+	char				*line;
+	char				**envp;
+    int					last_exit_status;
+    struct s_token_list	*token_list;
+    struct s_node		*tree;
+}	t_minishell;
+
 /* builtins */
 int		count_args(char **args);
 void    free_args(char **args);
@@ -78,7 +103,7 @@ int		ft_env(char *args[], char **envp[]);
 int		ft_export(char *args[], char **envp[]);
 int 	ft_unset(char *args[], char **envp[]);
 char	**copy_env(char *envp[]);
-char	*find_envp_arg(char *envp[], char *str);
+char	*find_envp_arg(char *envp[], char *str, unsigned int optional_len);
 int		update_or_add_envp(char **envp[], char *str, char *new_val);
 int		ft_getcwd(char *path, size_t size);
 
@@ -95,11 +120,14 @@ void			skip_whitespace_start(char **start);
 void			display_token_list(t_token_list *token);
 char			syntax_analyser(t_token_list *token);
 int				ft_isspace(char c);
+char			*to_end_of_quote(char *ptr, char quote_type);
 
 /* parser */
 t_node	*tree_maker(t_token_list *start, t_token_list *end);
 void	display_tree(t_node *node);
 void	free_tree(t_node *node);
+char	remove_quotes(t_token_list *args);
+char	expand_dollars(t_token_list *args, t_minishell *info);
 
 /* executor */
 t_token_list *get_wildcard(char *pattern);

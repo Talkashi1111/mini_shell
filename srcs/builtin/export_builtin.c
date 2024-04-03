@@ -1,6 +1,15 @@
-#include <errno.h>
-#include <unistd.h>
-#include <stdlib.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_builtin.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/02 17:45:07 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/02 17:45:08 by achappui         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int is_valid_export(char *str)

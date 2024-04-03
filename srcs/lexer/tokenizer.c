@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "minishell.h"
 
 void	free_token_list(t_token_list *node)
@@ -105,6 +104,7 @@ t_token_list	*tokenizer(char *str)
 			to_word_end(&end);
 		else
 			to_operator_end(&end);
+		printf("PSEUDO LEN: %ld\n", end - str);
 		token->str = ft_substr(str, 0, end - str);
 		if (!token->str)
 		{

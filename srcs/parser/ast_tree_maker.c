@@ -1,7 +1,15 @@
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ast_tree_maker.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/02 17:46:31 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/02 17:46:31 by achappui         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_token_list	*skip_parenthesis(t_token_list *token)
@@ -265,7 +273,7 @@ t_node	*tree_maker(t_token_list *start, t_token_list *end)
 	}
 	if (start->type == OPENPAR)
 	{
-		new_node = new_tree_node(tmp_token->type, 1, 0);
+		new_node = new_tree_node(OPENPAR, 1, 0);
 		if (!new_node)
 			return (NULL);
 		new_node->child[0] = tree_maker(start->next, skip_parenthesis(start));

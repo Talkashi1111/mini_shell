@@ -1,6 +1,15 @@
-#include <errno.h>
-#include <string.h>
-#include <unistd.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd_builtin.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/02 17:45:30 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/02 17:48:51 by achappui         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int ft_getcwd(char *path, size_t size)
@@ -27,7 +36,7 @@ int ft_pwd(char *args[], char **envp[])
 		ft_fprintf(STDERR_FILENO, "pwd: too many arguments\n");
 		return (USAGE_ERROR);
 	}
-	pwd = find_envp_arg(*envp, "PWD=");
+	pwd = find_envp_arg(*envp, "PWD", 0);
 	if (pwd)
 	{
 		ft_printf("%s\n", pwd);

@@ -1,17 +1,28 @@
-#include <stdlib.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/02 17:44:31 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/02 18:14:55 by achappui         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-char *find_envp_arg(char *envp[], char *str)
+char *find_envp_arg(char *envp[], char *str, unsigned int len)
 {
 	int i;
-	int len;
 
-	len = ft_strlen(str);
+	if (!len)
+		len = ft_strlen(str);
 	i = 0;
 	while (envp[i])
 	{
 		if (ft_strnstr(envp[i], str, len) != NULL)
-			return (envp[i] + len);
+			return (envp[i] + len + 1);
 		i++;
 	}
 	return (NULL);
