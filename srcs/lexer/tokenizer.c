@@ -19,13 +19,31 @@ void	free_token_list(t_token_list *node)
 	while (node)
 	{
 		next = node->next;
+		node->next = NULL;
 		free(node->str);
 		free(node);
 		node = next;
 	}
 }
 
-t_token_list	*new_token(void)
+t_token_list	*new_token(char *str, char type)
+{
+	t_token_list	*token;
+	
+	token = (t_token_list *)ft_calloc(1, sizeof(t_token_list));
+	if (!token)
+		return (NULL);
+	token->str = ft_strdup(str);
+	if (!token->str)
+	{
+		free(token);
+		return (NULL);
+	}
+	token->type = type;
+	return (token);
+}
+
+t_token_list	*create_token(void)
 {
 	t_token_list	*token;
 
@@ -37,7 +55,7 @@ t_token_list	*copy_token(t_token_list *token)
 {
 	t_token_list	*new_node;
 
-	new_node = new_token();
+	new_node = create_token();
 	if (!new_node)
 		return (NULL);
 	new_node->str = ft_strdup(token->str);
@@ -75,7 +93,7 @@ t_token_list	*tokenizer(char *str)
 		if (*str == '\0')
 			break ;
 		end = str;
-		token = new_token();
+		token = create_token();
 		if (!token)
 		{
 			free_token_list(head);

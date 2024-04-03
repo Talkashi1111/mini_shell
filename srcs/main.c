@@ -7,6 +7,7 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
 /*   Updated: 2024/04/02 23:47:05 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/02 21:57:57 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +22,13 @@ void ft_exit(char *args[], char **envp[])
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_minishell	info;
+	  t_minishell	info;
     char    **args;
+    char    **envp_cpy;
+    int last_exit_status;
+    t_token_list	*token_list;
+    t_token_list    *test_wildcard;//TODO: remove this line
+    t_node  *root;
 
     (void)argc;
     (void)argv;
@@ -30,6 +36,10 @@ int	main(int argc, char **argv, char **envp)
     if (!info.envp  || update_or_add_envp(&info.envp, "OLDPWD=", "") == MALLOC_ERROR)
         return (MALLOC_ERROR);
     info.last_exit_status = 0;
+    last_exit_status = 0;
+    test_wildcard = get_wildcard("*t*"); //TODO: remove this line
+    display_token_list(test_wildcard); //TODO: remove this line
+    free_token_list(test_wildcard); //TODO: remove this line
     while (TRUE)
     {
         info.line = readline(COLOR_GREEN "minishell ~ " COLOR_RESET);
