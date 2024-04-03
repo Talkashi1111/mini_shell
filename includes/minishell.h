@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/02 01:04:53 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/02 21:55:05 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,8 @@ char			get_token_type(char *str);
 void			to_operator_end(char **end);
 void			to_word_end(char **end);
 void			free_token_list(t_token_list *node);
+t_token_list	*create_token(void);
+t_token_list	*new_token(char *str, char type);
 t_token_list	*copy_token(t_token_list *token);
 void			skip_whitespace_start(char **start);
 void			display_token_list(t_token_list *token);
@@ -98,5 +100,8 @@ int				ft_isspace(char c);
 t_node	*tree_maker(t_token_list *start, t_token_list *end);
 void	display_tree(t_node *node);
 void	free_tree(t_node *node);
+
+/* executor */
+t_token_list *get_wildcard(char *pattern);
 
 #endif
