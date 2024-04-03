@@ -1,4 +1,15 @@
-#include <stdlib.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset_builtin.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/02 17:45:35 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/02 17:51:33 by achappui         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int		delete_envp_arg(char **envp[], char *str)
@@ -37,7 +48,7 @@ int ft_unset(char *args[], char **envp[])
 	i = 1;
 	while (args[i])
 	{
-		if (find_envp_arg(*envp, args[i]))
+		if (find_envp_arg(*envp, args[i], 0))
 			err = delete_envp_arg(envp, args[i]);
 		i++;
 	}

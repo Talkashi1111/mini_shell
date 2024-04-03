@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 13:36:32 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/01 21:29:16 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/02 23:33:04 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*to_end_of_quote(char *ptr, char quote_type)
 {
 	char	*saved_ptr;
 
-	saved_ptr = ptr; //car si il n'y a que une quote 
+	saved_ptr = ptr;
 	while (*ptr != '\0')
 	{
 		if (*ptr == quote_type)
@@ -68,7 +68,11 @@ void	to_word_end(char **end)
 	while (**end != '\0')
 	{
 		if (**end == '"' || **end == '\'')
-			*end = to_end_of_quote(*end, **end);
+		{
+			printf("NOUS SOMME LA \n");
+			*end = to_end_of_quote(*end + 1, **end);
+			printf("SYMBOLE: %c\n", **end);
+		}
 		else if (ft_isspace(**end))
 			break ;
 		else if (**end == '&' && *((*end) + 1) == '&') 
@@ -78,6 +82,10 @@ void	to_word_end(char **end)
 		else if (**end == '>')
 			break ;
 		else if (**end == '<')
+			break ;
+		else if (**end == '(')
+			break ;
+		else if (**end == ')')
 			break ;
 		(*end)++;
 	}
@@ -92,7 +100,7 @@ void	display_token_list(t_token_list *token)
 	}
 	while (token)
 	{
-		ft_printf("\"%s\" ", token->str);
+		ft_printf("\"%s\" TYPE: %i ", token->str, token->type);
 		token = token->next;
 	}
 	ft_printf("\n");

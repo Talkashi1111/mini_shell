@@ -40,7 +40,7 @@ char	syntax_analyser(t_token_list *token) //est-ce que token est forcement non N
 	while (token->next)
 	{
 		if ((token->type == OR || token->type == AND || token->type == PIPE) &&
-			(token->next->type >= OR || token->next->type == AND || token->next->type == PIPE || token->next->type == CLOSEPAR))
+			(token->next->type == OR || token->next->type == AND || token->next->type == PIPE || token->next->type == CLOSEPAR))
 		{
 			ft_fprintf(STDERR_FILENO, "shell: syntax error near '%s'\n", token->next->str);
 			return (SYNTAX_ERROR);
@@ -70,6 +70,10 @@ char	syntax_analyser(t_token_list *token) //est-ce que token est forcement non N
 		}
 		token = token->next;
 	}
+	if (token->type == OPENPAR)
+		closepar_count++;
+	if (token->type == CLOSEPAR)
+		closepar_count++;
 	if ((token->type == OR || token->type == AND || token->type == PIPE || token->type == OPENPAR) || (openpar_count != closepar_count))
 	{
 		ft_fprintf(STDERR_FILENO, "shell: syntax error near '\\n'\n");
