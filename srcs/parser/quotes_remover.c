@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes_remover.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 20:44:08 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/02 23:42:47 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/03 22:40:41 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char	remove_quotes(t_token_list *args)
 		// printf("LEN %d\n", len);
 		new_str = (char *)malloc((len + 1) * sizeof(char));
 		if (!new_str)
-			return (2);
+			return (MALLOC_ERROR);
 		new_str[len] = '\0';
 		fill_without_quotes(args->str, end_ptr, new_str);
 		free(args->str);
@@ -75,5 +75,5 @@ char	remove_quotes(t_token_list *args)
 		// printf("\"%s\"\n", args->str);
 		args = args->next;
 	}
-	return (1);
+	return (OK);
 }

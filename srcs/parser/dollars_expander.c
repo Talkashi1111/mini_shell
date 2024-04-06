@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollars_expander.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/03 17:01:53 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/03 22:42:41 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,14 +186,14 @@ char	expand_dollars(t_token_list *args, t_minishell *info)
 		len = count_final_length(args->str, info);
 		new_str = (char *)malloc((len + 1) * sizeof(char));
 		if (!new_str)
-			return (2); // ERROR_A_DEFINIR();
+			return (MALLOC_ERROR); // ERROR_A_DEFINIR();
 		new_str[len] = '\0';
 		fill_new_str(args->str, new_str, info);
 		free(args->str);
 		args->str = new_str;
 		args = args->next;
 	}
-	return (1);
+	return (OK);
 }
 
 

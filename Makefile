@@ -19,7 +19,7 @@ FILES := main.c \
 		lexer/syntax_analyser.c \
 		parser/ast_tree_maker.c \
 		parser/quotes_remover.c \
-		parser/dollars_expander.c
+		parser/dollars_expander.c \
 		executor/wildcard.c
 SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
 BONUS_FILES :=
