@@ -6,10 +6,11 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 20:44:08 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/03 22:40:41 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/06 20:27:59 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "minishell.h"
 
 unsigned int	without_quotes_len(char *str)

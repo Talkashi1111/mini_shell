@@ -10,36 +10,39 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <sys/wait.h>
 #include "minishell.h"
 
 int	handle_simple_cmd()
 {
-	parse_command();
+	// parse_command();
 
-	if (search_command == OK);
+	// if (search_command == OK);
 		
-	if (command == builtin)
+	// if (command == builtin)
 
-	else
-	{
-		fork();
-		apply redirection
-	}
+	// else
+	// {
+	// 	fork();
+	// 	apply redirection
+	// }
+	return (OK);
 }
 
 int	handle_subshell()
 {
-	pid_t	pid;
-	int		status;
+	// pid_t	pid;
+	// int		status;
 
-	pid = fork();
-	if (pid == 0)
-	{
-		//ya des choses a free ?
-		exit(run(node->child[0]));
-	}
-	waitpid(pid, &status, 0);
-	return (WEXITSTATUS(status));
+	// pid = fork();
+	// if (pid == 0)
+	// {
+	// 	//ya des choses a free ?
+	// 	exit(run(node->child[0]));
+	// }
+	// waitpid(pid, &status, 0);
+	// return (WEXITSTATUS(status));
+	return (OK);
 }
 
 int	handle_pipex()
@@ -47,7 +50,7 @@ int	handle_pipex()
 
 }
 
-int	run(t_node *node) //#run
+int	run(t_node *node)
 {
 	if (node->type == AND)
 		if (run(node->child[0]) == 0)

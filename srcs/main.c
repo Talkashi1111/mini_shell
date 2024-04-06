@@ -6,52 +6,80 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/03 22:46:45 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/06 20:42:00 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include "minishell.h"
 
-void ft_exit(char *args[], char **envp[])
+static int init_info(t_minishell *info, char **envp)
 {
-    free_args(args);
-    free_args(*envp);
-    *envp = NULL;
+    info->envp = copy_env(envp);
+    if (!info->envp || update_or_add_envp(info, "OLDPWD=", "") == MALLOC_ERROR)
+        return (MALLOC_ERROR);
+    info->last_exit_status = 0;
+    info->buildins[0] = (t_builtin){"cd", ft_cd};
+    info->buildins[1] = (t_builtin){"echo", ft_echo};
+    info->buildins[2] = (t_builtin){"env", ft_env};
+    info->buildins[3] = (t_builtin){"exit", ft_exit};
+    info->buildins[4] = (t_builtin){"export", ft_export};
+    info->buildins[5] = (t_builtin){"pwd", ft_pwd};
+    info->buildins[6] = (t_builtin){"unset", ft_unset};
+    info->buildins[7] = (t_builtin){NULL, NULL};
+    return (OK);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	    info;
+    t_pfunc         func;
     char            **args;
+    char            *line;
    // t_token_list    *test_wildcard;//TODO: remove this line
 
     (void)argc;
     (void)argv;
-    info.envp = copy_env(envp);
-    if (!info.envp  || update_or_add_envp(&info.envp, "OLDPWD=", "") == MALLOC_ERROR)
+    if (init_info(&info, envp) == MALLOC_ERROR)
         return (MALLOC_ERROR);
-    info.last_exit_status = 0;
     //test_wildcard = get_wildcard("*t*"); //TODO: remove this line
     //display_token_list(test_wildcard); //TODO: remove this line
    // free_token_list(test_wildcard); //TODO: remove this line
     while (TRUE)
     {
-        info.line = readline(COLOR_GREEN "minishell ~ " COLOR_RESET);
-        if (!info.line)
+        line = readline(COLOR_GREEN "minishell ~ " COLOR_RESET);
+        if (!line)
         {
-            ft_exit(NULL, &info.envp);
+            ft_exit(NULL, &info);
             break;
         }
-
-        info.token_list = tokenizer(info.line);
+        info.token_list = tokenizer(line);
+        if (DEBUG == TRUE)
+            display_token_list(info.token_list);
         if (info.token_list == NULL)
+        {
+            free(line);
             continue ;
+        }
+        add_history(line);
+        free(line);
+        func = is_builtin(info.token_list->str, info.buildins);
+        if (func)
+        {
+            args = tokens_to_args(info.token_list);
+            if (args != NULL)
+                info.last_exit_status = func(args, &info);
+            free_args(args);
+        }
+        else
+            ft_fprintf(STDERR_FILENO, "minishell: %s: command not found\n", info.token_list->str);
 		if (expand_dollars(info.token_list, &info) != OK)
-			printf("ERROR\n");
+			ft_printf("ERROR\n");
 		if (remove_quotes(info.token_list) != OK)
-            printf("ERROR\n");
-        display_token_list(info.token_list); // TODO: remove this info.line
+            ft_printf("ERROR\n");
         if (syntax_analyser(info.token_list) != OK)
         {
             free_token_list(info.token_list);
@@ -63,46 +91,11 @@ int	main(int argc, char **argv, char **envp)
             free_token_list(info.token_list);
             continue ;
         }
-        display_tree(info.tree); // TODO: remove this info.line
+        if (DEBUG == TRUE)
+            display_tree(info.tree);
         free_tree(info.tree);
         free_token_list(info.token_list);
-
-
-        args = ft_split(info.line, ' ');
-        free(info.line);
-        if (!args)
-        {
-            ft_fprintf(STDERR_FILENO, "split error\n");
-            continue;
-        }
-        if (!args[0])
-        {
-            free_args(args);
-            continue;
-        }
-        add_history(info.line);
-        if (ft_strncmp(args[0], "exit", sizeof("exit")) == 0) 
-        {
-            ft_exit(args, &info.envp);
-            break;
-        }
-        else if (ft_strncmp(args[0], "cd", sizeof("cd")) == 0)
-            info.last_exit_status = ft_cd(args, &info.envp);
-        else if (ft_strncmp(args[0], "echo", sizeof("echo")) == 0)
-            info.last_exit_status = ft_echo(args, &info.envp);
-        else if (ft_strncmp(args[0], "env", sizeof("env")) == 0)
-            info.last_exit_status = ft_env(args, &info.envp);
-        else if (ft_strncmp(args[0], "pwd", sizeof("pwd")) == 0)
-            info.last_exit_status = ft_pwd(args, &info.envp);
-        else if (ft_strncmp(args[0], "export", sizeof("export")) == 0)
-            info.last_exit_status = ft_export(args, &info.envp);
-        else if (ft_strncmp(args[0], "unset", sizeof("unset")) == 0)
-            info.last_exit_status = ft_unset(args, &info.envp);
-        else
-            ft_fprintf(STDERR_FILENO, "minishell: %s: command not found\n", args[0]);
-        free_args(args);
-        ft_printf("%d\n", info.last_exit_status);
+        ft_printf("exit status=%d\n", info.last_exit_status);
     }
-    ft_printf(COLOR_GREEN "minishell ~ " COLOR_RED "EXITED\n" COLOR_RESET);
     return (OK);
 }

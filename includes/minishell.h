@@ -3,34 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/02 23:46:31 by achappui         ###   ########.fr       */
-/*   Updated: 2024/04/02 21:55:05 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/06 20:06:33 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
 # include <limits.h>
 # include "libft.h"
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <string.h>
-#include <unistd.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <stdlib.h>
-#include <unistd.h>
+
+# ifndef DEBUG
+#  define DEBUG 0
+# endif
 
 # ifndef PATH_MAX
 #  define PATH_MAX 4096
@@ -84,28 +73,41 @@ typedef struct s_node
 	struct s_node	**child;
 }	t_node;
 
+struct	s_minishell;
+
+typedef int (*t_pfunc)(char *args[], struct s_minishell *info);
+
+typedef struct 
+{
+	char *name;
+	t_pfunc func;
+}	t_builtin;
+
 typedef struct s_minishell
 {
-	char				*line;
 	char				**envp;
     int					last_exit_status;
     struct s_token_list	*token_list;
     struct s_node		*tree;
+	t_builtin			buildins[8];
 }	t_minishell;
 
 /* builtins */
 int		count_args(char **args);
 void    free_args(char **args);
-int		ft_cd(char *args[], char **envp[]);
-int 	ft_pwd(char *args[], char **envp[]);
-int		ft_echo(char *args[], char **envp[]);
-int		ft_env(char *args[], char **envp[]);
-int		ft_export(char *args[], char **envp[]);
-int 	ft_unset(char *args[], char **envp[]);
+int		ft_exit(char *args[], t_minishell *info);
+int		ft_cd(char *args[], t_minishell *info);
+int 	ft_pwd(char *args[], t_minishell *info);
+int		ft_echo(char *args[], t_minishell *info);
+int		ft_env(char *args[], t_minishell *info);
+int		ft_export(char *args[], t_minishell *info);
+int 	ft_unset(char *args[], t_minishell *info);
 char	**copy_env(char *envp[]);
 char	*find_envp_arg(char *envp[], char *str, unsigned int optional_len);
-int		update_or_add_envp(char **envp[], char *str, char *new_val);
+int		update_or_add_envp(t_minishell *info, char *str, char *new_val);
 int		ft_getcwd(char *path, size_t size);
+t_pfunc	is_builtin(char *str, t_builtin *builtin);
+const char *node_type_to_string(enum token_type type);
 
 /* lexer */
 t_token_list	*tokenizer(char *str);
@@ -121,6 +123,7 @@ void			display_token_list(t_token_list *token);
 char			syntax_analyser(t_token_list *token);
 int				ft_isspace(char c);
 char			*to_end_of_quote(char *ptr, char quote_type);
+char			**tokens_to_args(t_token_list *token_list);
 
 /* parser */
 t_node	*tree_maker(t_token_list *start, t_token_list *end);

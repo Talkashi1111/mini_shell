@@ -10,6 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <stdlib.h>
 #include "minishell.h"
 
 t_token_list	*skip_parenthesis(t_token_list *token)
@@ -110,50 +114,54 @@ void free_tree(t_node *node)
 	free(node);
 }
 
-void display_tree(t_node *node)
-{
-	unsigned int	i;
-
-	if (node->type == CMD)
+void display_tree_recursive(t_node *node, int depth, int isLast, int *siblings) {
+    if (!node)
+		return;
+    for (int i = 0; i < depth - 1; ++i)
+        ft_printf("%s   ", siblings[i] ? "│" : " ");
+    if (depth > 0)
+        ft_printf("%s── ", isLast ? "└" : "├");
+    if (node->type == CMD)
 	{
-		ft_printf("CMD: \n");
-		ft_printf("args: ");
+        ft_printf("CMD\n");
+		// Ensure correct indentation for args and redi
+		for (int i = 0; i < depth; ++i)
+			ft_printf("%s   ", siblings[i] ? "│" : " ");
+		ft_printf("  args: "); // Indentation for args
 		display_token_list(node->args);
-		ft_printf("\n");
-		ft_printf("redi: ");
+		for (int i = 0; i < depth; ++i)
+			ft_printf("%s   ", siblings[i] ? "│" : " ");
+		ft_printf("  redi: "); // Indentation for redi
 		display_token_list(node->redi);
-		ft_printf("\n");
-	}
-	else if (node->type == PIPE)
-	{
-		ft_printf("PIPE: ---> \n");
-		i = 0;
-		while (i < node->child_nb)
-		{
-			display_tree(node->child[i]);
-			i++;
-		}
-		ft_printf("PIPE: <--- \n");
-	}
-	else if (node->type == OPENPAR)
-	{
-		ft_printf("OPERATOR: OPENPAR ---> \n");
-		display_tree(node->child[0]);
-		ft_printf("OPERATOR: OPENPAR <--- \n");
-	}
+    }
 	else
+		ft_printf("%s\n", node_type_to_string(node->type));
+
+    // Update the siblings array to keep track of which levels have remaining siblings
+    if (depth > 0)
+        siblings[depth - 1] = !isLast;
+
+    // Recursively print child nodes
+    for (unsigned int i = 0; i < node->child_nb; ++i)
+        display_tree_recursive(node->child[i], depth + 1, i == node->child_nb - 1, siblings);
+
+    // Reset the siblings array back
+    if (depth > 0)
+        siblings[depth - 1] = 0;
+}
+
+void	display_tree(t_node *node)
+{
+    int	siblings[128];
+	int	i;
+
+	i = 0;
+	while (i < 128)
 	{
-		if (node->type == OR)
-			ft_printf("OPERATOR: OR ---> \n");
-		else if (node->type == AND)
-			ft_printf("OPERATOR: AND ---> \n");
-		display_tree(node->child[0]);
-		display_tree(node->child[1]);
-		if (node->type == OR)
-			ft_printf("OPERATOR: OR <--- \n");
-		else if (node->type == AND)
-			ft_printf("OPERATOR: AND <--- \n");
+		siblings[i] = 0;
+		i++;
 	}
+    display_tree_recursive(node, 0, 1, siblings);
 }
 
 int	pipe_children(t_token_list *start, t_token_list *end, t_node *pipe_node)

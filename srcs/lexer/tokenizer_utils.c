@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 13:36:32 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/02 23:33:04 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/06 20:22:10 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ void	to_word_end(char **end)
 	{
 		if (**end == '"' || **end == '\'')
 		{
-			printf("NOUS SOMME LA \n");
+			ft_printf("NOUS SOMME LA \n");
 			*end = to_end_of_quote(*end + 1, **end);
-			printf("SYMBOLE: %c\n", **end);
+			ft_printf("SYMBOLE: %c\n", **end);
 		}
 		else if (ft_isspace(**end))
 			break ;
@@ -91,6 +91,37 @@ void	to_word_end(char **end)
 	}
 }
 
+char	**tokens_to_args(t_token_list *token_list)
+{
+	char			**args;
+	t_token_list	*tmp;
+	int				i;
+
+	tmp = token_list;
+	i = 0;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	args = (char **)ft_calloc(i + 1, sizeof(char *));
+	if (!args)
+		return (NULL);
+	i = 0;
+	while (token_list)
+	{
+		args[i] = ft_strdup(token_list->str);
+		if (!args[i])
+		{
+			free_args(args);
+			return (NULL);
+		}
+		i++;
+		token_list = token_list->next;
+	}
+	return (args);
+}
+
 void	display_token_list(t_token_list *token)
 {
 	if (!token)
@@ -100,7 +131,7 @@ void	display_token_list(t_token_list *token)
 	}
 	while (token)
 	{
-		ft_printf("\"%s\" TYPE: %i ", token->str, token->type);
+		ft_printf("\"%s\" TYPE: %s ", token->str, node_type_to_string(token->type));
 		token = token->next;
 	}
 	ft_printf("\n");

@@ -23,7 +23,10 @@ FILES := main.c \
 		executor/wildcard.c
 SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
 BONUS_FILES :=
-CFLAGS := -Wall -Wextra -Werror -g
+CFLAGS := -Wall -Wextra -Werror
+ifdef DEBUG
+    CFLAGS += -DDEBUG=1 -g
+endif
 IFLAGS := -I$(LIBFT_DIR) -I$(INCLUDE_DIR)
 LFLAGS := -L$(LIBFT_DIR) -lft -lreadline
 OBJECTS := $(addprefix $(OBJECT_DIR)/,$(FILES:.c=.o))

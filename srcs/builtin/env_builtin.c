@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:44:57 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/02 17:44:59 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/06 20:23:10 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "minishell.h"
 
 char	**copy_env(char *envp[])
@@ -35,7 +36,7 @@ char	**copy_env(char *envp[])
 	return (envp_cpy);
 }
 
-int	ft_env(char *args[], char **envp[])
+int	ft_env(char *args[], t_minishell *info)
 {
 	int i;
 
@@ -45,9 +46,9 @@ int	ft_env(char *args[], char **envp[])
 		return (USAGE_ERROR);
 	}
 	i = 0;
-	while ((*envp)[i])
+	while (info->envp[i])
 	{
-		ft_printf("%s\n", (*envp)[i]);
+		ft_printf("%s\n", info->envp[i]);
 		i++;
 	}
 	return (OK);

@@ -36,5 +36,9 @@ for the bonuses use
 make bonus
 ```
 
+## Debugging
+```bash
+DEBUG=1 make re
+```
 
 ## Usage

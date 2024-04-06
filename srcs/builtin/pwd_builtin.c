@@ -3,13 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pwd_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:30 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/02 17:48:51 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/06 20:24:49 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
 #include "minishell.h"
 
 int ft_getcwd(char *path, size_t size)
@@ -25,7 +28,7 @@ int ft_getcwd(char *path, size_t size)
 	return (OK);
 }
 
-int ft_pwd(char *args[], char **envp[])
+int ft_pwd(char *args[], t_minishell *info)
 {
 	char	path[PATH_MAX];
 	int		err;
@@ -36,7 +39,7 @@ int ft_pwd(char *args[], char **envp[])
 		ft_fprintf(STDERR_FILENO, "pwd: too many arguments\n");
 		return (USAGE_ERROR);
 	}
-	pwd = find_envp_arg(*envp, "PWD", 0);
+	pwd = find_envp_arg(info->envp, "PWD", 0);
 	if (pwd)
 	{
 		ft_printf("%s\n", pwd);
@@ -45,7 +48,7 @@ int ft_pwd(char *args[], char **envp[])
 	err = ft_getcwd(path, sizeof(path));
 	if (err != OK)
 		return (err);
-	err = update_or_add_envp(envp, "PWD=", path);
+	err = update_or_add_envp(info, "PWD=", path);
 	if (err != OK)
 		return (err);
 	ft_printf("%s\n", path);

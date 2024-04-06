@@ -6,10 +6,11 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/03 22:42:41 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/06 20:28:34 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "minishell.h"
 
 unsigned int	skip_quotes(char **str)
@@ -172,7 +173,7 @@ void	fill_new_str(char *old_str, char *new_str, t_minishell *info)
 
 void	ERROR_A_DEFINIR()
 {
-	printf("MALLOC ERROR de ERROR_A_DEFINIR\n");
+	ft_printf("MALLOC ERROR de ERROR_A_DEFINIR\n");
 }
 
 
