@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:07 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/06 20:25:40 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/07 13:46:20 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include "minishell.h"
+
 
 int is_valid_export(char *str)
 {

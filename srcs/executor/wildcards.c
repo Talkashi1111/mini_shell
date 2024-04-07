@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   wildcard.c                                         :+:      :+:    :+:   */
+/*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 21:49:03 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/02 21:56:15 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/07 22:33:56 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	is_match( char *str, char *pattern)
     return (*pattern == '\0');
 }
 
-t_token_list *get_wildcard(char *pattern)
+t_token_list *get_wildcard(char *pattern, t_minishell *info)
 {
     DIR             *dir;
     struct dirent   *entry;
@@ -69,12 +69,16 @@ t_token_list *get_wildcard(char *pattern)
 
 	head = create_token();
 	if (!head)
+	{
+		info->last_exit_status = MALLOC_ERROR;
 		return (NULL);
+	}
 	tmp = head;
 	dir = opendir(".");
 	if (!dir) 
 	{
-        ft_fprintf(STDERR_FILENO, "opendir\n", strerror(errno));
+		info->last_exit_status = errno;
+        ft_fprintf(STDERR_FILENO, "opendir: %s\n", strerror(errno));
 		free_token_list(head);
         return (NULL);
     }
@@ -88,6 +92,7 @@ t_token_list *get_wildcard(char *pattern)
 		tmp->next = new_token(entry->d_name, WORD);
 		if (!tmp->next)
 		{
+			info->last_exit_status = MALLOC_ERROR;
 			free_token_list(head->next);
 			head->next = NULL;
 			break ;
@@ -98,6 +103,69 @@ t_token_list *get_wildcard(char *pattern)
 	head = head->next;
 	free(tmp);
 	if (closedir(dir) == -1)
+	{
+		info->last_exit_status = errno;
 		ft_fprintf(STDERR_FILENO, "closedir: %s\n", strerror(errno));
-    return (head);
+	}
+	return (head);
+}
+
+t_token_list	*last_list_elem(t_token_list *list)
+{
+	if (list)
+		while (list->next)
+			list = list->next;
+	return (list);
+}
+
+int	wildcard_handler(t_token_list **token, t_minishell *info)
+{
+	t_token_list	*prev;
+	t_token_list	*tmp;
+	t_token_list	*last;
+
+	prev = create_token();
+	if (!prev)
+	{
+		info->last_exit_status = MALLOC_ERROR;
+		return (MALLOC_ERROR);
+	}
+	prev->next = *token;
+	*token = prev;
+	while (prev->next)
+	{
+		if (prev->next->type == WORD && strchr(prev->next->str, '*'))
+		{
+			tmp = get_wildcard(prev->next->str, info);
+			if(info->last_exit_status != OK)
+			{
+				prev = *token;
+				*token = (*token)->next;
+				free(prev);
+				return (info->last_exit_status);
+			}
+			if (tmp == NULL)
+			{
+				tmp = prev->next;
+				prev->next = prev->next->next;
+				free(tmp->str);
+				free(tmp);
+			}
+			else
+			{
+				last = last_list_elem(tmp);
+				last->next = prev->next->next;
+				free(prev->next->str);
+				free(prev->next);
+				prev->next = tmp;
+				prev = last;
+			}
+		}
+		else
+			prev = prev->next;
+	}
+	prev = *token;
+	*token = (*token)->next;
+	free(prev);
+	return (info->last_exit_status);
 }

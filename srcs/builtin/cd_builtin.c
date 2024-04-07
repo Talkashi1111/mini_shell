@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:44:37 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/06 20:22:40 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/07 13:44:42 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int ft_cd(char *args[], t_minishell *info)
 		return (err);
 	if (args[1] == NULL || ft_strncmp(args[1], "~", sizeof("~")) == 0)
 	{
-		new_path = find_envp_arg(info->envp, "HOME", 0);
+		new_path = find_envp_arg(info->envp, "HOME", ft_strlen("HOME"));
 		if (new_path == NULL)
 		{
 			ft_fprintf(STDERR_FILENO, "cd: HOME not set\n");
@@ -37,7 +37,7 @@ int ft_cd(char *args[], t_minishell *info)
 	{
 		if (ft_strncmp(args[1], "-", sizeof("-")) == 0)
 		{
-			new_path = find_envp_arg(info->envp, "OLDPWD", 0);
+			new_path = find_envp_arg(info->envp, "OLDPWD", ft_strlen("OLDPWD"));
 			if (new_path == NULL || new_path[0] == '\0')
 			{
 				ft_fprintf(STDERR_FILENO, "cd: OLDPWD not set\n");

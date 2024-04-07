@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:30 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/06 20:24:49 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/07 13:45:05 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int ft_pwd(char *args[], t_minishell *info)
 		ft_fprintf(STDERR_FILENO, "pwd: too many arguments\n");
 		return (USAGE_ERROR);
 	}
-	pwd = find_envp_arg(info->envp, "PWD", 0);
+	pwd = find_envp_arg(info->envp, "PWD", ft_strlen("PWD"));
 	if (pwd)
 	{
 		ft_printf("%s\n", pwd);

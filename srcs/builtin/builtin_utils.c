@@ -6,22 +6,12 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:44:31 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/06 20:26:18 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/07 16:23:04 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "minishell.h"
-
-// TODO: check that we didn't forget to free something
-int	ft_exit(char *args[], t_minishell *info)
-{
-    free_args(args);
-    free_args(info->envp);
-    info->envp = NULL;
-	exit(info->last_exit_status);
-	return (OK);
-}
 
 t_pfunc	is_builtin(char *str, t_builtin *builtin)
 {
@@ -37,6 +27,37 @@ t_pfunc	is_builtin(char *str, t_builtin *builtin)
 	return (NULL);
 }
 
+char	*ft_strnstr_env(char *env, char *var_name, unsigned int	var_name_len)
+{
+	while (var_name_len)
+	{
+		if (*env == '=' || *env != *var_name)
+			return (NULL);
+		env++;
+		var_name++;
+		var_name_len--;
+	}
+	if (*env == '=')
+		return (env + 1);
+	return (NULL);
+}
+
+char *find_envp_arg(char *envp[], char *var_name, unsigned int var_name_len)
+{
+	char	*value;
+	int		i;
+
+	i = 0;
+	while (envp[i])
+	{
+		value = ft_strnstr_env(envp[i], var_name, var_name_len);
+		if (value)
+			return (value);
+		i++;
+	}
+	return (NULL);
+}
+/* 
 char *find_envp_arg(char *envp[], char *str, unsigned int len)
 {
 	int i;
@@ -51,7 +72,7 @@ char *find_envp_arg(char *envp[], char *str, unsigned int len)
 		i++;
 	}
 	return (NULL);
-}
+} */
 
 int update_or_add_envp(t_minishell *info, char *str, char *new_val)
 {

@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/06 20:06:33 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/07 22:00:47 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,18 @@
 
 # define FALSE		0
 # define TRUE		1
+# define PIPE_OUT	0
+# define PIPE_IN	1
 
 # define COLOR_GREEN "\033[0;32m"
 # define COLOR_RESET "\033[0m"
 # define COLOR_RED "\033[0;31m"
+
+enum tokenizer{
+	HEAD,
+	TAIL,
+	TOKEN,
+};
 
 enum {
 	OK,
@@ -89,7 +97,9 @@ typedef struct s_minishell
     int					last_exit_status;
     struct s_token_list	*token_list;
     struct s_node		*tree;
-	t_builtin			buildins[8];
+	t_builtin			builtins[8];
+	int					(*fd_pipe)[2];
+	int					pipe_nb;
 }	t_minishell;
 
 /* builtins */
@@ -103,13 +113,14 @@ int		ft_env(char *args[], t_minishell *info);
 int		ft_export(char *args[], t_minishell *info);
 int 	ft_unset(char *args[], t_minishell *info);
 char	**copy_env(char *envp[]);
-char	*find_envp_arg(char *envp[], char *str, unsigned int optional_len);
+char 	*find_envp_arg(char *envp[], char *var_name, unsigned int var_name_len);
 int		update_or_add_envp(t_minishell *info, char *str, char *new_val);
 int		ft_getcwd(char *path, size_t size);
 t_pfunc	is_builtin(char *str, t_builtin *builtin);
 const char *node_type_to_string(enum token_type type);
 
 /* lexer */
+void			add_back_tokenizer(t_token_list *tl[3]);
 t_token_list	*tokenizer(char *str);
 char			get_token_type(char *str);
 void			to_operator_end(char **end);
@@ -122,17 +133,31 @@ void			skip_whitespace_start(char **start);
 void			display_token_list(t_token_list *token);
 char			syntax_analyser(t_token_list *token);
 int				ft_isspace(char c);
-char			*to_end_of_quote(char *ptr, char quote_type);
+char			*to_end_of_quote(char *ptr);
 char			**tokens_to_args(t_token_list *token_list);
 
 /* parser */
-t_node	*tree_maker(t_token_list *start, t_token_list *end);
-void	display_tree(t_node *node);
-void	free_tree(t_node *node);
-char	remove_quotes(t_token_list *args);
-char	expand_dollars(t_token_list *args, t_minishell *info);
+t_node			*handle_cmd(t_token_list *start, t_token_list *end);
+t_node			*handle_parenthesis(t_token_list *start);
+t_node			*handle_operator(t_token_list *start, t_token_list *end, t_token_list *tmp_token);
+t_node			*handle_pipe(t_token_list *start, t_token_list *end, unsigned int	pipe_nb);
+t_node			*new_tree_node(char type, unsigned int child_nb, unsigned int pipe_nb);
+void			add_back_token_list(t_token_list **list, t_token_list *token);
+t_token_list	*skip_parenthesis(t_token_list *token);
+int				pipe_children(t_token_list *start, t_token_list *end, t_node *pipe_node);
+int				init_cmd_node(t_token_list *start, t_token_list *end, t_node *cmd_node);
+t_node			*tree_maker(t_token_list *start, t_token_list *end);
+void			display_tree(t_node *node);
+void			free_tree(t_node *node);
 
 /* executor */
-t_token_list *get_wildcard(char *pattern);
+int				ft_run(t_node *node, t_minishell *info);
+void			ft_free_pipes(t_node *node, t_minishell *info);
+int				ft_open_pipes(t_node *node, t_minishell *info);
+int				wildcard_handler(t_token_list **token, t_minishell *info);
+int				remove_quotes(t_token_list *args, t_minishell *info);
+char			expand_dollars(t_token_list *args, t_minishell *info);
+unsigned int	get_varname_len(char *str);
+unsigned int	count_final_length(char *str, t_minishell *info);
 
 #endif

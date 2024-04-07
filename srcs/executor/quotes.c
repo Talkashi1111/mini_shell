@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   quotes_remover.c                                   :+:      :+:    :+:   */
+/*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 20:44:08 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/06 20:27:59 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/07 22:29:17 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,10 @@ unsigned int	without_quotes_len(char *str)
 	{
 		if (*str == '\'' || *str == '"')
 		{
-			tmp = to_end_of_quote(str + 1, *str) - str;
-			// printf("LEN2: %u\n", tmp);
+			tmp = to_end_of_quote(str) - str;
 			if (tmp)
 			{
 				final_len += tmp + 1 - 2;
-				// printf("FINALLEN: %u\n", final_len);
 				*str = '\0';
 				*(str + tmp) = '\0';
 				str += tmp + 1;
@@ -53,7 +51,7 @@ void	fill_without_quotes(char *start_ptr, char *end_ptr, char *new_str)
 	}
 }
 
-char	remove_quotes(t_token_list *args)
+int	remove_quotes(t_token_list *args, t_minishell *info)
 {
 	char			*end_ptr;
 	unsigned int	len;
@@ -65,15 +63,16 @@ char	remove_quotes(t_token_list *args)
 		while (*end_ptr)
 			end_ptr++;
 		len = without_quotes_len(args->str);
-		// printf("LEN %d\n", len);
 		new_str = (char *)malloc((len + 1) * sizeof(char));
 		if (!new_str)
+		{
+			info->last_exit_status = MALLOC_ERROR;
 			return (MALLOC_ERROR);
+		}
 		new_str[len] = '\0';
 		fill_without_quotes(args->str, end_ptr, new_str);
 		free(args->str);
 		args->str = new_str;
-		// printf("\"%s\"\n", args->str);
 		args = args->next;
 	}
 	return (OK);

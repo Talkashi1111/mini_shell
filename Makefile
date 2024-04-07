@@ -10,17 +10,25 @@ FILES := main.c \
 		builtin/echo_builtin.c \
 		builtin/env_builtin.c \
 		builtin/pwd_builtin.c \
+		builtin/exit_builtin.c \
 		builtin/export_builtin.c \
 		builtin/unset_builtin.c \
 		builtin/builtin_utils.c \
 		builtin/utils.c \
+		lexer/tokenizer_1.c \
+		lexer/tokenizer_2.c \
 		lexer/tokenizer.c \
-		lexer/tokenizer_utils.c \
 		lexer/syntax_analyser.c \
-		parser/ast_tree_maker.c \
-		parser/quotes_remover.c \
-		parser/dollars_expander.c \
-		executor/wildcard.c
+		parser/make_tree_1.c \
+		parser/make_tree_2.c \
+		parser/make_tree.c \
+		executor/run_tree.c \
+		executor/pipe.c \
+		executor/dollars_1.c \
+		executor/dollars.c \
+		executor/quotes.c \
+		executor/wildcards.c \
+		debug.c
 SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
 BONUS_FILES :=
 CFLAGS := -Wall -Wextra -Werror

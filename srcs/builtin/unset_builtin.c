@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:35 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/06 20:25:55 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/07 13:45:31 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int ft_unset(char *args[], t_minishell *info)
 	i = 1;
 	while (args[i])
 	{
-		if (find_envp_arg(info->envp, args[i], 0))
+		if (find_envp_arg(info->envp, args[i], ft_strlen(args[i])))
 			err = delete_envp_arg(info, args[i]);
 		i++;
 	}
