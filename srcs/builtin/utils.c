@@ -3,14 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:47 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/02 17:45:50 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/06 20:26:34 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "minishell.h"
+
+const char *node_type_to_string(enum token_type type) {
+    if (type == WORD) {
+        return "WORD";
+    } else if (type == STDIN) {
+        return "STDIN";
+    } else if (type == STDIN_HEREDOC) {
+        return "STDIN_HEREDOC";
+    } else if (type == STDOUT) {
+        return "STDOUT";
+    } else if (type == STDOUT_APPEND) {
+        return "STDOUT_APPEND";
+    } else if (type == OR) {
+        return "OR";
+    } else if (type == AND) {
+        return "AND";
+    } else if (type == PIPE) {
+        return "PIPE";
+    } else if (type == OPENPAR) {
+        return "OPENPAR";
+    } else if (type == CLOSEPAR) {
+        return "CLOSEPAR";
+    } else if (type == CMD) {
+        return "CMD";
+    } else {
+        return "UNKNOWN";
+    }
+}
 
 int	ft_isspace(char c)
 {

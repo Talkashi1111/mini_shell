@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   export_builtin.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:07 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/02 17:45:08 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/07 13:46:20 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
+#include <errno.h>
+#include <stdlib.h>
 #include "minishell.h"
+
 
 int is_valid_export(char *str)
 {
@@ -62,7 +66,7 @@ int	print_sorted_envp(char *envp[])
 	return (OK);
 }
 
-int ft_export(char *args[], char **envp[])
+int ft_export(char *args[], t_minishell *info)
 {
 	int	i;
 	char	*key;
@@ -71,7 +75,7 @@ int ft_export(char *args[], char **envp[])
 
 	if (!args[1])
 	{
-		print_sorted_envp(*envp);
+		print_sorted_envp(info->envp);
 		return (OK);
 	}
 	err = OK;
@@ -87,7 +91,7 @@ int ft_export(char *args[], char **envp[])
 		}
 		value = ft_strchr(args[i], '=') + 1;
 		key = ft_substr(args[i], 0, value - args[i]);
-		if (!key || update_or_add_envp(envp, key, value) == MALLOC_ERROR)
+		if (!key || update_or_add_envp(info, key, value) == MALLOC_ERROR)
 			err = MALLOC_ERROR;
 		free(key);
 		i++;

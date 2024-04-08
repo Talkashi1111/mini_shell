@@ -13,6 +13,40 @@
 #include <unistd.h>
 #include "minishell.h"
 
+char	syntax_error(char *str)
+{
+	ft_fprintf(STDERR_FILENO, "shell: syntax error near '%s'\n", str);
+	return (SYNTAX_ERROR);
+}
+
+char	analyse_middle_token(t_token_list *token, unsigned int *openpar_count, unsigned int *closepar_count)
+{
+	if ((token->type == OR || token->type == AND || token->type == PIPE) &&
+		(token->next->type == OR || token->next->type == AND || \
+		token->next->type == PIPE || token->next->type == CLOSEPAR))
+		return (SYNTAX_ERROR);
+	else if ((token->type == STDIN || token->type == STDIN_HEREDOC || \
+			token->type == STDOUT || token->type == STDOUT_APPEND) && \
+			token->next->type != WORD)
+		return (SYNTAX_ERROR);
+	else if (token->type == OPENPAR)
+	{
+		(*openpar_count)++;
+		if (token->next->type == AND || token->next->type == OR || \
+		token->next->type == PIPE || token->next->type == CLOSEPAR)
+			return (SYNTAX_ERROR);
+	}
+	else if (token->type == CLOSEPAR)
+	{
+		(*closepar_count)++;
+		if (token->next->type == STDIN || \
+		token->next->type == STDIN_HEREDOC || token->next->type == STDOUT || \
+		token->next->type == STDOUT_APPEND || token->next->type == WORD)
+			return (SYNTAX_ERROR);
+	}
+	return (OK);
+}
+
 /**
  * Checks the syntax of a token list.
  * on check l'ordre de gauche a droite donc on fait jamais de verif avec ce qu'il y a a gauche
@@ -23,61 +57,28 @@
  *         - SYNTAX_ERROR if there is a syntax error in the token list.
  *         - OK if the syntax analysis is successful.
  */
-char	syntax_analyser(t_token_list *token) //est-ce que token est forcement non NULL, donc qu'il y a qqch dedans ? (si ca avait foirer le process est anuler mais si c'est vide alors token list est null)
+char	syntax_analyser(t_token_list *token)
 {
 	unsigned int	openpar_count;
 	unsigned int	closepar_count;
 
 	openpar_count = 0;
 	closepar_count = 0;
-	if (token == NULL)
-		return (NOT_FOUND);
-	if (token->type == OR || token->type == AND || token->type == PIPE || token->type == CLOSEPAR) //TODO: what about: ['$', '*'] ? 
-	{
-		ft_fprintf(STDERR_FILENO, "shell: syntax error near '%s'\n", token->str);
-		return (SYNTAX_ERROR);
-	}
+	if (token->type == OR || token->type == AND || token->type == PIPE || \
+		token->type == CLOSEPAR)
+		return (syntax_error(token->str));
 	while (token->next)
 	{
-		if ((token->type == OR || token->type == AND || token->type == PIPE) &&
-			(token->next->type == OR || token->next->type == AND || token->next->type == PIPE || token->next->type == CLOSEPAR))
-		{
-			ft_fprintf(STDERR_FILENO, "shell: syntax error near '%s'\n", token->next->str);
-			return (SYNTAX_ERROR);
-		}
-		else if ((token->type == STDIN || token->type == STDIN_HEREDOC || token->type == STDOUT || token->type == STDOUT_APPEND)  && token->next->type != WORD)
-		{
-			ft_fprintf(STDERR_FILENO, "shell: syntax error near '%s'\n", token->next->str);
-			return (SYNTAX_ERROR);
-		}
-		else if (token->type == OPENPAR)
-		{
-			openpar_count++;
-			if (token->next->type == AND || token->next->type == OR || token->next->type == PIPE || token->next->type == CLOSEPAR) //j'autorise pas les parhentese vide
-			{
-				ft_fprintf(STDERR_FILENO, "shell: syntax error near '%s'\n", token->next->str);
-				return (SYNTAX_ERROR);
-			}
-		}
-		else if (token->type == CLOSEPAR)
-		{
-			closepar_count++;
-			if (token->next->type == STDIN || token->next->type == STDIN_HEREDOC || token->next->type == STDOUT || token->next->type == STDOUT_APPEND || token->next->type == WORD)
-			{
-				ft_fprintf(STDERR_FILENO, "shell: syntax error near '%s'\n", token->next->str);
-				return (SYNTAX_ERROR);
-			}
-		}
+		if (analyse_middle_token(token, &openpar_count, &closepar_count) != OK)
+			return (syntax_error(token->next->str));
 		token = token->next;
 	}
 	if (token->type == OPENPAR)
-		closepar_count++;
+		openpar_count++;
 	if (token->type == CLOSEPAR)
 		closepar_count++;
-	if ((token->type == OR || token->type == AND || token->type == PIPE || token->type == OPENPAR) || (openpar_count != closepar_count))
-	{
-		ft_fprintf(STDERR_FILENO, "shell: syntax error near '\\n'\n");
-		return (SYNTAX_ERROR);
-	}
+	if ((token->type == OR || token->type == AND || token->type == PIPE || \
+		token->type == OPENPAR) || (openpar_count != closepar_count))
+		return (syntax_error("\\n"));
 	return (OK);
 }
