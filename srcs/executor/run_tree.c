@@ -72,7 +72,7 @@ char	**token_list_to_args(t_token_list *node, t_minishell *info)
 }
 
 
-int	execute_cmd(t_node *node, t_minishell *info)
+int	execute_cmd(t_node *node, t_minishell *info) 
 {
 	char		**args;
 	t_pfunc		func;
@@ -105,21 +105,36 @@ int	execute_cmd(t_node *node, t_minishell *info)
 	return (info->last_exit_status);
 }
 
-int	handle_subshell()
+int	handle_subshell(t_node *node, t_minishell *info) //doute pour la gestion d'erreur, mettre strerror ?
 {
-	ft_printf("subshell\n");
-	// pid_t	pid;
-	// int		status;
+	pid_t	pid;
+	int		status;
 
-	// pid = fork();
-	// if (pid == 0)
-	// {
-	// 	//ya des choses a free ?
-	// 	exit(run(node->child[0]));
-	// }
-	// waitpid(pid, &status, 0);
-	// return (WEXITSTATUS(status));
-	return (OK);
+	pid = fork();
+	if (pid == -1)
+	{
+		info->last_exit_status = errno;
+		ft_fprintf(STDERR_FILENO, "fork: %s\n", strerror(errno));
+		return (info->last_exit_status);
+	}
+	if (pid == 0)
+	{
+		info->last_exit_status = ft_run(node->child[0], info);
+		ft_exit(NULL, info);
+	}
+	if (waitpid(pid, &status, 0) == -1)
+	{
+		info->last_exit_status = errno;
+		ft_fprintf(STDERR_FILENO, "waitpid: %s\n", strerror(errno));
+		return (info->last_exit_status);
+	}
+	if (WIFEXITED(status))
+		info->last_exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		info->last_exit_status = 128 + WTERMSIG(status);
+	else
+		ft_fprintf(STDERR_FILENO, "Child process exited with unknown status\n");
+	return (info->last_exit_status);
 }
 
 void	ft_child(t_node *node, unsigned int i, t_minishell *info)
@@ -221,7 +236,7 @@ int	ft_run(t_node *node, t_minishell *info)
 	else if (node->type == PIPE)
 		return (handle_pipex(node, info));
 	else if (node->type == OPENPAR)
-		return (handle_subshell());
+		return (handle_subshell(node, info));
 	else
 		return (execute_cmd(node, info));
 }

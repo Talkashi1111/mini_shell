@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/07 22:00:47 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/09 19:23:55 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ void			skip_whitespace_start(char **start);
 void			display_token_list(t_token_list *token);
 char			syntax_analyser(t_token_list *token);
 int				ft_isspace(char c);
-char			*to_end_of_quote(char *ptr);
+char			*to_end_of_quote(char *str);
 char			**tokens_to_args(t_token_list *token_list);
 
 /* parser */
