@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/07 22:20:22 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/09 12:54:01 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int minishell_init(t_minishell *info, char **envp)
     return (OK);
 }
 
-void    free_iteration_memory(t_minishell *info)
+void    free_tokens_and_tree(t_minishell *info)
 {
     free_tree(info->tree);
     info->tree = NULL;
@@ -77,7 +77,7 @@ char    minishell_loop(t_minishell *info)
             }
         }
         free(line);
-        free_iteration_memory(info);
+        free_tokens_and_tree(info);
     }
 }
 

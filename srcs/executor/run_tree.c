@@ -71,8 +71,7 @@ char	**token_list_to_args(t_token_list *node, t_minishell *info)
 	return (args);
 }
 
-
-int	execute_cmd(t_node *node, t_minishell *info) 
+int	execute_cmd(t_node *node, t_minishell *info)
 {
 	char		**args;
 	t_pfunc		func;
@@ -84,28 +83,29 @@ int	execute_cmd(t_node *node, t_minishell *info)
 		ft_fprintf(STDERR_FILENO, "command is empty\n");
 		return (OK);
 	}
-	args = token_list_to_args(node->args, info);
-	if (info->last_exit_status != OK)
-		return (info->last_exit_status);
-	func = is_builtin(args[0], info->builtins);
+	
+	func = is_builtin(node->args->str, info->builtins);
     if (func)
+	{
+		args = token_list_to_args(node->args, info);
+		if (info->last_exit_status != OK)
+			return (info->last_exit_status);
         info->last_exit_status = func(args, info);
+		free_args(args);
+	}
     else
 	{
-        ft_fprintf(STDERR_FILENO, "minishell: %s: command not found\n", args[0]);
+		if (execute_non_builtin(node, info) != OK)
+        	{
+				ft_fprintf(STDERR_FILENO, "minishell: %s: command not found\n", node->args->str);
+				return (info->last_exit_status);
+			}
+		info->last_exit_status = OK;
 	}
-	free_args(args);
-	// if (command == builtin)
-
-	// else
-	// {
-	// 	fork();
-	// 	apply redirection
-	// }
 	return (info->last_exit_status);
 }
 
-int	handle_subshell(t_node *node, t_minishell *info) //doute pour la gestion d'erreur, mettre strerror ?
+int	handle_subshell(t_node *node, t_minishell *info)
 {
 	pid_t	pid;
 	int		status;
@@ -169,9 +169,7 @@ void	ft_child(t_node *node, unsigned int i, t_minishell *info)
 int	handle_pipex(t_node *node, t_minishell *info)
 {
 	unsigned int		i;
-	pid_t				pid_tmp;
-	pid_t	pid;
-	int		status;
+	pid_t				pid;
 
 	if (ft_open_pipes(node, info) != OK)
 	{
@@ -193,26 +191,7 @@ int	handle_pipex(t_node *node, t_minishell *info)
 		i++;
 	}
 	ft_free_pipes(node, info);
-	while (TRUE)
-	{
-		pid_tmp = waitpid(-1, &status, 0);
-		if (pid_tmp == -1) {
-			if (errno == ECHILD)
-				break ;
-			info->last_exit_status = errno;
-			ft_fprintf(STDERR_FILENO, "waitpid: %s\n", strerror(errno));
-			break ;
-		}
-		if (pid_tmp != pid)
-			continue ;
-		if (WIFEXITED(status))
-			info->last_exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			info->last_exit_status = 128 + WTERMSIG(status);
-		else
-			ft_fprintf(STDERR_FILENO, "Child process exited with unknown status\n");
-	}
-	return (info->last_exit_status);
+	return (ft_wait_pid(pid, info));
 }
 
 int	ft_run(t_node *node, t_minishell *info)

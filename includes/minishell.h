@@ -7,6 +7,7 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
 /*   Updated: 2024/04/09 19:23:55 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/09 14:27:53 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +132,7 @@ t_token_list	*new_token(char *str, char type);
 t_token_list	*copy_token(t_token_list *token);
 void			skip_whitespace_start(char **start);
 void			display_token_list(t_token_list *token);
+unsigned int	token_list_size(t_token_list *list);
 char			syntax_analyser(t_token_list *token);
 int				ft_isspace(char c);
 char			*to_end_of_quote(char *str);
@@ -159,5 +161,7 @@ int				remove_quotes(t_token_list *args, t_minishell *info);
 char			expand_dollars(t_token_list *args, t_minishell *info);
 unsigned int	get_varname_len(char *str);
 unsigned int	count_final_length(char *str, t_minishell *info);
-
+int 			execute_non_builtin(t_node *node, t_minishell *info);
+void    		free_tokens_and_tree(t_minishell *info);
+int 			ft_wait_pid(int child_pid, t_minishell *info);
 #endif
