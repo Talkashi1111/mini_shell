@@ -26,6 +26,7 @@ FILES := main.c \
 		executor/pipe.c \
 		executor/dollars_1.c \
 		executor/dollars.c \
+		executor/execute_non_builtin.c \
 		executor/quotes.c \
 		executor/wildcards.c \
 		debug.c
