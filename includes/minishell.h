@@ -3,9 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/09 19:23:55 by achappui         ###   ########.fr       */
 /*   Updated: 2024/04/09 14:27:53 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -134,7 +135,7 @@ void			display_token_list(t_token_list *token);
 unsigned int	token_list_size(t_token_list *list);
 char			syntax_analyser(t_token_list *token);
 int				ft_isspace(char c);
-char			*to_end_of_quote(char *ptr);
+char			*to_end_of_quote(char *str);
 char			**tokens_to_args(t_token_list *token_list);
 
 /* parser */

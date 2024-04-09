@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 20:44:08 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/07 22:29:17 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/09 19:34:12 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,11 @@ unsigned int	without_quotes_len(char *str)
 				*str = '\0';
 				*(str + tmp) = '\0';
 				str += tmp + 1;
+				continue ;
 			}
 		}
-		else
-		{
-			str++;
-			final_len++;
-		}
+		str++;
+		final_len++;
 	}
 	return (final_len);
 }

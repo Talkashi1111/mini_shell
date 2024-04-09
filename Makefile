@@ -24,7 +24,6 @@ FILES := main.c \
 		parser/make_tree.c \
 		executor/run_tree.c \
 		executor/pipe.c \
-		executor/dollars_1.c \
 		executor/dollars.c \
 		executor/execute_non_builtin.c \
 		executor/quotes.c \
