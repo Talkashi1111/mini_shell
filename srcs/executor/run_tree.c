@@ -16,7 +16,6 @@
 #include <string.h>
 #include <errno.h>
 #include "minishell.h"
-#include <stdio.h>
 
 unsigned int	token_list_size(t_token_list *list)
 {

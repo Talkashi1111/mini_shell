@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 23:24:44 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/10 15:01:38 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/10 15:35:08 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <errno.h>
 #include <string.h>
 #include "minishell.h"
-#include <stdio.h>
 
 void	ft_free_pipes(t_minishell *info)
 {
