@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/09 12:54:01 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/10 13:50:22 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 #include <readline/history.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <signal.h>
 #include "minishell.h"
+
+int	g_signal = 0;
 
 static int minishell_init(t_minishell *info, char **envp)
 {
@@ -81,12 +84,24 @@ char    minishell_loop(t_minishell *info)
     }
 }
 
+void	signal_handler(int sig)
+{
+	(void)sig;
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
+}
+
 int	main(int argc, char **argv, char **envp)
 {
-	t_minishell info;
+	t_minishell 		info;
+	struct sigaction	sa;
 
     (void)argc;
     (void)argv;
+	sa.sa_handler = &signal_handler;
+	sa.sa_flags = SA_RESTART;
+	sigaction(SIGINT, &sa, NULL);
     if (minishell_init(&info, envp) == MALLOC_ERROR)
         return (MALLOC_ERROR);
     minishell_loop(&info);
