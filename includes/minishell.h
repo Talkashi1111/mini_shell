@@ -6,10 +6,10 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/09 19:23:55 by achappui         ###   ########.fr       */
-/*   Updated: 2024/04/09 14:27:53 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/10 14:54:41 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 
 #ifndef MINISHELL_H
@@ -100,7 +100,7 @@ typedef struct s_minishell
     struct s_node		*tree;
 	t_builtin			builtins[8];
 	int					(*fd_pipe)[2];
-	int					pipe_nb;
+	unsigned int		pipe_nb;
 }	t_minishell;
 
 /* builtins */
@@ -154,7 +154,7 @@ void			free_tree(t_node *node);
 
 /* executor */
 int				ft_run(t_node *node, t_minishell *info);
-void			ft_free_pipes(t_node *node, t_minishell *info);
+void			ft_free_pipes(t_minishell *info);
 int				ft_open_pipes(t_node *node, t_minishell *info);
 int				wildcard_handler(t_token_list **token, t_minishell *info);
 int				remove_quotes(t_token_list *args, t_minishell *info);

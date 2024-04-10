@@ -6,13 +6,14 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/09 19:41:44 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/10 14:24:08 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdbool.h>
 #include "minishell.h"
+#include <stdio.h>
 
 long long	with_dollar(char **str, char **seq, unsigned int *len, bool *to_free, t_minishell *info)
 {
@@ -93,11 +94,6 @@ char	*expand_dollar(char *str, unsigned int len, t_minishell *info)
 		free(seq);
 	return (new_str);
 }
-
-
-
-
-
 
 char	expand_dollars(t_token_list *args, t_minishell *info)
 {

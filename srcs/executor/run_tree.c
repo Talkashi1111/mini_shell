@@ -16,6 +16,7 @@
 #include <string.h>
 #include <errno.h>
 #include "minishell.h"
+#include <stdio.h>
 
 unsigned int	token_list_size(t_token_list *list)
 {
@@ -39,7 +40,7 @@ int	parse_cmd(t_node *node, t_minishell *info)
 		remove_quotes(node->args, info) != OK ||
 		remove_quotes(node->redi, info) != OK)
 		return (info->last_exit_status);
-	return (info->last_exit_status);
+	return (OK);
 }
 
 char	**token_list_to_args(t_token_list *node, t_minishell *info)
@@ -76,6 +77,7 @@ int	execute_cmd(t_node *node, t_minishell *info)
 	char		**args;
 	t_pfunc		func;
 
+	info->last_exit_status = OK;
 	if (parse_cmd(node, info) != OK)
 		return (info->last_exit_status);
 	if (node->args == NULL)
@@ -83,7 +85,6 @@ int	execute_cmd(t_node *node, t_minishell *info)
 		ft_fprintf(STDERR_FILENO, "command is empty\n");
 		return (OK);
 	}
-	
 	func = is_builtin(node->args->str, info->builtins);
     if (func)
 	{
@@ -146,22 +147,22 @@ void	ft_child(t_node *node, unsigned int i, t_minishell *info)
 			info->last_exit_status = errno;
 			ft_fprintf(STDERR_FILENO, "dup2(%d, %d): %s\n",
 				info->fd_pipe[i - 1][PIPE_OUT], STDIN_FILENO, strerror(errno));
-			ft_free_pipes(node, info);
+			ft_free_pipes(info);
 			exit(info->last_exit_status);
 		}
 	}
-	if (i < node->pipe_nb)
+	if (i < info->pipe_nb)
 	{
 		if (dup2(info->fd_pipe[i][PIPE_IN], STDOUT_FILENO) < 0)
 		{
 			info->last_exit_status = errno;
 			ft_fprintf(STDERR_FILENO, "dup2(%d, %d): %s\n",
 				info->fd_pipe[i][PIPE_IN], STDOUT_FILENO, strerror(errno));
-			ft_free_pipes(node, info);
+			ft_free_pipes(info);
 			exit(info->last_exit_status);
 		}
 	}
-	ft_free_pipes(node, info);
+	ft_free_pipes(info);
 	info->last_exit_status = ft_run(node, info);
 	ft_exit(NULL, info);
 }
@@ -173,7 +174,7 @@ int	handle_pipex(t_node *node, t_minishell *info)
 
 	if (ft_open_pipes(node, info) != OK)
 	{
-		ft_free_pipes(node, info);
+		ft_free_pipes(info);
 		return (info->last_exit_status);
 	}
 	i = 0;
@@ -190,7 +191,7 @@ int	handle_pipex(t_node *node, t_minishell *info)
 		}
 		i++;
 	}
-	ft_free_pipes(node, info);
+	ft_free_pipes(info);
 	return (ft_wait_pid(pid, info));
 }
 

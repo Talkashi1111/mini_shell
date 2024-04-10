@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 23:24:44 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/07 17:41:02 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/10 15:01:38 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,16 @@
 #include <errno.h>
 #include <string.h>
 #include "minishell.h"
+#include <stdio.h>
 
-void	ft_free_pipes(t_node *node, t_minishell *info)
+void	ft_free_pipes(t_minishell *info)
 {
 	unsigned int	i;
 
 	if (!info->fd_pipe)
 		return ;
 	i = 0;
-	while (i < node->pipe_nb)
+	while (i < info->pipe_nb)
 	{
 		if (info->fd_pipe[i][PIPE_OUT] >= 0 &&
 				close(info->fd_pipe[i][PIPE_OUT]) < 0)
