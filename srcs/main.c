@@ -6,10 +6,10 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/11 15:54:47 by achappui         ###   ########.fr       */
-/*   Updated: 2024/04/10 13:50:22 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/11 16:22:23 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 // #include <readline/readline.h>
 #include <unistd.h>
@@ -62,11 +62,10 @@ char    minishell_loop(t_minishell *info)
     {
         line = readline(COLOR_GREEN "minishell ~ " COLOR_RESET);
         if (!line)
-        {
-            ft_fprintf(STDERR_FILENO, "readline error\n");
-            info->last_exit_status = 1;
-            ft_exit(NULL, info);
-        }
+		{
+			ft_printf("exit\n");
+			ft_exit(NULL, info);
+		}
         info->token_list = tokenizer(line);
         if (DEBUG == TRUE)
             display_token_list(info->token_list);
@@ -91,13 +90,14 @@ char    minishell_loop(t_minishell *info)
 
 void	signal_handler(int sig)
 {
-	if (sig == SIGINT)
-	{
-		rl_replace_line("", 0);
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_redisplay();
-	}
+	printf("SIGNUM %d\n", sig);
+	// if (sig == SIGINT)
+	// {
+	// 	rl_replace_line("", 0);
+	// 	write(1, "\n", 1);
+	// 	rl_on_new_line();
+	// 	rl_redisplay();
+	// }
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -111,6 +111,8 @@ int	main(int argc, char **argv, char **envp)
 	sa.sa_handler = &signal_handler;
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+	sigaction(SIGTERM, &sa, NULL);
     if (minishell_init(&info, envp) == MALLOC_ERROR)
         return (MALLOC_ERROR);
     minishell_loop(&info);

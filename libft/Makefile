@@ -3,13 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+         #
+#    By: achappui <achappui@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/30 14:51:12 by tkashi            #+#    #+#              #
-#    Updated: 2024/04/10 16:38:20 by tkashi           ###   ########.fr        #
+#    Updated: 2024/04/11 16:13:19 by achappui         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+NAME := libft.a
 SRCS := ft_isalnum.c \
 	ft_isalpha.c \
 	ft_isascii.c \

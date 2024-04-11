@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 21:32:26 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/11 13:24:43 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/11 16:33:38 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,13 @@ int	check_redirections(t_node *node, t_minishell *info)
 	if (index)
 	{
 		while (index->next)
+		{
 			if (((index->type >= STDIN && index->type <= STDOUT_APPEND) && \
 			(index->next->type >= STDIN && index->next->type <= STDOUT_APPEND)) ||
 			(index->type == WORD && index->next->type == WORD))
 				info->last_exit_status = 1;
+			index = index->next;	
+		}
 		if (index->type >= STDIN && index->type <= STDOUT_APPEND)
 			info->last_exit_status = 1;
 	}
