@@ -6,6 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/10 21:51:51 by achappui         ###   ########.fr       */
 /*   Updated: 2024/04/10 14:24:08 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -95,14 +96,33 @@ char	*expand_dollar(char *str, unsigned int len, t_minishell *info)
 	return (new_str);
 }
 
-char	expand_dollars(t_token_list *args, t_minishell *info)
+char	expand_dollars(t_token_list **args, t_minishell *info)
 {
-	while (args)
+	t_token_list	tmp;
+	t_token_list	*tmp_ptr;
+	t_token_list	*to_free;
+
+	tmp_ptr = &tmp;
+	tmp_ptr->next = *args;
+	*args = tmp_ptr;
+	while (tmp_ptr->next)
 	{
-		args->str = expand_dollar(args->str, 0, info);
-		if (!args->str)
+		tmp_ptr->next->str = expand_dollar(tmp_ptr->next->str, 0, info);
+		if (!tmp_ptr->next->str)
+		{
+			info->last_exit_status = MALLOC_ERROR;
 			return (MALLOC_ERROR);
-		args = args->next;
+		}
+		else if (tmp_ptr->next->str[0] == '\0')
+		{
+			to_free = tmp_ptr->next;
+			tmp_ptr->next = tmp_ptr->next->next;
+			free(to_free->str);
+			free(to_free);
+		}
+		else
+			tmp_ptr = tmp_ptr->next;
 	}
+	*args = (*args)->next;
 	return (OK);
 }

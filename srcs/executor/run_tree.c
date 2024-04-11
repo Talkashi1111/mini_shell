@@ -32,8 +32,8 @@ unsigned int	token_list_size(t_token_list *list)
 
 int	parse_cmd(t_node *node, t_minishell *info)
 {
-	if (expand_dollars(node->args, info) != OK ||
-		expand_dollars(node->redi, info) != OK ||
+	if (expand_dollars(&node->args, info) != OK ||
+		expand_dollars(&node->redi, info) != OK ||
 		wildcard_handler(&node->args, info) != OK ||
 		wildcard_handler(&node->redi, info) != OK ||
 		remove_quotes(node->args, info) != OK ||
@@ -79,11 +79,10 @@ int	execute_cmd(t_node *node, t_minishell *info)
 	info->last_exit_status = OK;
 	if (parse_cmd(node, info) != OK)
 		return (info->last_exit_status);
-	if (node->args == NULL)
-	{
-		ft_fprintf(STDERR_FILENO, "command is empty\n");
+	if (node->args == NULL && node->redi == NULL) //modified
 		return (OK);
-	}
+	// if (apply_redirections(node, info) != OK)
+	// 	return (info->last_exit_status);
 	func = is_builtin(node->args->str, info->builtins);
     if (func)
 	{
