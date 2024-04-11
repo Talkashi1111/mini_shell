@@ -7,6 +7,7 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
 /*   Updated: 2024/04/11 15:54:47 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/10 13:50:22 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +21,6 @@
 #include "/Users/achappui/.brew/opt/readline/include/readline/readline.h"
 #include "/Users/achappui/.brew/opt/readline/include/readline/history.h"
 #include "minishell.h"
-
 
 int	g_signal = 0;
 
@@ -107,8 +107,7 @@ int	main(int argc, char **argv, char **envp)
 
     (void)argc;
     (void)argv;
-	
-	// kill(0, SIGUSR1);
+
 	sa.sa_handler = &signal_handler;
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);

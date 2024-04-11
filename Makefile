@@ -42,13 +42,15 @@ OBJECTS := $(addprefix $(OBJECT_DIR)/,$(FILES:.c=.o))
 OBJS_WITHOUT_MAIN := $(filter-out $(OBJECT_DIR)/main.o, $(OBJECTS))
 BONUS_OBJ :=  $(addprefix $(BONUS_DIR)/,$(BONUS_FILES:.c=.o))
 CC := gcc
-END := "\033[0m"
-WHITE := "\033[1;37m"
+#color codes
+END := \033[0m
+WHITE := \033[1;37m
 NC := \033[0m
-PINK := "\033[1;35m"
-GREEN := "\033[32m"
-BOLD := "\033[1m"
-L_PURPLE :="\033[38;5;55m"
+PINK := \033[1;35m
+GREEN := \033[32m
+BOLD := \033[1m
+L_PURPLE :=\033[38;5;55m
+
 UNAME := $(shell uname)
 ifeq ($(UNAME),Darwin)
 	LEAK_TOOL := leaks -atExit --
@@ -69,7 +71,10 @@ $(LIBFT_DIR)/libft.a:
 
 $(OBJECT_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@ 
+	@echo -e "${L_PURPLE}${BOLD}Compiling:${NC} $< -> $@"
+	@$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@  && \
+		echo -e "${GREEN}Success:${NC} Compiled $<" || \
+		(echo -e "${PINK}Error:${NC} Failed to compile $<"; exit 1)
 
 $(BONUS_DIR)/%.o: $(BONUS_DIR)/%.c
 	$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
