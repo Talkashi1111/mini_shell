@@ -96,10 +96,7 @@ int	execute_cmd(t_node *node, t_minishell *info)
     else
 	{
 		if (execute_non_builtin(node, info) != OK)
-        	{
-				ft_fprintf(STDERR_FILENO, "minishell: %s: command not found\n", node->args->str);
 				return (info->last_exit_status);
-			}
 		info->last_exit_status = OK;
 	}
 	return (info->last_exit_status);
@@ -216,6 +213,8 @@ int	ft_run(t_node *node, t_minishell *info)
 		return (handle_pipex(node, info));
 	else if (node->type == OPENPAR)
 		return (handle_subshell(node, info));
+/* 	else if (node->type >= STDIN && node->type <= STDOUT_APPEND)
+		return (handle_redir(node, info)); */
 	else
 		return (execute_cmd(node, info));
 }

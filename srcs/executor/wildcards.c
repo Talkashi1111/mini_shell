@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 21:49:03 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/10 14:11:56 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/10 16:57:42 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,16 @@ t_token_list *get_wildcard(char *pattern, t_minishell *info)
 	}
 	tmp = head;
 	head = head->next;
+	if (head == NULL)
+	{
+		head = new_token(pattern, WORD);
+		if (!head)
+		{
+			info->last_exit_status = MALLOC_ERROR;
+			free_token_list(head);
+			return (NULL);
+		}//to verify about freeing 
+	}
 	free(tmp);
 	if (closedir(dir) == -1)
 	{
