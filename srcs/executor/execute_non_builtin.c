@@ -107,14 +107,11 @@ int execute_non_builtin(t_node *node, t_minishell *info)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (node->type == CMD)
+		path = match_path(node->args->str, info);
+		if (!path)
 		{
-			path = match_path(node->args->str, info);
-			if (!path)
-			{
-				info->last_exit_status = MALLOC_ERROR;
-				ft_exit(NULL, info);
-			}
+			info->last_exit_status = MALLOC_ERROR;
+			ft_exit(NULL, info);
 		}
 		size = token_list_size(node->args);
 		args = ft_calloc((size + 1), sizeof(char *));
