@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:44:57 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/10 13:56:59 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/13 10:03:14 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 char	**copy_env(char *envp[])
 {
-	int i;
-	char **envp_cpy;
+	int		i;
+	char	**envp_cpy;
 
 	i = count_args(envp);
 	envp_cpy = ft_calloc(i + 1, sizeof(char *));
@@ -38,7 +38,7 @@ char	**copy_env(char *envp[])
 
 int	ft_env(char *args[], t_minishell *info)
 {
-	int i;
+	int	i;
 
 	if (args[1] != NULL)
 	{

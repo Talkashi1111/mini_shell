@@ -3,23 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/11 16:22:23 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/12 17:34:44 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-// #include <readline/readline.h>
+#include <readline/readline.h> //linux
+#include <readline/history.h> //linux
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <fcntl.h>
 #include <stdio.h>
 # define READLINE_LIBRARY 1
-#include "/Users/achappui/.brew/opt/readline/include/readline/readline.h"
-#include "/Users/achappui/.brew/opt/readline/include/readline/history.h"
+// #include "/Users/achappui/.brew/opt/readline/include/readline/readline.h"
+// #include "/Users/achappui/.brew/opt/readline/include/readline/history.h"
 #include "minishell.h"
 
 int	g_signal = 0;
@@ -90,14 +91,13 @@ char    minishell_loop(t_minishell *info)
 
 void	signal_handler(int sig)
 {
-	printf("SIGNUM %d\n", sig);
-	// if (sig == SIGINT)
-	// {
-	// 	rl_replace_line("", 0);
-	// 	write(1, "\n", 1);
-	// 	rl_on_new_line();
-	// 	rl_redisplay();
-	// }
+	if (sig == SIGINT)
+	{
+		//rl_replace_line("", 0); sert a rien sur linux
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_redisplay();
+	}
 }
 
 int	main(int argc, char **argv, char **envp)

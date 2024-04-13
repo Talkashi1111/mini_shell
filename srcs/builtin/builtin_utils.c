@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:44:31 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/07 16:23:04 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/12 20:00:40 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 t_pfunc	is_builtin(char *str, t_builtin *builtin)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (builtin[i].name)
@@ -27,7 +27,7 @@ t_pfunc	is_builtin(char *str, t_builtin *builtin)
 	return (NULL);
 }
 
-char	*ft_strnstr_env(char *env, char *var_name, unsigned int	var_name_len)
+char	*ft_strnstr_env(char *env, char *var_name, unsigned int var_name_len)
 {
 	while (var_name_len)
 	{
@@ -42,7 +42,7 @@ char	*ft_strnstr_env(char *env, char *var_name, unsigned int	var_name_len)
 	return (NULL);
 }
 
-char *find_envp_arg(char *envp[], char *var_name, unsigned int var_name_len)
+char	*find_envp_arg(char *envp[], char *var_name, unsigned int var_name_len)
 {
 	char	*value;
 	int		i;
@@ -57,28 +57,32 @@ char *find_envp_arg(char *envp[], char *var_name, unsigned int var_name_len)
 	}
 	return (NULL);
 }
-/* 
-char *find_envp_arg(char *envp[], char *str, unsigned int len)
-{
-	int i;
 
-	if (!len)
-		len = ft_strlen(str);
+int	add_envp(t_minishell *info, char *new_entry)
+{
+	char	**envp_new;
+	int		i;
+
+	i = count_args(info->envp);
+	envp_new = ft_calloc(i + 2, sizeof(char *));
+	if (!envp_new)
+		return (MALLOC_ERROR);
 	i = 0;
-	while (envp[i])
+	while (info->envp[i])
 	{
-		if (ft_strnstr(envp[i], str, len) != NULL)
-			return (envp[i] + len + 1);
+		envp_new[i] = info->envp[i];
 		i++;
 	}
-	return (NULL);
-} */
+	envp_new[i] = new_entry;
+	free(info->envp);
+	info->envp = envp_new;
+	return (OK);
+}
 
-int update_or_add_envp(t_minishell *info, char *str, char *new_val)
+int	update_or_add_envp(t_minishell *info, char *str, char *new_val)
 {
-	int i;
-	char **envp_new;
-	char *new_entry;
+	int		i;
+	char	*new_entry;
 
 	new_entry = ft_strjoin(str, new_val);
 	if (!new_entry)
@@ -94,20 +98,10 @@ int update_or_add_envp(t_minishell *info, char *str, char *new_val)
 		}
 		i++;
 	}
-	envp_new = ft_calloc(i + 2, sizeof(char *));
-	if (!envp_new)
+	if (add_envp(info, new_entry) == MALLOC_ERROR)
 	{
 		free(new_entry);
 		return (MALLOC_ERROR);
 	}
-	i = 0;
-	while (info->envp[i])
-	{
-		envp_new[i] = info->envp[i];
-		i++;
-	}
-	envp_new[i] = new_entry;
-	free(info->envp);
-	info->envp = envp_new;
 	return (OK);
 }

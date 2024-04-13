@@ -2,7 +2,7 @@ NAME := minishell
 BONUS_NAME := minishell_bonus
 OBJECT_DIR := obj
 LIBFT_DIR := libft
-READLINE_DIR :=	/Users/achappui/.brew/opt/readline/lib
+#READLINE_DIR :=	/Users/achappui/.brew/opt/readline/lib
 INCLUDE_DIR := includes
 SRC_DIR := srcs
 BONUS_DIR := bonus
@@ -36,8 +36,8 @@ CFLAGS := -Wall -Wextra -Werror
 ifdef DEBUG
     CFLAGS += -DDEBUG=1 -g
 endif
-IFLAGS := -I$(LIBFT_DIR) -I$(INCLUDE_DIR) -I /Users/achappui/.brew/opt/readline/include/readline
-LFLAGS := -L$(LIBFT_DIR) -L$(READLINE_DIR) -lft -lreadline
+IFLAGS := -I$(LIBFT_DIR) -I$(INCLUDE_DIR)#-I /Users/achappui/.brew/opt/readline/include/readline
+LFLAGS := -L$(LIBFT_DIR) -lft -lreadline#-L$(READLINE_DIR) -lft -lreadline
 OBJECTS := $(addprefix $(OBJECT_DIR)/,$(FILES:.c=.o))
 OBJS_WITHOUT_MAIN := $(filter-out $(OBJECT_DIR)/main.o, $(OBJECTS))
 BONUS_OBJ :=  $(addprefix $(BONUS_DIR)/,$(BONUS_FILES:.c=.o))
