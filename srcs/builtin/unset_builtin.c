@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   unset_builtin.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:35 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/11 15:57:44 by achappui         ###   ########.fr       */
-/*   Updated: 2024/04/10 13:57:21 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/13 15:05:54 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "minishell.h"
 
-int		delete_envp_arg(t_minishell *info, char *str)
+int	delete_envp_arg(t_minishell *info, char *str)
 {
 	int		i;
 	int		j;
@@ -41,10 +40,10 @@ int		delete_envp_arg(t_minishell *info, char *str)
 	return (OK);
 }
 
-int ft_unset(char *args[], t_minishell *info)
+int	ft_unset(char *args[], t_minishell *info)
 {
-	int i;
-	int err;
+	int	i;
+	int	err;
 
 	err = OK;
 	i = 1;

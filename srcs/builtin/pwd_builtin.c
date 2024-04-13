@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:30 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/10 13:57:15 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/13 15:04:58 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 #include <string.h>
 #include "minishell.h"
 
-int ft_getcwd(char *path, size_t size)
+int	ft_getcwd(char *path, size_t size)
 {
-	int err;
+	int	err;
 
 	if (getcwd(path, size) == NULL)
 	{
@@ -28,7 +28,7 @@ int ft_getcwd(char *path, size_t size)
 	return (OK);
 }
 
-int ft_pwd(char *args[], t_minishell *info)
+int	ft_pwd(char *args[], t_minishell *info)
 {
 	char	path[PATH_MAX];
 	int		err;

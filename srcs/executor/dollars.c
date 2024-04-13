@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   dollars.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/10 21:51:51 by achappui         ###   ########.fr       */
-/*   Updated: 2024/04/10 14:24:08 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/13 15:38:28 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -31,7 +31,7 @@ long long	with_dollar(char **str, char **seq, unsigned int *len, bool *to_free, 
 			return (-3);
 		*to_free = TRUE;
 		i = ft_strlen(*seq);
-		*str += 1 + 1;
+		*str += 1 + 1; //why 1 + 1?
 	}
 	else
 	{
@@ -78,19 +78,19 @@ char	*expand_dollar(char *str, unsigned int len, t_minishell *info)
 		i = with_dollar(&str, &seq, &len, &to_free, info);
 	else
 		i = no_dollar(&str, &seq, &len);
-	if (i == -3)
+	if (i == -3) //why -3? Best practice is avoid magic numbers
 		return (NULL);
 	if (*str == '\0')
 	{
 		new_str = (char *)malloc((len + 1) * sizeof(char));
 		new_str[len] = '\0';
 		if (!new_str)
-			return (NULL);
+			return (NULL); // forgot to free seq
 	}
 	else
 		new_str = expand_dollar(str, len, info);
 	while (i)
-		new_str[--len] = seq[--i];
+		new_str[--len] = seq[--i]; //potential NULL pointer dereference
 	if (to_free)
 		free(seq);
 	return (new_str);
@@ -104,14 +104,14 @@ char	expand_dollars(t_token_list **args, t_minishell *info)
 
 	tmp_ptr = &tmp;
 	tmp_ptr->next = *args;
-	*args = tmp_ptr;
+	*args = tmp_ptr; //why do we need to do this?
 	while (tmp_ptr->next)
 	{
 		tmp_ptr->next->str = expand_dollar(tmp_ptr->next->str, 0, info);
 		if (!tmp_ptr->next->str)
 		{
 			info->last_exit_status = MALLOC_ERROR;
-			return (MALLOC_ERROR);
+			return (MALLOC_ERROR); //bug here, forgot to promote args to next
 		}
 		else if (tmp_ptr->next->str[0] == '\0')
 		{
@@ -123,6 +123,6 @@ char	expand_dollars(t_token_list **args, t_minishell *info)
 		else
 			tmp_ptr = tmp_ptr->next;
 	}
-	*args = (*args)->next;
+	*args = (*args)->next; //why do we need to do this?
 	return (OK);
 }

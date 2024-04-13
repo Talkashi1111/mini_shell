@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   echo_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:44:43 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/10 13:56:56 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/13 10:02:31 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_echo(char *args[], t_minishell *info)
+int	ft_echo(char *args[], t_minishell *info)
 {
-	int i;
-	int option_n;
-	int n_args;
+	int	i;
+	int	option_n;
+	int	n_args;
 
 	(void)info->envp;
 	n_args = count_args(args);

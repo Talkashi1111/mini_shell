@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_builtin.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:07 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/10 13:57:07 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/13 14:51:53 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,9 @@
 #include <stdlib.h>
 #include "minishell.h"
 
-
-int is_valid_export(char *str)
+int	is_valid_export(char *str)
 {
-	char *end_key;
+	char	*end_key;
 
 	end_key = ft_strchr(str, '=');
 	if (!end_key || end_key == str)
@@ -35,23 +34,20 @@ int is_valid_export(char *str)
 	return (OK);
 }
 
-int	print_sorted_envp(char *envp[])
+void	ft_buble_sort(char **sorted_envp)
 {
-	char	**sorted_envp;
 	int		i;
 	int		j;
 	char	*tmp;
 
-	sorted_envp = copy_env(envp);
-	if (!sorted_envp)
-		return (MALLOC_ERROR);
 	i = 0;
 	while (sorted_envp[i])
 	{
 		j = i + 1;
 		while (sorted_envp[j])
 		{
-			if (ft_strncmp(sorted_envp[i], sorted_envp[j], ft_strlen(sorted_envp[i])) > 0)
+			if (ft_strncmp(sorted_envp[i], sorted_envp[j],
+					ft_strlen(sorted_envp[i])) > 0)
 			{
 				tmp = sorted_envp[i];
 				sorted_envp[i] = sorted_envp[j];
@@ -62,15 +58,35 @@ int	print_sorted_envp(char *envp[])
 		ft_printf("declare -x %s\n", sorted_envp[i]);
 		i++;
 	}
+}
+
+int	print_sorted_envp(char *envp[])
+{
+	char	**sorted_envp;
+
+	sorted_envp = copy_env(envp);
+	if (!sorted_envp)
+		return (MALLOC_ERROR);
+	ft_buble_sort(sorted_envp);
 	free_args(sorted_envp);
 	return (OK);
 }
 
-int ft_export(char *args[], t_minishell *info)
+void	ft_search_replace_envp(char *arg, t_minishell *info, int *err)
 {
-	int	i;
 	char	*key;
 	char	*value;
+
+	value = ft_strchr(arg, '=') + 1;
+	key = ft_substr(arg, 0, value - arg);
+	if (!key || update_or_add_envp(info, key, value) == MALLOC_ERROR)
+		*err = MALLOC_ERROR;
+	free(key);
+}
+
+int	ft_export(char *args[], t_minishell *info)
+{
+	int	i;
 	int	err;
 
 	if (!args[1])
@@ -84,16 +100,13 @@ int ft_export(char *args[], t_minishell *info)
 	{
 		if (is_valid_export(args[i]) == USAGE_ERROR)
 		{
-			ft_fprintf(STDERR_FILENO, "export: `%s': not a valid identifier\n", args[i]);
+			ft_fprintf(STDERR_FILENO, "export: `%s': not a valid identifier\n",
+				args[i]);
 			err = USAGE_ERROR;
 			i++;
 			continue ;
 		}
-		value = ft_strchr(args[i], '=') + 1;
-		key = ft_substr(args[i], 0, value - args[i]);
-		if (!key || update_or_add_envp(info, key, value) == MALLOC_ERROR)
-			err = MALLOC_ERROR;
-		free(key);
+		ft_search_replace_envp(args[i], info, &err);
 		i++;
 	}
 	return (err);

@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/11 15:38:18 by achappui         ###   ########.fr       */
-/*   Updated: 2024/04/10 14:54:41 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/13 14:47:55 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 
 
@@ -113,6 +113,8 @@ int 	ft_pwd(char *args[], t_minishell *info);
 int		ft_echo(char *args[], t_minishell *info);
 int		ft_env(char *args[], t_minishell *info);
 int		ft_export(char *args[], t_minishell *info);
+int		print_sorted_envp(char *envp[]);
+void	ft_buble_sort(char **sorted_envp);
 int 	ft_unset(char *args[], t_minishell *info);
 char	**copy_env(char *envp[]);
 char 	*find_envp_arg(char *envp[], char *var_name, unsigned int var_name_len);
