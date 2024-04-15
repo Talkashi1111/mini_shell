@@ -96,47 +96,38 @@ int ft_wait_pid(int child_pid, t_minishell *info)
 	return (info->last_exit_status);
 }
 
-int execute_non_builtin(t_node *node, t_minishell *info)
+int execute_non_builtin(t_node *node, t_minishell *info, int heredoc_pipe[2])
 {
 	pid_t 	pid;
 	char **args;
 	char *path;
-	int 	size;
-	int 	i;
 
 	pid = fork();
 	if (pid == 0)
 	{
-		path = match_path(node->args->str, info);
-		if (!path)
+		if (dup2(heredoc_pipe[0], 0) == -1)
 		{
-			info->last_exit_status = MALLOC_ERROR;
+			close(heredoc_pipe[0]);
+			close(heredoc_pipe[1]);
 			ft_exit(NULL, info);
 		}
-		size = token_list_size(node->args);
-		args = ft_calloc((size + 1), sizeof(char *));
+		close(heredoc_pipe[0]);
+		close(heredoc_pipe[1]);
+		if (apply_redirections(node, info, heredoc_pipe) != OK)
+			ft_exit(NULL, info);
+		path = match_path(node->args->str, info);
+		if (!path)
+			ft_exit(NULL, info);
+		args = token_list_to_args(node->args, info);
 		if (!args)
 		{
 			free(path);
-			info->last_exit_status = MALLOC_ERROR;
 			ft_exit(NULL, info);
 		}
+		free(args[0]);
 		args[0] = path;
-		node->args = node->args->next;
-		i = 1;
-		while(node->args)
-		{
-			args[i] = ft_strdup(node->args->str);
-			if (!args[i])
-			{
-				info->last_exit_status = MALLOC_ERROR;
-				ft_exit(args, info);
-			}
-			node->args = node->args->next;
-			i++;
-		}
 		free_tokens_and_tree(info);
-		execve(path, args, info->envp);
+		execve(path, args, info->envp); //j'aurais mis un if juste pour etre coherent avec les autres gestion d'erreurs
 		info->last_exit_status = errno;
 		ft_fprintf(STDERR_FILENO, "execve: %s\n", strerror(errno));
 		ft_exit(args, info);
