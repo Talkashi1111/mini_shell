@@ -87,7 +87,7 @@ struct	s_minishell;
 
 typedef int (*t_pfunc)(char *args[], struct s_minishell *info);
 
-typedef struct 
+typedef struct
 {
 	char *name;
 	t_pfunc func;
@@ -164,6 +164,7 @@ int				ft_open_pipes(t_node *node, t_minishell *info);
 int				wildcard_handler(t_token_list **token, t_minishell *info);
 int				remove_quotes(t_token_list *args, t_minishell *info);
 char			expand_dollars(t_token_list **args, t_minishell *info);
+char			**token_list_to_args(t_token_list *node, t_minishell *info);
 int 			execute_non_builtin(t_node *node, t_minishell *info, int heredoc_pipe[2]);
 void    		free_tokens_and_tree(t_minishell *info);
 int 			ft_wait_pid(int child_pid, t_minishell *info);

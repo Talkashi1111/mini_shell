@@ -87,7 +87,7 @@ int    save_stdstreams(int stdstreams[2], t_minishell *info)
     {
         info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "dup: %s\n", strerror(errno));
-        return (info->last_exit_status);    
+        return (info->last_exit_status);
     }
     return (OK);
 }
@@ -98,13 +98,13 @@ int    restore_stdstreams(int stdstreams[2], t_minishell *info)
     {
         info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "dup2: %s\n", strerror(errno));
-        return (info->last_exit_status);    
+        return (info->last_exit_status);
     }
     if (dup2(stdstreams[1], 1) == -1)
     {
         info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "dup2: %s\n", strerror(errno));
-        return (info->last_exit_status);    
+        return (info->last_exit_status);
     }
     if (close(stdstreams[0]) == -1)
     {
@@ -133,7 +133,7 @@ int	check_redirections(t_node *node, t_minishell *info)
 			(index->next->type >= STDIN && index->next->type <= STDOUT_APPEND)) ||
 			(index->type == WORD && index->next->type == WORD))
 				info->last_exit_status = 1;
-			index = index->next;	
+			index = index->next;
 		}
 		if (index->type >= STDIN && index->type <= STDOUT_APPEND)
 			info->last_exit_status = 1;
@@ -145,7 +145,10 @@ int	check_redirections(t_node *node, t_minishell *info)
 
 void	get_last_stdin_stdout(t_token_list *redi, t_token_list **last_stdin, t_token_list **last_stdout)
 {
-	while (redi)
+	//int token_size;
+
+	//token_size = token_list_size(redi);
+	while (redi)// token_size >= 2 ?? token_size --?
 	{
 		if (redi->type == STDIN || redi->type == STDIN_HEREDOC)
 			*last_stdin = redi;
@@ -163,10 +166,15 @@ int	apply_redirections(t_node *node, t_minishell *info, int heredoc_pipe[2]) //c
 	t_token_list	*last_stdout;
 
 	(void)info; //a utiliser pour la gestion d'erreur, alors enlever le void
-	get_last_stdin_stdout(node->redi, &last_stdin, &last_stdout);
+	get_last_stdin_stdout(node->redi, &last_stdin, &last_stdout);//you are pointing at this stage on last_stdin ->str = "<" and trying to open it?
 	if (last_stdin && last_stdin->type == STDIN)
 	{
-		fd = open(last_stdin->next->str, O_RDONLY);
+		fd = open(last_stdin->next->str, O_RDONLY, 0644);
+		if (fd < 0)
+		{
+			info->last_exit_status = errno;
+			perror(last_stdin->next->str);
+		}
 		dup2(fd, 0);
 		close(fd);
 	}
@@ -278,7 +286,7 @@ int	execute_cmd(t_node *node, t_minishell *info)
 		return (OK);
 	if (check_redirections(node, info) != OK)
 		return (info->last_exit_status);
-	func = is_builtin(node->args->str, info->builtins);
+	func = is_builtin(node->args->str, info->builtins); //check for null pointer dereference in args.
     if (func)
 	{
 		if (node->redi)
