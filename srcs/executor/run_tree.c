@@ -83,7 +83,7 @@ int	execute_cmd(t_node *node, t_minishell *info)
 		return (OK);
 	// if (apply_redirections(node, info) != OK)
 	// 	return (info->last_exit_status);
-	func = is_builtin(node->args->str, info->builtins);
+	func = is_builtin(node->args->str, info->builtins); //check for null pointer dereference in args.
     if (func)
 	{
 		args = token_list_to_args(node->args, info);

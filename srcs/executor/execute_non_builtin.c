@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute_non_builtin.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/15 16:04:15 by tkashi            #+#    #+#             */
+/*   Updated: 2024/04/15 18:13:19 by tkashi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include <errno.h>
 #include <unistd.h>
@@ -31,28 +43,11 @@ char	*ft_form_path(char *path, char *cmd)
 	return (ret);
 }
 
-char *match_path(char *cmd, t_minishell *info)
+char *ft_search_in_paths(char **splitted_path, char *cmd)
 {
-	char 	*origin_path_env;
-	char	**splitted_path;
 	int i;
 	char *path;
-	
-	if (!cmd || cmd[0] == '/' || !ft_strncmp(cmd, "./", 2) || 
-		!ft_strncmp(cmd, "../", 3))
-		return (cmd);
-	
-	origin_path_env = find_envp_arg(info->envp, "PATH", 4);
-	if (!origin_path_env)
-		return (cmd);//how to return
-	splitted_path = ft_split(origin_path_env + 5, ':');
-	if (!splitted_path)
-	{
-		ft_fprintf(STDERR_FILENO, "failed to split the env paths\n");
-		info->last_exit_status = MALLOC_ERROR;
-		//free everything because we are in child process
-		return (NULL);
-	}
+
 	i = 0;
 	while (splitted_path[i])
 	{
@@ -66,8 +61,30 @@ char *match_path(char *cmd, t_minishell *info)
 		i++;
 	}
 	free_args(splitted_path);
-	return (cmd);
+	return (ft_strdup(cmd));
 }
+
+char *match_path(char *cmd, t_minishell *info)
+{
+	char 	*path_value;
+	char	**splitted_path;
+
+	if (!cmd || cmd[0] == '/' || !ft_strncmp(cmd, "./", 2) ||
+		!ft_strncmp(cmd, "../", 3))
+		return (ft_strdup(cmd));
+	path_value = find_envp_arg(info->envp, "PATH", 4);
+	if (!path_value)
+		return (ft_strdup(cmd));
+	splitted_path = ft_split(path_value + 5, ':');
+	if (!splitted_path)
+	{
+		ft_fprintf(STDERR_FILENO, "failed to split PATH\n");
+		info->last_exit_status = MALLOC_ERROR;
+		return (NULL);
+	}
+	return (ft_search_in_paths(splitted_path, cmd));
+}
+
 
 int ft_wait_pid(int child_pid, t_minishell *info)
 {
@@ -96,56 +113,43 @@ int ft_wait_pid(int child_pid, t_minishell *info)
 	return (info->last_exit_status);
 }
 
-int execute_non_builtin(t_node *node, t_minishell *info)
+int	command_child_process(t_node *node, t_minishell *info)
 {
-	pid_t 	pid;
-	char **args;
-	char *path;
-	int 	size;
-	int 	i;
+	char	**args;
+	char	*path;
 
-	pid = fork();
-	if (pid == 0)
+	args = token_list_to_args(node->args, info);
+	if (!args)
+		ft_exit(NULL, info);
+	path = match_path(node->args->str, info);
+	if (!path)
 	{
-		path = match_path(node->args->str, info);
-		if (!path)
-		{
-			info->last_exit_status = MALLOC_ERROR;
-			ft_exit(NULL, info);
-		}
-		size = token_list_size(node->args);
-		args = ft_calloc((size + 1), sizeof(char *));
-		if (!args)
-		{
-			free(path);
-			info->last_exit_status = MALLOC_ERROR;
-			ft_exit(NULL, info);
-		}
-		args[0] = path;
-		node->args = node->args->next;
-		i = 1;
-		while(node->args)
-		{
-			args[i] = ft_strdup(node->args->str);
-			if (!args[i])
-			{
-				info->last_exit_status = MALLOC_ERROR;
-				ft_exit(args, info);
-			}
-			node->args = node->args->next;
-			i++;
-		}
-		free_tokens_and_tree(info);
-		execve(path, args, info->envp);
-		info->last_exit_status = errno;
-		ft_fprintf(STDERR_FILENO, "execve: %s\n", strerror(errno));
+		info->last_exit_status = MALLOC_ERROR;
 		ft_exit(args, info);
 	}
-	else if (pid < 0)
-	{
-		info->last_exit_status = errno;
-		ft_fprintf(STDERR_FILENO, "fork: %s\n", strerror(errno));
-		return (info->last_exit_status);
-	}
-	return (ft_wait_pid(pid, info));
+	free(args[0]);
+	args[0] = path;
+	execve(args[0], args, info->envp);
+	info->last_exit_status = errno;
+	ft_fprintf(STDERR_FILENO, "execve: %s\n", strerror(errno));
+	ft_exit(args, info);
+	return (info->last_exit_status);
+}
+
+int execute_non_builtin(t_node *node, t_minishell *info)
+{
+    pid_t     pid;
+
+    pid = fork();
+    if (pid == 0)
+    {
+		command_child_process(node, info);
+    }
+    else if (pid < 0)
+    {
+        info->last_exit_status = errno;
+        ft_fprintf(STDERR_FILENO, "fork: %s\n", strerror(errno));
+        return (info->last_exit_status);
+    }
+    return (ft_wait_pid(pid, info));
 }
