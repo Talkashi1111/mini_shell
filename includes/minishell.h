@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/13 14:47:55 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/15 18:39:52 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,14 +156,15 @@ void			display_tree(t_node *node);
 void			free_tree(t_node *node);
 
 /* executor */
-int				apply_redirections(t_node *node, t_minishell *info);
+char			**token_list_to_args(t_token_list *node, t_minishell *info);
+int				apply_redirections(t_node *node, t_minishell *info, int heredoc_pipe[2]);
 int				ft_run(t_node *node, t_minishell *info);
 void			ft_free_pipes(t_minishell *info);
 int				ft_open_pipes(t_node *node, t_minishell *info);
 int				wildcard_handler(t_token_list **token, t_minishell *info);
 int				remove_quotes(t_token_list *args, t_minishell *info);
 char			expand_dollars(t_token_list **args, t_minishell *info);
-int 			execute_non_builtin(t_node *node, t_minishell *info);
+int 			execute_non_builtin(t_node *node, t_minishell *info, int heredoc_pipe[2]);
 void    		free_tokens_and_tree(t_minishell *info);
 int 			ft_wait_pid(int child_pid, t_minishell *info);
 #endif
