@@ -1,96 +1,117 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   make_tree_1.c                                      :+:      :+:    :+:   */
+/*   ast_tree_maker.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/06 19:13:43 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/06 19:13:43 by achappui         ###   ########.fr       */
+/*   Created: 2024/04/02 17:46:31 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/02 17:46:31 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <stdlib.h>
 #include "minishell.h"
 
-void	add_back_token_list(t_token_list **list, t_token_list *token)
+t_token_list	*search_operator(t_token_list *start, t_token_list *end)//end est l'element juste apres le dernier, ca peut etre NULL
 {
-	t_token_list	*index;
+	t_token_list	*token;
+	t_token_list	*saved_token;
 
-	if (!*list)
-		*list = token;
-	else
-	{
-		index = *list;
-		while (index->next)
-			index = index->next;
-		index->next = token;
-	}
-}
-
-t_token_list	*skip_parenthesis(t_token_list *token)
-{
-	unsigned int	scope;
-
-	scope = 0;
-	while (TRUE)
+	saved_token = NULL;
+	token = start;
+	while (token != end)
 	{
 		if (token->type == OPENPAR)
-			scope++;
-		else if (token->type == CLOSEPAR && --scope == 0)
-			return (token);
+			token = skip_parenthesis(token);
+		else if (token->type == OR || token->type == AND)
+			saved_token = token;
 		token = token->next;
 	}
+	return (saved_token);
 }
 
-t_node	*new_tree_node(char type, unsigned int child_nb, unsigned int pipe_nb)
+unsigned int	count_pipes(t_token_list *start, t_token_list *end)
 {
-	t_node	*new_node;
+	unsigned int	pipe_nb;
 
-	new_node = (t_node *)ft_calloc(1, sizeof(t_node));
-	if (!new_node)
+	pipe_nb = 0;
+	while (start != end)
 	{
-		ft_fprintf(STDERR_FILENO, "failed to allocate tree node [type=%d]: %s\n", type, strerror(errno));
-		return (NULL);
+		if (start->type == OPENPAR)
+			start = skip_parenthesis(start);
+		else if (start->type == PIPE)
+			pipe_nb++;
+		start = start->next;
 	}
-	new_node->type = type;
-	new_node->child_nb = child_nb;
-	new_node->pipe_nb = pipe_nb;
-	if (child_nb)
-	{
-		new_node->child = (t_node **)ft_calloc(child_nb, sizeof(t_node *));
-		if (!new_node->child)
-		{
-			ft_fprintf(STDERR_FILENO, "failed to allocate children array for tree node [type=%d]: %s\n", type, strerror(errno));
-			free(new_node);
-			return (NULL);
-		}
-	}
-	return (new_node);
+	return (pipe_nb);
 }
 
-void free_tree(t_node *node)
+int	pipe_children(t_token_list *start, t_token_list *end, t_node *pipe_node)
 {
-	unsigned int	i;
-	
-	if (!node)
-		return ;
-	if (node->child_nb)
+	t_token_list	*token;
+	int				i;
+
+	token = start;
+	i = 0;
+	while (token != end)
 	{
-		i = 0;
-		while (i < node->child_nb && node->child[i])
+		if (token->type == OPENPAR)
+			token = skip_parenthesis(token);
+		else if (token->type == PIPE)
 		{
-			free_tree(node->child[i]);
-			node->child[i] = NULL;
+			pipe_node->child[i] = tree_maker(start, token);
+			if (!pipe_node->child[i])
+				return (MALLOC_ERROR);
+			token = token->next;
+			start = token;
 			i++;
 		}
-		free(node->child);
-		node->child = NULL;
+		else
+			token = token->next;
 	}
-	free_token_list(node->redi);
-	free_token_list(node->args);
-	free(node);
+	pipe_node->child[i] = tree_maker(start, end);
+	if (!pipe_node->child[i])
+		return (MALLOC_ERROR);
+	return (OK);
+}
+
+int	init_cmd_node(t_token_list *start, t_token_list *end, t_node *cmd_node)
+{
+	t_token_list	*token;
+
+	while (start != end)
+	{
+		token = copy_token(start);
+		if (!token)
+			return (MALLOC_ERROR);
+		if (start->type >= STDIN && start->type <= STDOUT_APPEND)
+		{
+			add_back_token_list(&cmd_node->redi, token);
+			start = start->next;
+			token = copy_token(start);
+			if (!token)
+				return (MALLOC_ERROR);
+			add_back_token_list(&cmd_node->redi, token);
+		}
+		else if (start->type == WORD)
+			add_back_token_list(&cmd_node->args, token);
+		start = start->next;
+	}
+	return (OK);
+}
+
+t_node	*tree_maker(t_token_list *start, t_token_list *end)
+{
+	t_token_list	*tmp_token;
+	unsigned int	pipe_nb;
+
+	tmp_token = search_operator(start, end);
+	if (tmp_token)
+		return (handle_operator(start, end, tmp_token));
+	pipe_nb = count_pipes(start, end);
+	if (pipe_nb)
+		return (handle_pipe(start, end, pipe_nb));
+	if (start->type == OPENPAR)
+		return (handle_parenthesis(start));
+	return (handle_cmd(start, end));
 }

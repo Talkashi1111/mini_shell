@@ -3,140 +3,92 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <marvin@42lausanne.ch>              +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/16 11:43:18 by tkashi            #+#    #+#             */
-/*   Updated: 2023/11/16 12:08:01 by tkashi           ###   ########.fr       */
+/*   Created: 2023/11/09 18:29:54 by achappui          #+#    #+#             */
+/*   Updated: 2024/01/17 16:23:02 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "get_next_line.h"
-#include "libft.h"
 
-void	polish(t_list **list)
+void	ft_fill_line(char *line, t_sinfo *si, unsigned int index)
 {
-	int		i;
-	int		j;
-	char	*str;
+	t_block	*blocks;
 
-	free_list(list, FALSE);
-	i = 0;
-	str = (*list)->tail->buf;
-	while (str[i] != '\n' && str[i] != '\0')
-		i++;
-	if (str[i] == '\0')
+	blocks = &si->sblock;
+	while (1)
 	{
-		free_list(list, TRUE);
-		return ;
-	}
-	i++;
-	j = 0;
-	while (str[i] != '\0')
-		str[j++] = str[i++];
-	str[j] = '\0';
-	i = 0;
-	while (str[i] != '\n' && str[i] != '\0')
-		i++;
-	if (str[i] == '\n')
-		i++;
-	(*list)->len = i;
-}
-
-char	*copy_new_line(t_list *list)
-{
-	int			i;
-	int			j;
-	t_lst_node	*temp;
-	char		*new_line;
-
-	if (!list || list->len == 0)
-		return (NULL);
-	new_line = (char *)malloc((list->len + 1) * sizeof(char));
-	if (!new_line)
-		return (NULL);
-	temp = list->head;
-	j = 0;
-	while (j < list->len)
-	{
-		i = 0;
-		while (temp->buf[i] != '\0' && temp->buf[i] != '\n')
-			new_line[j++] = temp->buf[i++];
-		if (temp->buf[i] == '\n')
-			new_line[j++] = '\n';
-		temp = temp->next;
-	}
-	new_line[j] = '\0';
-	return (new_line);
-}
-
-int	append_to_list(t_list *list, ssize_t bytes_read, char *buf)
-{
-	ssize_t			new_line_idx;
-	t_lst_node		*new_node;
-
-	new_node = create_node(&buf);
-	if (!new_node)
-		return (0);
-	if (!list->head)
-		list->head = new_node;
-	else
-		list->tail->next = new_node;
-	list->tail = new_node;
-	new_line_idx = find_new_line(list);
-	if (new_line_idx == -1)
-		list->len += bytes_read;
-	else
-		list->len += new_line_idx + 1;
-	return (1);
-}
-
-int	prepare_next_line(int fd, t_list *list)
-{
-	ssize_t	bytes_read;
-	char	*buf;
-
-	while (find_new_line(list) == -1)
-	{
-		buf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-		if (!buf)
-			return (0);
-		bytes_read = read(fd, buf, BUFFER_SIZE);
-		if (bytes_read <= 0)
+		if (blocks->buffer[index] == '\0')
 		{
-			free(buf);
-			if (bytes_read < 0)
-				return (0);
-			return (1);
+			blocks = blocks->next;
+			index = 0;
+			if (blocks->buffer[0] == '\0')
+			{
+				si->sindex = BUFFER_SIZE;
+				return ;
+			}
 		}
-		buf[bytes_read] = '\0';
-		if (!append_to_list(list, bytes_read, buf))
-			return (0);
+		if (blocks->buffer[index] == '\n')
+		{
+			*line = '\n';
+			si->sindex = index + 1;
+			while (++index < BUFFER_SIZE)
+				si->sblock.buffer[index] = blocks->buffer[index];
+			return ;
+		}
+		*line++ = blocks->buffer[index++];
 	}
-	return (1);
+}
+
+int	ft_get_line_length(int fd, t_block *block, unsigned int index)
+{
+	int	len;
+
+	len = 0;
+	while (1)
+	{
+		if (block->buffer[index] == '\0')
+		{
+			block->next = ft_read_next_block(fd);
+			if (!block->next)
+				return (-1);
+			block = block->next;
+			index = 0;
+			if (block->buffer[0] == '\0')
+				return (len);
+		}
+		if (block->buffer[index] == '\n')
+			return (len + 1);
+		len++;
+		index++;
+	}
 }
 
 char	*get_next_line(int fd)
 {
-	char			*next_line;
-	static t_list	*list;
+	static t_sinfo	si = {.sindex = BUFFER_SIZE, .sblock.next = NULL, \
+							.sblock.buffer = {[BUFFER_SIZE] = '\0'}};
+	char			*line;
+	int				len;
 
-	if (BUFFER_SIZE <= 0 || fd < 0 || read(fd, &next_line, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	line = NULL;
+	len = ft_get_line_length(fd, &si.sblock, si.sindex);
+	if (len > 0)
 	{
-		free_list(&list, TRUE);
-		return (NULL);
+		line = (char *)malloc((len + 1) * sizeof(char));
+		if (line)
+		{
+			line[len] = '\0';
+			ft_fill_line(line, &si, si.sindex);
+		}
 	}
-	if (!init_list(&list))
-		return (NULL);
-	if (!prepare_next_line(fd, list))
-	{
-		free_list(&list, TRUE);
-		return (NULL);
-	}
-	next_line = copy_new_line(list);
-	if (!next_line)
-	{
-		free_list(&list, TRUE);
-		return (NULL);
-	}
-	polish(&list);
-	return (next_line);
+	else
+		si.sindex = BUFFER_SIZE;
+	ft_freeblocks(&si.sblock.next);
+	if (len == -1)
+		return ((void *)-1);
+	return (line);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe.c                                             :+:      :+:    :+:   */
+/*   handle_pipex.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/06 23:24:44 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/10 15:35:08 by achappui         ###   ########.fr       */
+/*   Created: 2024/04/16 16:55:31 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/16 17:07:53 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,61 @@ int	ft_open_pipes(t_node *node, t_minishell *info)
 	info->pipe_nb = node->pipe_nb;
 	info->last_exit_status = OK;
 	return (OK);
+}
+
+void	ft_child(t_node *node, unsigned int i, t_minishell *info)
+{
+	if (i > 0)
+	{
+		if (dup2(info->fd_pipe[i - 1][PIPE_OUT], STDIN_FILENO) < 0)
+		{
+			info->last_exit_status = errno;
+			ft_fprintf(STDERR_FILENO, "dup2(%d, %d): %s\n",
+				info->fd_pipe[i - 1][PIPE_OUT], STDIN_FILENO, strerror(errno));
+			ft_free_pipes(info);
+			exit(info->last_exit_status);
+		}
+	}
+	if (i < info->pipe_nb)
+	{
+		if (dup2(info->fd_pipe[i][PIPE_IN], STDOUT_FILENO) < 0)
+		{
+			info->last_exit_status = errno;
+			ft_fprintf(STDERR_FILENO, "dup2(%d, %d): %s\n",
+				info->fd_pipe[i][PIPE_IN], STDOUT_FILENO, strerror(errno));
+			ft_free_pipes(info);
+			exit(info->last_exit_status);
+		}
+	}
+	ft_free_pipes(info);
+	info->last_exit_status = ft_run(node, info);
+	ft_exit(NULL, info);
+}
+
+int	handle_pipex(t_node *node, t_minishell *info)
+{
+	unsigned int		i;
+	int					pid;
+
+	if (ft_open_pipes(node, info) != OK)
+	{
+		ft_free_pipes(info);
+		return (info->last_exit_status);
+	}
+	i = 0;
+	while (i < node->child_nb)
+	{
+		pid = fork();
+		if (pid == 0)
+			ft_child(node->child[i], i, info);
+		else if (pid < 0)
+		{
+			info->last_exit_status = errno;
+			ft_fprintf(STDERR_FILENO, "fork: %s\n", strerror(errno));
+			break ;
+		}
+		i++;
+	}
+	ft_free_pipes(info);
+	return (ft_wait_pid(pid, info));
 }

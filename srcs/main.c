@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/12 17:34:44 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/16 18:29:38 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	signal_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
-		//rl_replace_line("", 0); sert a rien sur linux
+		rl_replace_line("", 0);// sert a rien sur linux
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();

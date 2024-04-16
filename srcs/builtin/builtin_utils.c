@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:44:31 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/12 20:00:40 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/16 18:03:07 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ t_pfunc	is_builtin(char *str, t_builtin *builtin)
 {
 	int	i;
 
+	if (!str)
+		return (NULL);
 	i = 0;
 	while (builtin[i].name)
 	{

@@ -3,46 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <marvin@42lausanne.ch>              +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/16 12:05:07 by tkashi            #+#    #+#             */
-/*   Updated: 2023/11/16 12:05:43 by tkashi           ###   ########.fr       */
+/*   Created: 2023/11/09 18:29:56 by achappui          #+#    #+#             */
+/*   Updated: 2024/01/12 10:11:13 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# include <stddef.h>
-# include <fcntl.h>
-# include <sys/types.h>
-# include <stdlib.h>
 # include <unistd.h>
+# include <stdlib.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 255
-# endif 
-# define FALSE 0
-# define TRUE 1
+#  define BUFFER_SIZE 3
+# endif
 
-typedef struct s_node
+typedef struct s_block
 {
-	char			*buf;
-	struct s_node	*next;
-}				t_lst_node;
+	char			buffer[BUFFER_SIZE + 1];
+	struct s_block	*next;
+}	t_block;
 
-typedef struct s_list
+typedef struct s_sinfo
 {
-	t_lst_node	*head;
-	t_lst_node	*tail;
-	ssize_t		len;
-}			t_list;
+	unsigned int	sindex;
+	struct s_block	sblock;
+}	t_sinfo;
 
-void		polish(t_list **list);
-char		*copy_new_line(t_list *list);
-ssize_t		find_new_line(t_list *list);
-int			append_to_list(t_list *list, ssize_t bytes_read, char *buf);
-int			prepare_next_line(int fd, t_list *list);
-void		free_list(t_list **list, int free_all);
-t_list		*init_list(t_list **list);
-t_lst_node	*create_node(char **buf);
-void		free_helper(t_list **list);
+t_block	*ft_read_next_block(int fd);
+void	ft_freeblocks(t_block **blk);
+
+char	*get_next_line(int fd);
+
 #endif
