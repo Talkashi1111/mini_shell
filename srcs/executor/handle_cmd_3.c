@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 16:04:15 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/16 20:33:47 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/16 21:40:09 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ int execute_non_builtin(t_cmd *cmd, t_minishell *info, t_node *node)
     pid_t     pid;
 
     pid = fork();
+	(void)node;
     if (pid == 0)
     {
 		if (apply_redirections(cmd, info, node->redi) != OK)

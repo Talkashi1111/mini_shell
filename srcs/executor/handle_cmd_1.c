@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:57:47 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/16 20:23:46 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/16 21:56:32 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,22 @@ int	execute_others(t_cmd *cmd, t_minishell *info, t_node *node)
 	if (save_std_streams(cmd->saved_std, info) != OK)
 		return (info->last_exit_status);
 	if (apply_redirections(cmd, info, node->redi) != OK)
+	{
+		ft_close_size_2(cmd->saved_std, info);
 		return (info->last_exit_status);
+	}
 	if (cmd->func)
 		info->last_exit_status = cmd->func(cmd->args, info);
 	if (restore_std_streams(cmd->saved_std, info) != OK)
+	{
+		ft_close_size_2(cmd->saved_std, info);
 		return (info->last_exit_status);
+	}
+	ft_close_size_2(cmd->saved_std, info);
 	return (OK);
 }
-
+#include <sys/types.h>
+#include <sys/wait.h>
 
 int	handle_command(t_node *node, t_minishell *info)
 {
@@ -71,14 +79,16 @@ int	handle_command(t_node *node, t_minishell *info)
 	{
 		if (run_potential_heredocs(node->redi, info, &cmd) == OK)
 		{
+			close(cmd.heredoc_pipe[1]);
+			cmd.heredoc_pipe[1] = -1;
 			if (cmd.func || !cmd.args[0])
 				execute_others(&cmd, info, node);
 			else
 				execute_non_builtin(&cmd, info, node);
+			close(cmd.heredoc_pipe[0]);
+			cmd.heredoc_pipe[0] = -1;
 		}
 	}
-	ft_close_size_2(cmd.heredoc_pipe, info);
-	ft_close_size_2(cmd.saved_std, info);
 	free_args(cmd.args);
 	wait_potential_heredocs(cmd.pid, info); //on ne recupere pas la valeur de retour de 
 	return (info->last_exit_status);
