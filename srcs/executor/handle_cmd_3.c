@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_non_builtin.c                              :+:      :+:    :+:   */
+/*   handle_cmd_3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 16:04:15 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/15 23:25:44 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/16 20:33:47 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,75 +85,45 @@ char *match_path(char *cmd, t_minishell *info)
 	return (ft_search_in_paths(splitted_path, cmd));
 }
 
-
-int ft_wait_pid(int child_pid, t_minishell *info)
+int	command_child_process(t_cmd *cmd, t_minishell *info)
 {
-	pid_t pid_tmp;
-	int status;
-
-	while (TRUE)
-	{
-		pid_tmp = waitpid(-1, &status, 0);
-		if (pid_tmp == -1) {
-			if (errno == ECHILD)
-				break ;
-			info->last_exit_status = errno;
-			ft_fprintf(STDERR_FILENO, "waitpid: %s\n", strerror(errno));
-			break ;
-		}
-		if (pid_tmp != child_pid)
-			continue ;
-		if (WIFEXITED(status))
-			info->last_exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			info->last_exit_status = 128 + WTERMSIG(status);
-		else
-			ft_fprintf(STDERR_FILENO, "Child process exited with unknown status\n");
-	}
-	return (info->last_exit_status);
-}
-
-int	command_child_process(t_node *node, t_minishell *info, int heredoc_pipe[2])
-{
-	char	**args;
 	char	*path;
 
-	if (dup2(heredoc_pipe[0], 0) == -1)
-	{
-		close(heredoc_pipe[0]);
-		close(heredoc_pipe[1]);
-		ft_exit(NULL, info);
-	}
-	close(heredoc_pipe[0]);
-	close(heredoc_pipe[1]);
-	if (apply_redirections(node, info, heredoc_pipe) != OK)
-		ft_exit(NULL, info);
-	args = token_list_to_args(node->args, info);
-	if (!args)
-		ft_exit(NULL, info);
-	path = match_path(node->args->str, info);
+	path = match_path(cmd->args[0], info);
 	if (!path)
 	{
 		info->last_exit_status = MALLOC_ERROR;
-		ft_exit(args, info);
+		free_args(cmd->args);
+		ft_exit(NULL, info);
 	}
-	free(args[0]);
-	args[0] = path;
-	execve(args[0], args, info->envp);
+	free(cmd->args[0]);
+	cmd->args[0] = path;
+	execve(cmd->args[0], cmd->args, info->envp);
 	info->last_exit_status = errno;
 	ft_fprintf(STDERR_FILENO, "execve: %s\n", strerror(errno));
-	ft_exit(args, info);
+	free_args(cmd->args);
+	ft_exit(NULL, info);
 	return (info->last_exit_status);
 }
 
-int execute_non_builtin(t_node *node, t_minishell *info, int heredoc_pipe[2])
+#include <stdio.h>
+int execute_non_builtin(t_cmd *cmd, t_minishell *info, t_node *node)
 {
     pid_t     pid;
 
     pid = fork();
     if (pid == 0)
     {
-        command_child_process(node, info, heredoc_pipe);
+		if (apply_redirections(cmd, info, node->redi) != OK)
+		{
+			ft_close_size_2(cmd->saved_std, info);
+			ft_close_size_2(cmd->heredoc_pipe, info);
+			free_args(cmd->args);
+			ft_exit(NULL, info);
+		}
+		ft_close_size_2(cmd->saved_std, info);
+		ft_close_size_2(cmd->heredoc_pipe, info);
+        command_child_process(cmd, info);
     }
     else if (pid < 0)
     {

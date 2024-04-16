@@ -1,91 +1,62 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenizer_2.c                                      :+:      :+:    :+:   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/22 13:36:32 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/06 18:43:04 by achappui         ###   ########.fr       */
+/*   Created: 2024/03/20 14:18:41 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/01 23:36:59 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "minishell.h"
 
-char	*to_end_of_quote(char *str)
+t_token_list	*tokenizer_error(t_token_list *list, t_token_list *current_token)
 {
-	char	quote_type;
-	char	*saved_str;
+	free_token_list(list);
+	free(current_token);
+	return (NULL);
+}
 
-	quote_type = *str;
-	saved_str = str;
-	str++;
-	while (*str != '\0')
+/**
+ * This function performs the initial separation of the input,
+ * identifying different elements such as words and operators using delimiters,
+ * without removing quotes or dollars.
+ * It converts the input into tokens and checks if the arrangement of operators is correct.
+ * 
+ * Delimiters: < << >> > | && || WHITE_SPACES
+ * 
+ * @param str The input string to be tokenized
+ * @return A pointer to the token list if successful, NULL if failed
+ */
+t_token_list	*tokenizer(char *str)
+{
+	char			*end;
+	t_token_list 	*tl[3];
+
+	tl[HEAD] = NULL;
+	while (str && *str != '\0')
 	{
-		if (*str == quote_type)
-			return (str);
-		str++;
+		skip_whitespace_start(&str);
+		if (*str == '\0')
+			break ;
+		end = str;
+		tl[TOKEN] = create_token();
+		if (!tl[TOKEN])
+			return (tokenizer_error(tl[HEAD], NULL));
+		tl[TOKEN]->type = get_token_type(str);
+		if (tl[TOKEN]->type == WORD)
+			to_word_end(&end);
+		else
+			to_operator_end(&end);
+		tl[TOKEN]->str = ft_substr(str, 0, end - str);
+		if (!tl[TOKEN]->str)
+			return (tokenizer_error(tl[HEAD], tl[TOKEN]));
+		add_back_tokenizer(tl);
+		str = end;
 	}
-	return (saved_str);
+	return (tl[HEAD]);
 }
 
-void	skip_whitespace_start(char **start)
-{
-	while (ft_isspace(**start))
-		(*start)++;
-}
-
-char	get_token_type(char *str)
-{
-	if (*str == '&' && *(str + 1) == '&')
-		return (AND);
-	else if (*str == '|' && *(str + 1) == '|')
-		return (OR);
-	else if (*str == '>' && *(str + 1) == '>')
-		return (STDOUT_APPEND);
-	else if (*str == '<' && *(str + 1) == '<')
-		return (STDIN_HEREDOC);
-	else if (*str == '|')
-		return (PIPE);
-	else if (*str == '>')
-		return (STDOUT);
-	else if (*str == '<')
-		return (STDIN);
-	else if (*str == '(')
-		return (OPENPAR);
-	else if (*str == ')')
-		return (CLOSEPAR);
-	else
-		return (WORD);
-}
-
-void	to_operator_end(char **end)
-{
-	if (**end != '(' && **end != ')' && *((*end) + 1) == **end)
-		(*end)++;
-	(*end)++;
-}
-
-void	to_word_end(char **end)
-{
-	while (**end != '\0')
-	{
-		if (**end == '"' || **end == '\'')
-			*end = to_end_of_quote(*end);
-		else if (ft_isspace(**end))
-			break ;
-		else if (**end == '&' && *((*end) + 1) == '&') 
-			break ;
-		else if (**end == '|')
-			break ;
-		else if (**end == '>')
-			break ;
-		else if (**end == '<')
-			break ;
-		else if (**end == '(')
-			break ;
-		else if (**end == ')')
-			break ;
-		(*end)++;
-	}
-}

@@ -1,84 +1,91 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenizer_3.c                                      :+:      :+:    :+:   */
+/*   tokenizer_2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/06 18:42:12 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/06 18:42:12 by achappui         ###   ########.fr       */
+/*   Created: 2024/03/22 13:36:32 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/06 18:43:04 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "minishell.h"
 
-void	free_token_list(t_token_list *node)
+char	*to_end_of_quote(char *str)
 {
-	t_token_list	*next;
+	char	quote_type;
+	char	*saved_str;
 
-	while (node)
+	quote_type = *str;
+	saved_str = str;
+	str++;
+	while (*str != '\0')
 	{
-		next = node->next;
-		node->next = NULL;
-		free(node->str);
-		free(node);
-		node = next;
+		if (*str == quote_type)
+			return (str);
+		str++;
 	}
+	return (saved_str);
 }
 
-t_token_list	*new_token(char *str, char type)
+void	skip_whitespace_start(char **start)
 {
-	t_token_list	*token;
-	
-	token = (t_token_list *)ft_calloc(1, sizeof(t_token_list));
-	if (!token)
-		return (NULL);
-	token->str = ft_strdup(str);
-	if (!token->str)
-	{
-		free(token);
-		return (NULL);
-	}
-	token->type = type;
-	return (token);
+	while (ft_isspace(**start))
+		(*start)++;
 }
 
-t_token_list	*create_token(void)
+char	get_token_type(char *str)
 {
-	t_token_list	*token;
-
-	token = (t_token_list *)ft_calloc(1, sizeof(t_token_list));
-	return (token);
-}
-
-t_token_list	*copy_token(t_token_list *token)
-{
-	t_token_list	*new_node;
-
-	new_node = create_token();
-	if (!new_node)
-		return (NULL);
-	new_node->str = ft_strdup(token->str);
-	if (!new_node->str)
-	{
-		free(new_node);
-		return (NULL);
-	}
-	new_node->type = token->type;
-	return (new_node);
-}
-
-void	add_back_tokenizer(t_token_list *tl[3])
-{
-	if (!tl[HEAD])
-	{
-		tl[HEAD] = tl[TOKEN];
-		tl[TAIL] = tl[HEAD];
-	}
+	if (*str == '&' && *(str + 1) == '&')
+		return (AND);
+	else if (*str == '|' && *(str + 1) == '|')
+		return (OR);
+	else if (*str == '>' && *(str + 1) == '>')
+		return (STDOUT_APPEND);
+	else if (*str == '<' && *(str + 1) == '<')
+		return (STDIN_HEREDOC);
+	else if (*str == '|')
+		return (PIPE);
+	else if (*str == '>')
+		return (STDOUT);
+	else if (*str == '<')
+		return (STDIN);
+	else if (*str == '(')
+		return (OPENPAR);
+	else if (*str == ')')
+		return (CLOSEPAR);
 	else
+		return (WORD);
+}
+
+void	to_operator_end(char **end)
+{
+	if (**end != '(' && **end != ')' && *((*end) + 1) == **end)
+		(*end)++;
+	(*end)++;
+}
+
+void	to_word_end(char **end)
+{
+	while (**end != '\0')
 	{
-		tl[TAIL]->next = tl[TOKEN];
-		tl[TAIL] = tl[TOKEN];
+		if (**end == '"' || **end == '\'')
+			*end = to_end_of_quote(*end);
+		else if (ft_isspace(**end))
+			break ;
+		else if (**end == '&' && *((*end) + 1) == '&') 
+			break ;
+		else if (**end == '|')
+			break ;
+		else if (**end == '>')
+			break ;
+		else if (**end == '<')
+			break ;
+		else if (**end == '(')
+			break ;
+		else if (**end == ')')
+			break ;
+		(*end)++;
 	}
 }

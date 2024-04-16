@@ -1,81 +1,96 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   make_tree_2.c                                      :+:      :+:    :+:   */
+/*   make_tree_1.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/06 19:12:51 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/06 19:12:51 by achappui         ###   ########.fr       */
+/*   Created: 2024/04/06 19:13:43 by achappui          #+#    #+#             */
+/*   Updated: 2024/04/06 19:13:43 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <stdlib.h>
 #include "minishell.h"
 
-t_node	*handle_operator(t_token_list *start, t_token_list *end, t_token_list *tmp_token)
+void	add_back_token_list(t_token_list **list, t_token_list *token)
 {
-	t_node			*new_node;
+	t_token_list	*index;
 
-	new_node = new_tree_node(tmp_token->type, 2, 0);
-	if (!new_node)
-		return (NULL);
-	new_node->child[0] = tree_maker(start, tmp_token);
-	if (!new_node->child[0])
+	if (!*list)
+		*list = token;
+	else
 	{
-		free_tree(new_node);
+		index = *list;
+		while (index->next)
+			index = index->next;
+		index->next = token;
+	}
+}
+
+t_token_list	*skip_parenthesis(t_token_list *token)
+{
+	unsigned int	scope;
+
+	scope = 0;
+	while (TRUE)
+	{
+		if (token->type == OPENPAR)
+			scope++;
+		else if (token->type == CLOSEPAR && --scope == 0)
+			return (token);
+		token = token->next;
+	}
+}
+
+t_node	*new_tree_node(char type, unsigned int child_nb, unsigned int pipe_nb)
+{
+	t_node	*new_node;
+
+	new_node = (t_node *)ft_calloc(1, sizeof(t_node));
+	if (!new_node)
+	{
+		ft_fprintf(STDERR_FILENO, "failed to allocate tree node [type=%d]: %s\n", type, strerror(errno));
 		return (NULL);
 	}
-	new_node->child[1] = tree_maker(tmp_token->next, end);
-	if (!new_node->child[1])
+	new_node->type = type;
+	new_node->child_nb = child_nb;
+	new_node->pipe_nb = pipe_nb;
+	if (child_nb)
 	{
-		free_tree(new_node);
-		return (NULL);
+		new_node->child = (t_node **)ft_calloc(child_nb, sizeof(t_node *));
+		if (!new_node->child)
+		{
+			ft_fprintf(STDERR_FILENO, "failed to allocate children array for tree node [type=%d]: %s\n", type, strerror(errno));
+			free(new_node);
+			return (NULL);
+		}
 	}
 	return (new_node);
 }
 
-t_node	*handle_pipe(t_token_list *start, t_token_list *end, unsigned int	pipe_nb)
+void free_tree(t_node *node)
 {
-	t_node			*new_node;
-
-	new_node = new_tree_node(PIPE, pipe_nb + 1, pipe_nb);
-	if (!new_node)
-		return (NULL);
-	if (pipe_children(start, end, new_node) != OK)
+	unsigned int	i;
+	
+	if (!node)
+		return ;
+	if (node->child_nb)
 	{
-		free_tree(new_node);
-		return (NULL);
+		i = 0;
+		while (i < node->child_nb && node->child[i])
+		{
+			free_tree(node->child[i]);
+			node->child[i] = NULL;
+			i++;
+		}
+		free(node->child);
+		node->child = NULL;
 	}
-	return (new_node);
-}
-
-t_node	*handle_parenthesis(t_token_list *start)
-{
-	t_node			*new_node;
-
-	new_node = new_tree_node(OPENPAR, 1, 0);
-	if (!new_node)
-		return (NULL);
-	new_node->child[0] = tree_maker(start->next, skip_parenthesis(start));
-	if (!new_node->child[0])
-	{
-		free_tree(new_node);
-		return (NULL);
-	}
-	return (new_node);
-}
-
-t_node	*handle_cmd(t_token_list *start, t_token_list *end)
-{
-	t_node			*new_node;
-
-	new_node = new_tree_node(CMD, 0, 0);
-	if (!new_node)
-		return (NULL);
-	if (init_cmd_node(start, end, new_node) != OK)
-	{
-		free_tree(new_node);
-		return (NULL);
-	}
-	return (new_node);
+	free_token_list(node->redi);
+	free_token_list(node->args);
+	free(node);
 }

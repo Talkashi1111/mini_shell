@@ -16,19 +16,24 @@ FILES := main.c \
 		builtin/unset_builtin.c \
 		builtin/builtin_utils.c \
 		builtin/utils.c \
+		lexer/syntax_analyser.c \
 		lexer/tokenizer_1.c \
 		lexer/tokenizer_2.c \
-		lexer/tokenizer.c \
-		lexer/syntax_analyser.c \
+		lexer/tokenizer_3.c \
 		parser/make_tree_1.c \
 		parser/make_tree_2.c \
-		parser/make_tree.c \
+		parser/make_tree_3.c \
+		executor/expand_dollars.c \
+		executor/expand_quotes.c \
+		executor/expand_wildcards.c \
+		executor/handle_cmd_1.c \
+		executor/handle_cmd_2.c \
+		executor/handle_cmd_3.c \
+		executor/handle_pipex.c \
+		executor/handle_subshell.c \
+		executor/redirections_1.c \
+		executor/redirections_2.c \
 		executor/run_tree.c \
-		executor/pipe.c \
-		executor/dollars.c \
-		executor/execute_non_builtin.c \
-		executor/quotes.c \
-		executor/wildcards.c \
 		debug.c
 SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
 #BONUS_FILES :=
