@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/16 18:29:38 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 00:27:56 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int minishell_init(t_minishell *info, char **envp)
     info->builtins[7] = (t_builtin){NULL, NULL};
     info->fd_pipe = NULL;
     info->pipe_nb = 0;
-
+	close(open(".heredoc", O_CREAT, 0777)); //checker errors comment fermer le heredoc si il est fermer dans exit par les autres process
     return (OK);
 }
 

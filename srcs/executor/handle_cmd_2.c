@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:59:33 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/16 20:09:02 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/16 23:57:23 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,13 @@ unsigned int	token_list_size(t_token_list *list)
 	return (size);
 }
 
-char	**token_list_to_args(t_token_list *node, t_minishell *info)
+char	**token_list_to_args(t_token_list *token_list, t_minishell *info)
 {
 	unsigned int	size;
 	unsigned int	i;
 	char			**args;
 
-	size = token_list_size(node);
+	size = token_list_size(token_list);
 	args = ft_calloc((size + 1), sizeof(char *));
 	if (!args)
 	{
@@ -71,39 +71,32 @@ char	**token_list_to_args(t_token_list *node, t_minishell *info)
 		return (NULL);
 	}
 	i = 0;
-	while (node)
+	while (token_list)
 	{
-		args[i] = ft_strdup(node->str);
+		args[i] = ft_strdup(token_list->str);
 		if (!args[i])
 		{
 			info->last_exit_status = MALLOC_ERROR;
 			free_args(args);
 			return (NULL);
 		}
-		node = node->next;
+		token_list = token_list->next;
 		i++;
 	}
 	return (args);
 }
 
-void	reset_fd_tabs(int heredoc_pipe[2], int saved_std[2])
-{
-	heredoc_pipe[0] = -1;
-	heredoc_pipe[1] = -1;
-	saved_std[0] = -1;
-	saved_std[1] = -1;
-}
 
-void    ft_close_size_2(int fds[2], t_minishell *info)
+void    ft_close_fds(int fds[2], t_minishell *info)
 {
-    if (fds[0] >= 0 && close(fds[0]) < 0)
+    if (fds[0] != -1 && close(fds[0]) == -1)
     {
         info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "close(%d): %s: %s\n",
             fds[0], info->token_list->str, strerror(errno));
     }
     fds[0]= -1;
-    if (fds[1] >= 0 && close(fds[1]) < 0)
+    if (fds[1] != -1 && close(fds[1]) == -1)
     {
         info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "close(%d): %s: %s\n",
