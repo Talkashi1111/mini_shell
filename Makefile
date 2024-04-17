@@ -27,6 +27,7 @@ FILES := main.c \
 		executor/expand_quotes.c \
 		executor/expand_wildcards.c \
 		executor/handle_cmd_1.c \
+		executor/fill_heredoc.c \
 		executor/handle_cmd_utils.c \
 		executor/handle_pipex.c \
 		executor/handle_subshell.c \

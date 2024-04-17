@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:48:07 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 13:50:27 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 15:51:06 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,52 +77,6 @@ int	redirect(int redi_fd, char *path, int flags, t_minishell *info)
 	}
 	return (OK);
 }
-
-int	fill_heredoc(int saved_streams[2], char *eof, t_minishell *info)
-{
-	char			*line;
-	unsigned int	eof_len;
-	int				fd;
-
-	fd = open(".heredoc", O_WRONLY | O_TRUNC | O_APPEND, 0777); //pour les perm autre chose ?
-	if (fd == -1)
-	{
-		info->last_exit_status = errno;
-		ft_fprintf(STDERR_FILENO, "open: %s\n", strerror(errno));
-		return (info->last_exit_status);
-	}
-	eof_len = ft_strlen(eof);
-	write(saved_streams[1], ">", 1); //checker le write ? //PROBLEME DE VITESSE d'APPARITION DU >
-	line = get_next_line(saved_streams[0]);
-	if (!line)
-	{
-		info->last_exit_status = errno;
-		ft_fprintf(STDERR_FILENO, "read: %s\n", strerror(errno));
-		ft_exit(NULL, info);
-	}
-	write(fd, line, ft_strlen(line)); //checker le write
-	while (!(ft_strncmp(line, eof, eof_len) == 0 && line[eof_len] == '\n'))
-	{
-		free(line);
-		write(saved_streams[1], ">", 1); //checker le write ?
-		line = get_next_line(saved_streams[0]);
-		if (!line)
-		{
-			info->last_exit_status = errno;
-			ft_fprintf(STDERR_FILENO, "read: %s\n", strerror(errno));
-			ft_exit(NULL, info);
-		}
-		write(fd, line, ft_strlen(line)); //checker le write
-	}
-	free(line);
-	if (close(fd) == -1)
-	{
-		info->last_exit_status = errno;
-		ft_fprintf(STDERR_FILENO, "close: %s\n", strerror(errno));
-	}
-	return (OK);
-}
-#include <stdio.h>// ca sert  a quoi???
 
 int	apply_redirections(int saved_streams[2], t_token_list *redi, t_minishell *info)
 {
