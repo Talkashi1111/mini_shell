@@ -3,14 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   unset_builtin.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:35 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/13 15:05:54 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/17 13:49:21 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "minishell.h"
 
 int	delete_envp_arg(t_minishell *info, char *str)

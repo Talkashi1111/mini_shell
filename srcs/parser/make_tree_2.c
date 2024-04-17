@@ -10,10 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <stdlib.h>
 #include "minishell.h"
 
 void	add_back_token_list(t_token_list **list, t_token_list *token)

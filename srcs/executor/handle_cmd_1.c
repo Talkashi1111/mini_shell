@@ -6,14 +6,11 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:57:47 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 00:19:29 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 13:50:01 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <unistd.h>
-#include <errno.h>
-#include <stdio.h>
 
 int	parse_cmd(t_node *node, t_minishell *info)
 {

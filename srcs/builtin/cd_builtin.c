@@ -3,16 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   cd_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:49:54 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/17 11:00:41 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/17 13:48:54 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
 #include "minishell.h"
 
 int	ft_chdir(t_minishell *info, char *new_path, char *curr_path, char *arg)

@@ -6,14 +6,10 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:55:31 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/16 17:07:53 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 13:50:14 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
 #include "minishell.h"
 
 void	ft_free_pipes(t_minishell *info)

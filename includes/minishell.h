@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 12:16:05 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/17 13:56:24 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,20 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
+# include <stdlib.h>
+# include <unistd.h>
+# include <signal.h>
+# include <errno.h>
+# include <string.h>
+# include <fcntl.h>
+# include <stdbool.h>
+# include <stdio.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <dirent.h>
+# include <sys/stat.h>
+# include "readline/readline.h"
+# include "readline/history.h" 
 # include <limits.h>
 # include "libft.h"
 

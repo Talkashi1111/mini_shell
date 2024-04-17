@@ -3,18 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   fill_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 11:51:11 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/17 12:27:16 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/17 13:57:51 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <errno.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdlib.h>
-#include <fcntl.h>
 #include "minishell.h"
 
 int	fill_heredoc(int saved_streams[2], char *eof, t_minishell *info)
@@ -36,7 +31,7 @@ int	fill_heredoc(int saved_streams[2], char *eof, t_minishell *info)
 	{
 		write(saved_streams[1], ">", 1);
 		line = get_next_line(saved_streams[0]);
-		if (!line || ((ft_strncmp(line, eof, ft_strlen(eof)) == 0) && line[ft_strlen(eof)] == '\n'))
+		if (!line || ((ft_strncmp(line, eof, eof_len) == 0) && line[eof_len] == '\n'))
 		{
 			info->last_exit_status = errno;
 			if (!line)

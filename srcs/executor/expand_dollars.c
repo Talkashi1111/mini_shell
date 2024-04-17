@@ -6,15 +6,11 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/16 17:04:13 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 13:49:36 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-#include <stdlib.h>
-#include <stdbool.h>
 #include "minishell.h"
-#include <stdio.h>
 
 long long	with_dollar(char **str, char **seq, unsigned int *len, bool *to_free, t_minishell *info)
 {

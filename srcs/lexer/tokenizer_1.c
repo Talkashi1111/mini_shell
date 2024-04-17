@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "minishell.h"
 
 t_token_list	*tokenizer_error(t_token_list *list, t_token_list *current_token)

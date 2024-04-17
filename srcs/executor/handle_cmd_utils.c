@@ -3,19 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   handle_cmd_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:59:33 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 11:14:35 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/17 13:50:10 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <errno.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <string.h>
+
 
 int ft_wait_pid(int child_pid, t_minishell *info)
 {

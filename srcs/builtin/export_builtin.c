@@ -3,16 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   export_builtin.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:07 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/13 14:51:53 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/17 13:49:15 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <errno.h>
-#include <stdlib.h>
 #include "minishell.h"
 
 int	is_valid_export(char *str)

@@ -6,16 +6,11 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:56:57 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/16 17:26:12 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 13:50:18 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <errno.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <string.h>
 
 int	handle_subshell(t_node *node, t_minishell *info)
 {

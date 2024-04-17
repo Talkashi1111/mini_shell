@@ -3,24 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 13:07:48 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/17 13:56:28 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
-/* #include <readline/readline.h> //linux
-#include <readline/history.h> //linux */
-#include <unistd.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <fcntl.h>
-#include <stdio.h>
-//# define READLINE_LIBRARY 1
-#include "$(READLINE_INC)/readline/readline.h"
-#include "$(READLINE_INC)/readline/history.h" 
 
 #include "minishell.h"
 

@@ -6,11 +6,10 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:44:31 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/16 18:03:07 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 13:55:00 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "minishell.h"
 
 t_pfunc	is_builtin(char *str, t_builtin *builtin)

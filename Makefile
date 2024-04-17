@@ -22,12 +22,12 @@ FILES := main.c \
 		parser/make_tree_1.c \
 		parser/make_tree_2.c \
 		parser/make_tree_3.c \
+		executor/search_path_cmd.c \
 		executor/expand_dollars.c \
 		executor/expand_quotes.c \
 		executor/expand_wildcards.c \
 		executor/handle_cmd_1.c \
-		executor/handle_cmd_2.c \
-		executor/handle_cmd_3.c \
+		executor/handle_cmd_utils.c \
 		executor/handle_pipex.c \
 		executor/handle_subshell.c \
 		executor/redirections_1.c \
@@ -35,7 +35,6 @@ FILES := main.c \
 		executor/run_tree.c \
 		debug.c
 SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
-#BONUS_FILES :=
 CFLAGS := -Wall -Wextra -Werror
 ifdef DEBUG
     CFLAGS += -DDEBUG=1 -g
@@ -52,7 +51,7 @@ else
     READLINE_INC := /usr/include/readline
 endif
 IFLAGS := -I$(LIBFT_DIR) -I$(INCLUDE_DIR) -I$(READLINE_INC)
-LFLAGS := -L$(LIBFT_DIR) -lft -lreadline -L$(READLINE_LIB) -lft -lreadline
+LFLAGS := -L$(LIBFT_DIR) -lft -L$(READLINE_LIB) -lreadline
 OBJECTS := $(addprefix $(OBJECT_DIR)/,$(FILES:.c=.o))
 OBJS_WITHOUT_MAIN := $(filter-out $(OBJECT_DIR)/main.o, $(OBJECTS))
 BONUS_OBJ :=  $(addprefix $(BONUS_DIR)/,$(BONUS_FILES:.c=.o))
