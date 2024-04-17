@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 10:53:04 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/17 13:07:48 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,10 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <stdio.h>
-# define READLINE_LIBRARY 1
-#include "/Users/tkashi/.brew/opt/readline/include/readline/readline.h"
-#include "/Users/tkashi/.brew/opt/readline/include/readline/history.h"
+//# define READLINE_LIBRARY 1
+#include "$(READLINE_INC)/readline/readline.h"
+#include "$(READLINE_INC)/readline/history.h" 
+
 #include "minishell.h"
 
 int	g_signal = 0;
