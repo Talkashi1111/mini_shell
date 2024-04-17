@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 00:19:24 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 12:16:05 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ void			ft_close_fds(int fds[2], t_minishell *info);
 int				check_redirections(t_node *node, t_minishell *info);
 int				save_std_streams(int saved_std[2], t_minishell *info);
 int				restore_std_streams(int saved_std[2], t_minishell *info);
+int				fill_heredoc(int saved_streams[2], char *eof, t_minishell *info);
 int				handle_pipex(t_node *node, t_minishell *info);
 int				handle_subshell(t_node *node, t_minishell *info);
 int				handle_command(t_node *node, t_minishell *info);

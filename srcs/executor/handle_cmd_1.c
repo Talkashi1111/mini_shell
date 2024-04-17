@@ -56,7 +56,7 @@ int	handle_command(t_node *node, t_minishell *info)
 	saved_streams[1] = -1;
 	args = NULL;
 	func = NULL;
-	info->last_exit_status = OK;
+	info->last_exit_status = OK;//?
 	if (pre_execution(node, &args, info, &func) == OK && save_std_streams(saved_streams, info) == OK)
 	{
 		if (apply_redirections(saved_streams, node->redi, info) == OK)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:48:07 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 00:23:40 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 12:31:48 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ int    save_std_streams(int saved_streams[2], t_minishell *info)
 
 int    restore_std_streams(int saved_streams[2], t_minishell *info)
 {
-    if (dup2(saved_streams[0], 0) == -1)
+    if (dup2(saved_streams[0], STDIN_FILENO) == -1)
     {
         info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "dup2: %s\n", strerror(errno));
         return (info->last_exit_status);
     }
-    if (dup2(saved_streams[1], 1) == -1)
+    if (dup2(saved_streams[1], STDOUT_FILENO) == -1)
     {
         info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "dup2: %s\n", strerror(errno));
@@ -129,16 +129,17 @@ int	fill_heredoc(int saved_streams[2], char *eof, t_minishell *info)
 	}
 	return (OK);
 }
-#include <stdio.h>
+#include <stdio.h>// ca sert  a quoi???
+
 int	apply_redirections(int saved_streams[2], t_token_list *redi, t_minishell *info)
 {
 	while (redi)
 	{
 		if (redi->type == STDIN && redirect(0, redi->next->str, O_RDONLY, info) != OK)
 			return (info->last_exit_status);
-		else if (redi->type == STDIN_HEREDOC && (fill_heredoc(saved_streams, redi->next->str, info) != OK || redirect(0, ".heredoc", O_RDONLY, info) != OK))
+		else if (redi->type == STDIN_HEREDOC && (fill_heredoc(saved_streams, redi->next->str, info) != OK || redirect(STDIN_FILENO, ".heredoc", O_RDONLY, info) != OK))
 			return (info->last_exit_status);
-		else if (redi->type == STDOUT && redirect(1, redi->next->str, O_CREAT | O_WRONLY | O_TRUNC, info) != OK)
+		else if (redi->type == STDOUT && redirect(STDOUT_FILENO, redi->next->str, O_CREAT | O_WRONLY | O_TRUNC, info) != OK)
 			return (info->last_exit_status);
 		else if (redi->type == STDOUT_APPEND && redirect(1, redi->next->str, O_CREAT | O_WRONLY | O_APPEND, info) != OK)
 			return (info->last_exit_status);

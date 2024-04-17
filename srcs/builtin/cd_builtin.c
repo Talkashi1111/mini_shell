@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:49:54 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/12 22:15:17 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/17 11:00:41 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ int	ft_cd(char *args[], t_minishell *info)
 	int		err;
 	char	*new_path;
 	char	curr_path[PATH_MAX];
-
+	
+	new_path = NULL;
 	err = ft_getcwd(curr_path, PATH_MAX);
 	if (err != OK)
 		return (err);
