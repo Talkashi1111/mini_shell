@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exit_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/07 16:19:55 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/13 10:05:12 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/17 00:27:35 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include "minishell.h"
 
 int	ft_exit(char *args[], t_minishell *info)

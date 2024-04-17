@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/16 20:08:14 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 12:16:05 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,15 +87,6 @@ struct	s_minishell;
 
 typedef int (*t_pfunc)(char *args[], struct s_minishell *info);
 
-typedef struct s_cmd
-{
-	int			pid;
-	char		**args;
-	int			heredoc_pipe[2];
-	int			saved_std[2];
-	t_pfunc		func;
-}	t_cmd;
-
 typedef struct
 {
 	char *name;
@@ -165,25 +156,22 @@ void			display_tree(t_node *node);
 void			free_tree(t_node *node);
 
 /* executor */
-char			**token_list_to_args(t_token_list *node, t_minishell *info);
-int				apply_redirections(t_cmd *cmd, t_minishell *info, t_token_list *redi);
+char			**token_list_to_args(t_token_list *token_list, t_minishell *info);
+int				apply_redirections(int saved_streams[2], t_token_list *redi, t_minishell *info);
 int				ft_run(t_node *node, t_minishell *info);
 void			ft_free_pipes(t_minishell *info);
 int				ft_open_pipes(t_node *node, t_minishell *info);
 int				wildcard_handler(t_token_list **token, t_minishell *info);
 int				remove_quotes(t_token_list *args, t_minishell *info);
 char			expand_dollars(t_token_list **args, t_minishell *info);
-char			**token_list_to_args(t_token_list *node, t_minishell *info);
-int				execute_non_builtin(t_cmd *cmd, t_minishell *info, t_node *node);
+int				execute_non_builtin(char **args, int saved_streams[2], t_minishell *info);
 void    		free_tokens_and_tree(t_minishell *info);
 int 			ft_wait_pid(int child_pid, t_minishell *info);
-void    		ft_close_size_2(int fds[2], t_minishell *info);
-void			reset_fd_tabs(int heredoc_pipe[2], int saved_std[2]);
+void			ft_close_fds(int fds[2], t_minishell *info);
 int				check_redirections(t_node *node, t_minishell *info);
-int				run_potential_heredocs(t_token_list *redi, t_minishell *info, t_cmd *cmd);
 int				save_std_streams(int saved_std[2], t_minishell *info);
 int				restore_std_streams(int saved_std[2], t_minishell *info);
-int				wait_potential_heredocs(int pid, t_minishell *info);
+int				fill_heredoc(int saved_streams[2], char *eof, t_minishell *info);
 int				handle_pipex(t_node *node, t_minishell *info);
 int				handle_subshell(t_node *node, t_minishell *info);
 int				handle_command(t_node *node, t_minishell *info);
