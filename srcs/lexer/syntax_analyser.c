@@ -12,10 +12,11 @@
 
 #include "minishell.h"
 
-char	syntax_error(char *str)
+char	syntax_error(char *str, t_minishell *info)
 {
-	ft_fprintf(STDERR_FILENO, "shell: syntax error near '%s'\n", str);
-	return (SYNTAX_ERROR);
+	info->last_exit_status = SYNTAX_ERROR;
+	ft_fprintf(STDERR_FILENO, "bash: syntax error near '%s'\n", str);
+	return (info->last_exit_status);
 }
 
 char	analyse_middle_token(t_token_list *token, unsigned int *openpar_count, unsigned int *closepar_count)
@@ -56,7 +57,7 @@ char	analyse_middle_token(t_token_list *token, unsigned int *openpar_count, unsi
  *         - SYNTAX_ERROR if there is a syntax error in the token list.
  *         - OK if the syntax analysis is successful.
  */
-char	syntax_analyser(t_token_list *token)
+char	syntax_analyser(t_token_list *token, t_minishell *info)
 {
 	unsigned int	openpar_count;
 	unsigned int	closepar_count;
@@ -65,11 +66,11 @@ char	syntax_analyser(t_token_list *token)
 	closepar_count = 0;
 	if (token->type == OR || token->type == AND || token->type == PIPE || \
 		token->type == CLOSEPAR)
-		return (syntax_error(token->str));
+		return (syntax_error(token->str, info));
 	while (token->next)
 	{
 		if (analyse_middle_token(token, &openpar_count, &closepar_count) != OK)
-			return (syntax_error(token->next->str));
+			return (syntax_error(token->next->str, info));
 		token = token->next;
 	}
 	if (token->type == OPENPAR)
@@ -78,6 +79,6 @@ char	syntax_analyser(t_token_list *token)
 		closepar_count++;
 	if ((token->type == OR || token->type == AND || token->type == PIPE || \
 		token->type == OPENPAR) || (openpar_count != closepar_count))
-		return (syntax_error("\\n"));
+		return (syntax_error("\\n", info));
 	return (OK);
 }

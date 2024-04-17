@@ -42,14 +42,15 @@ t_token_list	*skip_parenthesis(t_token_list *token)
 	}
 }
 
-t_node	*new_tree_node(char type, unsigned int child_nb, unsigned int pipe_nb)
+t_node	*new_tree_node(char type, unsigned int child_nb, unsigned int pipe_nb, t_minishell *info)
 {
 	t_node	*new_node;
 
 	new_node = (t_node *)ft_calloc(1, sizeof(t_node));
 	if (!new_node)
 	{
-		ft_fprintf(STDERR_FILENO, "failed to allocate tree node [type=%d]: %s\n", type, strerror(errno));
+		info->last_exit_status = errno;
+		ft_fprintf(STDERR_FILENO, "bash: malloc: %s\n", strerror(errno));
 		return (NULL);
 	}
 	new_node->type = type;
@@ -60,7 +61,8 @@ t_node	*new_tree_node(char type, unsigned int child_nb, unsigned int pipe_nb)
 		new_node->child = (t_node **)ft_calloc(child_nb, sizeof(t_node *));
 		if (!new_node->child)
 		{
-			ft_fprintf(STDERR_FILENO, "failed to allocate children array for tree node [type=%d]: %s\n", type, strerror(errno));
+			info->last_exit_status = errno;
+			ft_fprintf(STDERR_FILENO, "bash: malloc: %s\n", strerror(errno));
 			free(new_node);
 			return (NULL);
 		}
@@ -68,7 +70,7 @@ t_node	*new_tree_node(char type, unsigned int child_nb, unsigned int pipe_nb)
 	return (new_node);
 }
 
-void free_tree(t_node *node)
+void free_tree(t_node *node, t_minishell *info)
 {
 	unsigned int	i;
 	
@@ -79,14 +81,14 @@ void free_tree(t_node *node)
 		i = 0;
 		while (i < node->child_nb && node->child[i])
 		{
-			free_tree(node->child[i]);
+			free_tree(node->child[i], info);
 			node->child[i] = NULL;
 			i++;
 		}
 		free(node->child);
 		node->child = NULL;
 	}
-	free_token_list(node->redi);
-	free_token_list(node->args);
+	free_token_list(node->redi, 1, info);
+	free_token_list(node->args, 0, info);
 	free(node);
 }

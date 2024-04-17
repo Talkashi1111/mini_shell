@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:57:47 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 13:50:01 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 22:54:58 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,25 +46,22 @@ int	pre_execution(t_node *node, char ***args, t_minishell *info, t_pfunc *func)
 int	handle_command(t_node *node, t_minishell *info)
 {
 	char		**args;
-	int			saved_streams[2];
 	t_pfunc		func;
 
-	saved_streams[0] = -1;
-	saved_streams[1] = -1;
 	args = NULL;
 	func = NULL;
-	info->last_exit_status = OK;//?
-	if (pre_execution(node, &args, info, &func) == OK && save_std_streams(saved_streams, info) == OK)
+	info->last_exit_status = OK;
+	if (pre_execution(node, &args, info, &func) == OK)
 	{
-		if (apply_redirections(saved_streams, node->redi, info) == OK)
+		if (apply_redirections(node->redi, info) == OK)
 		{
 			if (func)
 				info->last_exit_status = func(args, info);
 			else if (args[0])
-				info->last_exit_status = execute_non_builtin(args, saved_streams, info);
+				info->last_exit_status = execute_non_builtin(args, info->saved_streams, info);
 		}
 	}
 	free_args(args);
-	restore_std_streams(saved_streams, info);
+	restore_std_streams(info->saved_streams, info);
 	return (info->last_exit_status);
 }

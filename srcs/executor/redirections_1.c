@@ -3,26 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:48:07 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 15:51:06 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/17 22:54:22 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int    save_std_streams(int saved_streams[2], t_minishell *info)
+int    save_std_streams(t_minishell *info)
 {
-    saved_streams[0] = dup(0);
-    if (saved_streams[0] == -1)
+    info->saved_streams[0] = dup(0);
+    if (info->saved_streams[0] == -1)
     {
         info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "dup: %s\n", strerror(errno));
         return (info->last_exit_status);
     }
-    saved_streams[1] = dup(1);
-    if (saved_streams[1] == -1)
+    info->saved_streams[1] = dup(1);
+    if (info->saved_streams[1] == -1)
     {
         info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "dup: %s\n", strerror(errno));
@@ -33,13 +33,13 @@ int    save_std_streams(int saved_streams[2], t_minishell *info)
 
 int    restore_std_streams(int saved_streams[2], t_minishell *info)
 {
-    if (dup2(saved_streams[0], STDIN_FILENO) == -1)
+    if (dup2(saved_streams[0], 0) == -1)
     {
         info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "dup2: %s\n", strerror(errno));
         return (info->last_exit_status);
     }
-    if (dup2(saved_streams[1], STDOUT_FILENO) == -1)
+    if (dup2(saved_streams[1], 1) == -1)
     {
         info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "dup2: %s\n", strerror(errno));
@@ -78,15 +78,15 @@ int	redirect(int redi_fd, char *path, int flags, t_minishell *info)
 	return (OK);
 }
 
-int	apply_redirections(int saved_streams[2], t_token_list *redi, t_minishell *info)
+int	apply_redirections(t_token_list *redi, t_minishell *info)
 {
 	while (redi)
 	{
 		if (redi->type == STDIN && redirect(0, redi->next->str, O_RDONLY, info) != OK)
 			return (info->last_exit_status);
-		else if (redi->type == STDIN_HEREDOC && (fill_heredoc(saved_streams, redi->next->str, info) != OK || redirect(STDIN_FILENO, ".heredoc", O_RDONLY, info) != OK))
+		else if (redi->type == STDIN_HEREDOC && redirect(0, redi->next->str, O_RDONLY, info) != OK)
 			return (info->last_exit_status);
-		else if (redi->type == STDOUT && redirect(STDOUT_FILENO, redi->next->str, O_CREAT | O_WRONLY | O_TRUNC, info) != OK)
+		else if (redi->type == STDOUT && redirect(1, redi->next->str, O_CREAT | O_WRONLY | O_TRUNC, info) != OK)
 			return (info->last_exit_status);
 		else if (redi->type == STDOUT_APPEND && redirect(1, redi->next->str, O_CREAT | O_WRONLY | O_APPEND, info) != OK)
 			return (info->last_exit_status);

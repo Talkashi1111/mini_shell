@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:49:54 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/17 13:48:54 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 19:34:18 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,7 @@ int	ft_cd(char *args[], t_minishell *info)
 	int		err;
 	char	*new_path;
 	char	curr_path[PATH_MAX];
-	
-	new_path = NULL;
+
 	err = ft_getcwd(curr_path, PATH_MAX);
 	if (err != OK)
 		return (err);

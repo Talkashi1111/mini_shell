@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   search_path_cmd.c                                  :+:      :+:    :+:   */
+/*   handle_cmd_3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 16:04:15 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/17 13:52:00 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 19:33:25 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,10 +104,10 @@ int execute_non_builtin(char **args, int saved_streams[2], t_minishell *info)
 {
     pid_t     pid;
 
+	(void)saved_streams;
     pid = fork();
     if (pid == 0)
     {
-		ft_close_fds(saved_streams, info);
         command_child_process(args, info);
     }
     else if (pid < 0)

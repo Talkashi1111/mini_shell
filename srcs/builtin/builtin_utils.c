@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:44:31 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 13:55:00 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 19:34:16 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	update_or_add_envp(t_minishell *info, char *str, char *new_val)
 
 	new_entry = ft_strjoin(str, new_val);
 	if (!new_entry)
-		return (MALLOC_ERROR);
+		return (info->last_exit_status = errno);
 	i = 0;
 	while (info->envp[i])
 	{

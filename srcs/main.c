@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 13:56:28 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 22:48:43 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,12 @@ int	g_signal = 0;
 static int minishell_init(t_minishell *info, char **envp)
 {
     info->envp = copy_env(envp);
-    if (!info->envp || update_or_add_envp(info, "OLDPWD=", "") == MALLOC_ERROR)
-        return (MALLOC_ERROR);
+    if (!info->envp || update_or_add_envp(info, "OLDPWD=", "") != OK)
+	{
+		info->last_exit_status = errno;
+		ft_fprintf(STDERR_FILENO, "bash: malloc: %s\n", strerror(errno));
+        return (info->last_exit_status);
+	}
     info->last_exit_status = OK;
     info->token_list = NULL;
     info->tree = NULL;
@@ -32,17 +36,22 @@ static int minishell_init(t_minishell *info, char **envp)
     info->builtins[7] = (t_builtin){NULL, NULL};
     info->fd_pipe = NULL;
     info->pipe_nb = 0;
-	close(open(".heredoc", O_CREAT, 0777)); //checker errors comment fermer le heredoc si il est fermer dans exit par les autres process
-    return (OK);
+	save_std_streams(info);
+	return (OK);
 }
 
 void    free_tokens_and_tree(t_minishell *info)
 {
-    free_tree(info->tree);
+    free_tree(info->tree, info);
     info->tree = NULL;
-    free_token_list(info->token_list);
+    free_token_list(info->token_list, 0, info);
     info->token_list = NULL;
 }
+
+        // if (DEBUG == TRUE)
+        //     display_token_list(info->token_list);
+                // if (DEBUG == TRUE)
+                //     display_tree(info->tree);
 
 char    minishell_loop(t_minishell *info)
 {
@@ -53,22 +62,19 @@ char    minishell_loop(t_minishell *info)
         line = readline(COLOR_GREEN "minishell ~ " COLOR_RESET);
         if (!line)
 		{
+			info->last_exit_status = OK;
 			ft_printf("exit\n");
 			ft_exit(NULL, info);
 		}
-        info->token_list = tokenizer(line);
-        if (DEBUG == TRUE)
-            display_token_list(info->token_list);
+        info->token_list = tokenizer(line, info);
         if (info->token_list)
         {
             add_history(line);
             free(line);
             line = NULL;
-            if (syntax_analyser(info->token_list) == OK)
+            if (syntax_analyser(info->token_list, info) == OK)
             {
-                info->tree = tree_maker(info->token_list, NULL);
-                if (DEBUG == TRUE)
-                    display_tree(info->tree);
+                info->tree = tree_maker(info->token_list, NULL, info);
                 if (info->tree)
                     ft_run(info->tree, info);
             }
@@ -96,14 +102,13 @@ int	main(int argc, char **argv, char **envp)
 
     (void)argc;
     (void)argv;
-
 	sa.sa_handler = &signal_handler;
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
 	sigaction(SIGTERM, &sa, NULL);
-    if (minishell_init(&info, envp) == MALLOC_ERROR)
-        return (MALLOC_ERROR);
+    if (minishell_init(&info, envp) != OK)
+        return (info.last_exit_status);
     minishell_loop(&info);
     return (OK);
 }

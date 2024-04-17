@@ -12,17 +12,26 @@
 
 #include "minishell.h"
 
-void	free_token_list(t_token_list *node)
+void	free_token_list(t_token_list *token, char redi, t_minishell *info)
 {
 	t_token_list	*next;
 
-	while (node)
+	while (token)
 	{
-		next = node->next;
-		node->next = NULL;
-		free(node->str);
-		free(node);
-		node = next;
+		if (redi && token->type == STDIN_HEREDOC)
+		{
+			if (token->next && unlink(token->next->str) == -1)
+			{
+				info->last_exit_status = errno;
+				//merde faut faire gaffe au trajet du fichier car cd change
+				ft_fprintf(STDERR_FILENO, "unlink: %s\n", strerror(errno));
+			}
+		}
+		next = token->next;
+		token->next = NULL;
+		free(token->str);
+		free(token);
+		token = next;
 	}
 }
 
@@ -51,16 +60,22 @@ t_token_list	*create_token(void)
 	return (token);
 }
 
-t_token_list	*copy_token(t_token_list *token)
+t_token_list	*copy_token(t_token_list *token, t_minishell *info)
 {
 	t_token_list	*new_node;
 
 	new_node = create_token();
 	if (!new_node)
+	{
+		info->last_exit_status = errno;
+		ft_fprintf(STDERR_FILENO, "bash: malloc: %s\n", strerror(errno));
 		return (NULL);
+	}
 	new_node->str = ft_strdup(token->str);
 	if (!new_node->str)
 	{
+		info->last_exit_status = errno;
+		ft_fprintf(STDERR_FILENO, "bash: malloc: %s\n", strerror(errno));
 		free(new_node);
 		return (NULL);
 	}
