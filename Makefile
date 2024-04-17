@@ -26,15 +26,14 @@ FILES := main.c \
 		executor/expand_quotes.c \
 		executor/expand_wildcards.c \
 		executor/handle_cmd_1.c \
-		executor/handle_cmd_utils.c \
-		executor/search_path_cmd.c \
+		executor/handle_cmd_2.c \
+		executor/handle_cmd_3.c \
 		executor/handle_pipex.c \
 		executor/handle_subshell.c \
 		executor/redirections_1.c \
 		executor/redirections_2.c \
 		executor/run_tree.c \
-		debug.c \
-		#executor/fill_heredoc.c
+		debug.c
 SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
 #BONUS_FILES :=
 CFLAGS := -Wall -Wextra -Werror
@@ -69,7 +68,6 @@ L_PURPLE :=\033[38;5;55m
 
 
 $(info $(OBJECTS))
-
 
 .PHONY: all 
 all: $(NAME)
