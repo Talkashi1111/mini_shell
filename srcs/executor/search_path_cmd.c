@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_cmd_3.c                                     :+:      :+:    :+:   */
+/*   search_path_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 16:04:15 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/16 21:40:09 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 11:13:34 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,46 +85,37 @@ char *match_path(char *cmd, t_minishell *info)
 	return (ft_search_in_paths(splitted_path, cmd));
 }
 
-int	command_child_process(t_cmd *cmd, t_minishell *info)
+int	command_child_process(char **args, t_minishell *info)
 {
 	char	*path;
 
-	path = match_path(cmd->args[0], info);
+	path = match_path(args[0], info);
 	if (!path)
 	{
 		info->last_exit_status = MALLOC_ERROR;
-		free_args(cmd->args);
+		free_args(args);
 		ft_exit(NULL, info);
 	}
-	free(cmd->args[0]);
-	cmd->args[0] = path;
-	execve(cmd->args[0], cmd->args, info->envp);
+	free(args[0]);
+	args[0] = path;
+	execve(args[0], args, info->envp);
 	info->last_exit_status = errno;
 	ft_fprintf(STDERR_FILENO, "execve: %s\n", strerror(errno));
-	free_args(cmd->args);
+	free_args(args);
 	ft_exit(NULL, info);
 	return (info->last_exit_status);
 }
 
 #include <stdio.h>
-int execute_non_builtin(t_cmd *cmd, t_minishell *info, t_node *node)
+int execute_non_builtin(char **args, int saved_streams[2], t_minishell *info)
 {
     pid_t     pid;
 
     pid = fork();
-	(void)node;
     if (pid == 0)
     {
-		if (apply_redirections(cmd, info, node->redi) != OK)
-		{
-			ft_close_size_2(cmd->saved_std, info);
-			ft_close_size_2(cmd->heredoc_pipe, info);
-			free_args(cmd->args);
-			ft_exit(NULL, info);
-		}
-		ft_close_size_2(cmd->saved_std, info);
-		ft_close_size_2(cmd->heredoc_pipe, info);
-        command_child_process(cmd, info);
+		ft_close_fds(saved_streams, info);
+        command_child_process(args, info);
     }
     else if (pid < 0)
     {

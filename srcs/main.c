@@ -3,24 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/16 18:29:38 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 13:07:48 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-#include <readline/readline.h> //linux
-#include <readline/history.h> //linux
+/* #include <readline/readline.h> //linux
+#include <readline/history.h> //linux */
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <fcntl.h>
 #include <stdio.h>
-# define READLINE_LIBRARY 1
-// #include "/Users/achappui/.brew/opt/readline/include/readline/readline.h"
-// #include "/Users/achappui/.brew/opt/readline/include/readline/history.h"
+//# define READLINE_LIBRARY 1
+#include "$(READLINE_INC)/readline/readline.h"
+#include "$(READLINE_INC)/readline/history.h" 
+
 #include "minishell.h"
 
 int	g_signal = 0;
@@ -43,7 +44,7 @@ static int minishell_init(t_minishell *info, char **envp)
     info->builtins[7] = (t_builtin){NULL, NULL};
     info->fd_pipe = NULL;
     info->pipe_nb = 0;
-
+	close(open(".heredoc", O_CREAT, 0777)); //checker errors comment fermer le heredoc si il est fermer dans exit par les autres process
     return (OK);
 }
 
