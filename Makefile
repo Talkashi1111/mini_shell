@@ -22,21 +22,21 @@ FILES := main.c \
 		parser/make_tree_1.c \
 		parser/make_tree_2.c \
 		parser/make_tree_3.c \
-		executor/search_path_cmd.c \
 		executor/expand_dollars.c \
 		executor/expand_quotes.c \
 		executor/expand_wildcards.c \
 		executor/handle_cmd_1.c \
-		executor/fill_heredoc.c \
-		executor/handle_cmd_utils.c \
+		executor/handle_cmd_2.c \
+		executor/handle_cmd_3.c \
 		executor/handle_pipex.c \
 		executor/handle_subshell.c \
 		executor/redirections_1.c \
 		executor/redirections_2.c \
 		executor/run_tree.c \
+		parser/heredoc.c \
 		debug.c
 SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
-CFLAGS := -Wall -Wextra -Werror
+CFLAGS := -Wall -Wextra -Werror -DHEREDOC_PATH='"$(shell pwd)"'
 ifdef DEBUG
     CFLAGS += -DDEBUG=1 -g
 endif

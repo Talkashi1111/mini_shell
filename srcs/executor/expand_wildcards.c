@@ -6,15 +6,11 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 21:49:03 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/17 13:49:51 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/17 22:52:43 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-#define TRUE 1
-#define FALSE 0
-
 
 int	is_match( char *str, char *pattern) 
 {
@@ -73,7 +69,7 @@ t_token_list *get_wildcard(char *pattern, t_minishell *info)
 	{
 		info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "opendir: %s\n", strerror(errno));
-		free_token_list(head);
+		free_token_list(head, 0, info);
         return (NULL);
     }
 	while (TRUE)
@@ -87,7 +83,7 @@ t_token_list *get_wildcard(char *pattern, t_minishell *info)
 		if (!tmp->next)
 		{
 			info->last_exit_status = MALLOC_ERROR;
-			free_token_list(head->next);
+			free_token_list(head->next, 0, info);
 			head->next = NULL;
 			break ;
 		}
@@ -101,7 +97,7 @@ t_token_list *get_wildcard(char *pattern, t_minishell *info)
 		if (!head)
 		{
 			info->last_exit_status = MALLOC_ERROR;
-			free_token_list(head);
+			free_token_list(head, 0, info);
 			return (NULL);
 		}//to verify about freeing 
 	}
