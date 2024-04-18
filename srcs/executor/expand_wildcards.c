@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 21:49:03 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/17 22:52:43 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/18 13:55:49 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,27 +50,26 @@ int	is_match( char *str, char *pattern)
     return (*pattern == '\0');
 }
 
-t_token_list *get_wildcard(char *pattern, t_minishell *info)
+int get_wildcard(t_token_list **wildcard_list, char *pattern, t_minishell *info)
 {
     DIR             *dir;
     struct dirent   *entry;
-    t_token_list    *head;
 	t_token_list	*tmp;
 
-	head = create_token();
-	if (!head)
+	(*wildcard_list) = create_token();
+	if (!(*wildcard_list))
 	{
-		info->last_exit_status = MALLOC_ERROR;
-		return (NULL);
+		info->last_exit_status = errno;
+		return (info->last_exit_status);
 	}
-	tmp = head;
+	tmp = (*wildcard_list);
 	dir = opendir(".");
 	if (!dir) 
 	{
 		info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "opendir: %s\n", strerror(errno));
-		free_token_list(head, 0, info);
-        return (NULL);
+		free_token_list((*wildcard_list), 0, info);
+        return (info->last_exit_status);
     }
 	while (TRUE)
 	{
@@ -82,32 +81,29 @@ t_token_list *get_wildcard(char *pattern, t_minishell *info)
 		tmp->next = new_token(entry->d_name, WORD);
 		if (!tmp->next)
 		{
-			info->last_exit_status = MALLOC_ERROR;
-			free_token_list(head->next, 0, info);
-			head->next = NULL;
+			info->last_exit_status = errno;
+			free_token_list((*wildcard_list)->next, 0, info);
+			(*wildcard_list)->next = NULL;
 			break ;
 		}
 		tmp = tmp->next;
 	}
-	tmp = head;
-	head = head->next;
-	if (head == NULL)
+	tmp = (*wildcard_list);
+	(*wildcard_list) = (*wildcard_list)->next;
+	if ((*wildcard_list) == NULL)
 	{
-		head = new_token(pattern, WORD);
-		if (!head)
+		(*wildcard_list) = new_token(pattern, WORD);
+		if (!(*wildcard_list))
 		{
-			info->last_exit_status = MALLOC_ERROR;
-			free_token_list(head, 0, info);
-			return (NULL);
+			info->last_exit_status = errno;
+			free_token_list((*wildcard_list), 0, info);
+			return (info->last_exit_status);
 		}//to verify about freeing 
 	}
 	free(tmp);
 	if (closedir(dir) == -1)
-	{
-		info->last_exit_status = errno;
 		ft_fprintf(STDERR_FILENO, "closedir: %s\n", strerror(errno));
-	}
-	return (head);
+	return (OK);
 }
 
 t_token_list	*last_list_elem(t_token_list *list)
@@ -118,54 +114,33 @@ t_token_list	*last_list_elem(t_token_list *list)
 	return (list);
 }
 
-int	wildcard_handler(t_token_list **token, t_minishell *info)
+int	wildcard_handler(t_token_list **args, t_minishell *info, char runtime)
 {
-	t_token_list	*prev;
-	t_token_list	*tmp;
+	t_token_list	tmp;
+	t_token_list	*tmp_ptr;
+	t_token_list	*wildcard_list;
 	t_token_list	*last;
 
-	prev = create_token();
-	if (!prev)
+	tmp_ptr = &tmp;
+	tmp_ptr->next = *args;
+	*args = tmp_ptr;
+	wildcard_list = NULL;
+	while (tmp_ptr->next)
 	{
-		info->last_exit_status = MALLOC_ERROR;
-		return (MALLOC_ERROR);
-	}
-	prev->next = *token;
-	*token = prev;
-	while (prev->next)
-	{
-		if (prev->next->type == WORD && strchr(prev->next->str, '*'))
+		if (tmp_ptr->next->type == WORD && strchr(tmp_ptr->next->str, '*'))
 		{
-			tmp = get_wildcard(prev->next->str, info);
-			if(info->last_exit_status != OK)
-			{
-				prev = *token;
-				*token = (*token)->next;
-				free(prev);
+			if(get_wildcard(&wildcard_list, tmp_ptr->next->str, info) != OK)
 				return (info->last_exit_status);
-			}
-			if (tmp == NULL)
-			{
-				tmp = prev->next;
-				prev->next = prev->next->next;
-				free(tmp->str);
-				free(tmp);
-			}
-			else
-			{
-				last = last_list_elem(tmp);
-				last->next = prev->next->next;
-				free(prev->next->str);
-				free(prev->next);
-				prev->next = tmp;
-				prev = last;
-			}
+			last = last_list_elem(wildcard_list);
+			last->next = tmp_ptr->next->next;
+			tmp_ptr->next = wildcard_list;
+			tmp_ptr = last;
 		}
+		else if (runtime && tmp_ptr->next->type == STDIN_HEREDOC)
+			tmp_ptr = tmp_ptr->next->next;
 		else
-			prev = prev->next;
+			tmp_ptr = tmp_ptr->next;
 	}
-	prev = *token;
-	*token = (*token)->next;
-	free(prev);
+	*args = (*args)->next;
 	return (info->last_exit_status);
 }

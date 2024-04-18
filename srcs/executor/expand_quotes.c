@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 20:44:08 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/18 12:52:23 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/18 13:56:25 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	fill_without_quotes(char *start_ptr, char *end_ptr, char *new_str)
 	}
 }
 
-int	remove_quotes(t_token_list *args, t_minishell *info)
+int	remove_quotes(t_token_list *args, t_minishell *info, char runtime)
 {
 	char			*end_ptr;
 	unsigned int	len;
@@ -70,6 +70,8 @@ int	remove_quotes(t_token_list *args, t_minishell *info)
 		fill_without_quotes(args->str, end_ptr, new_str);
 		free(args->str);
 		args->str = new_str;
+		if (runtime && args->type == STDIN_HEREDOC)
+			args = args->next;
 		args = args->next;
 	}
 	return (OK);

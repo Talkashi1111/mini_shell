@@ -72,7 +72,8 @@ int	init_cmd_node_redi(t_token_list *start, t_node *cmd_node, t_token_list *toke
 	}
 	if (token_1->type == STDIN_HEREDOC)
 	{
-		if (heredoc_expander((uintptr_t)token_2, &token_2->str, info) != OK)
+		if (remove_quotes(token_2, info, 0) != OK|| \
+			heredoc_expander((uintptr_t)token_2, &token_2->str, info) != OK)
 		{
 			free(token_1->str);
 			free(token_1);
