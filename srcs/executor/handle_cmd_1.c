@@ -6,20 +6,22 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:57:47 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/18 12:56:54 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/18 13:45:49 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+
+
 int	parse_cmd(t_node *node, t_minishell *info)
 {
-	if (expand_dollars(&node->args, info) != OK ||
-		expand_dollars(&node->redi, info) != OK ||
-		wildcard_handler(&node->args, info) != OK ||
-		wildcard_handler(&node->redi, info) != OK ||
-		remove_quotes(node->args, info) != OK ||
-		remove_quotes(node->redi, info) != OK)
+	if (expand_dollars(&node->args, info, 1) != OK ||
+		expand_dollars(&node->redi, info, 1) != OK ||
+		wildcard_handler(&node->args, info, 1) != OK ||
+		wildcard_handler(&node->redi, info, 1) != OK ||
+		remove_quotes(node->args, info, 1) != OK ||
+		remove_quotes(node->redi, info, 1) != OK)
 		return (info->last_exit_status);
 	return (OK);
 }
@@ -58,7 +60,7 @@ int	handle_command(t_node *node, t_minishell *info)
 			if (func)
 				info->last_exit_status = func(args, info);
 			else if (args[0])
-				info->last_exit_status = execute_non_builtin(args, info->saved_streams, info);
+				info->last_exit_status = execute_non_builtin(args, info);
 		}
 	}
 	free_args(args);

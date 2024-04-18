@@ -30,8 +30,7 @@ FILES := main.c \
 		executor/handle_cmd_3.c \
 		executor/handle_pipex.c \
 		executor/handle_subshell.c \
-		executor/redirections_1.c \
-		executor/redirections_2.c \
+		executor/redirections.c \
 		executor/run_tree.c \
 		parser/heredoc.c \
 		debug.c

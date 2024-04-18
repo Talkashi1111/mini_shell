@@ -88,24 +88,38 @@ t_node	*handle_cmd(t_token_list *start, t_token_list *end, t_minishell *info)
 	return (new_node);
 }
 
-char	*ft_itoa_heredoc(uintptr_t n)
+void    fill_tab(char *tab, unsigned int size, uintptr_t n)
 {
-	uintptr_t	tab;
-	short		i;
+    char            *heredoc_path;
+    unsigned int    i;
+    
+    heredoc_path = HEREDOC_PATH;
+    i = -1;
+    while (heredoc_path[++i])
+        tab[i] = heredoc_path[i];
+    tab[i++] = '/';
+    tab[i] = '.';
+    tab[size] = '\0';
+    while (tab[--size] != '.')
+    {
+        tab[size] = n % 10 + 48;
+        n /= 10;
+    }
+}
 
-	tab = n;
-	i = 2;
-	while ((tab >= 10) && i++)
-		tab /= 10;
-	tab = (long long)malloc((i + 2) * sizeof(char));
-	if (!tab)
-		return (NULL);
-	((char *)tab)[i] = '\0';
-	((char *)tab)[0] = '.';
-	while (n > 0 || (i == 1))
-	{
-		((char *)tab)[--i] = n % 10 + 48;
-		n /= 10;
-	}
-	return ((char *)tab);
+char    *ft_itoa_heredoc(uintptr_t n)
+{
+    uintptr_t    tab;
+    unsigned int size;
+
+    tab = n;
+    size = 1;
+    while (tab >= 10 && size++)
+        tab /= 10;
+    size += ft_strlen(HEREDOC_PATH) + 2;
+    tab = (uintptr_t)malloc((size + 1) * sizeof(char));
+    if (!tab)
+        return (NULL);
+    fill_tab((char *)tab, size, n);
+    return ((char *)tab);
 }
