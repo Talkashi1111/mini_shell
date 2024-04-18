@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/07 16:19:55 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/18 18:31:42 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/18 18:52:47 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	ft_exit(char *args[], t_minishell *info)
 	free_tree(info->tree);
 	free_token_list(info->token_list);
 	free_args(info->envp);
+	rl_clear_history();
+	ft_close_fds(info->saved_streams, info);
 	exit(info->last_exit_status);
 	return (OK);
 }

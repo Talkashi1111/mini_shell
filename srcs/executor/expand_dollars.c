@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/18 13:52:49 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/18 18:58:44 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,9 @@ char	expand_dollars(t_token_list **args, t_minishell *info, char runtime)
 	*args = tmp_ptr;
 	while (tmp_ptr->next)
 	{
+		to_free = (t_token_list *)tmp_ptr->next->str;
 		tmp_ptr->next->str = expand_dollar(tmp_ptr->next->str, 0, info);
+		free(to_free);
 		if (!tmp_ptr->next->str)
 		{
 			info->last_exit_status = MALLOC_ERROR;
