@@ -92,3 +92,19 @@ void free_tree(t_node *node, t_minishell *info)
 	free_token_list(node->args, 0, info);
 	free(node);
 }
+
+unsigned int	count_pipes(t_token_list *start, t_token_list *end)
+{
+	unsigned int	pipe_nb;
+
+	pipe_nb = 0;
+	while (start != end)
+	{
+		if (start->type == OPENPAR)
+			start = skip_parenthesis(start);
+		else if (start->type == PIPE)
+			pipe_nb++;
+		start = start->next;
+	}
+	return (pipe_nb);
+}

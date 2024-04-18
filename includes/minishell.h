@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 22:54:34 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/18 13:03:25 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@
 # include <limits.h>
 # include <stdint.h>
 # include "libft.h"
+
+# ifndef HEREDOC_PATH
+  # define HEREDOC_PATH
+# endif
 
 # ifndef DEBUG
 #  define DEBUG 0
@@ -179,15 +183,18 @@ int				ft_open_pipes(t_node *node, t_minishell *info);
 int				wildcard_handler(t_token_list **token, t_minishell *info);
 int				remove_quotes(t_token_list *args, t_minishell *info);
 char			expand_dollars(t_token_list **args, t_minishell *info);
-int				execute_non_builtin(char **args, int saved_streams[2], t_minishell *info);
+int				execute_non_builtin(char **args, t_minishell *info);
 void    		free_tokens_and_tree(t_minishell *info);
 int 			ft_wait_pid(int child_pid, t_minishell *info);
 void			ft_close_fds(int fds[2], t_minishell *info);
 int				check_redirections(t_node *node, t_minishell *info);
 int    			save_std_streams(t_minishell *info);
 int				restore_std_streams(int saved_std[2], t_minishell *info);
-int				fill_heredoc(int saved_streams[2], char *eof, t_minishell *info);
 int				handle_pipex(t_node *node, t_minishell *info);
 int				handle_subshell(t_node *node, t_minishell *info);
 int				handle_command(t_node *node, t_minishell *info);
+
+int				heredoc_expander(uintptr_t file_no, char **eof, t_minishell *info);
+char			*ft_itoa_heredoc(uintptr_t n);
+unsigned int	count_pipes(t_token_list *start, t_token_list *end);
 #endif

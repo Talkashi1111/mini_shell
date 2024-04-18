@@ -2,7 +2,6 @@ NAME := minishell
 BONUS_NAME := minishell_bonus
 OBJECT_DIR := obj
 LIBFT_DIR := libft
-#READLINE_DIR :=	/Users/achappui/.brew/opt/readline/lib
 INCLUDE_DIR := includes
 SRC_DIR := srcs
 BONUS_DIR := bonus
@@ -34,15 +33,26 @@ FILES := main.c \
 		executor/redirections_1.c \
 		executor/redirections_2.c \
 		executor/run_tree.c \
+		parser/heredoc.c \
 		debug.c
 SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
-#BONUS_FILES :=
-CFLAGS := -Wall -Wextra -Werror
+CFLAGS := -Wall -Wextra -Werror -DHEREDOC_PATH='"$(shell pwd)"'
 ifdef DEBUG
     CFLAGS += -DDEBUG=1 -g
 endif
-IFLAGS := -I$(LIBFT_DIR) -I$(INCLUDE_DIR)#-I /Users/achappui/.brew/opt/readline/include/readline
-LFLAGS := -L$(LIBFT_DIR) -lft -lreadline#-L$(READLINE_DIR) -lft -lreadline
+UNAME := $(shell uname)
+ifeq ($(UNAME),Darwin)
+	LEAK_TOOL := leaks -atExit --
+	HOSTNAME := $(shell whoami)
+    READLINE_LIB := /Users/$(HOSTNAME)/.brew/opt/readline/lib
+    READLINE_INC := /Users/$(HOSTNAME)/.brew/opt/readline/include
+else
+	LEAK_TOOL := valgrind --leak-check=full
+	READLINE_LIB := /lib/x86_64-linux-gnu
+    READLINE_INC := /usr/include/readline
+endif
+IFLAGS := -I$(LIBFT_DIR) -I$(INCLUDE_DIR) -I$(READLINE_INC)
+LFLAGS := -L$(LIBFT_DIR) -lft -L$(READLINE_LIB) -lreadline
 OBJECTS := $(addprefix $(OBJECT_DIR)/,$(FILES:.c=.o))
 OBJS_WITHOUT_MAIN := $(filter-out $(OBJECT_DIR)/main.o, $(OBJECTS))
 BONUS_OBJ :=  $(addprefix $(BONUS_DIR)/,$(BONUS_FILES:.c=.o))
@@ -56,14 +66,8 @@ GREEN := \033[32m
 BOLD := \033[1m
 L_PURPLE :=\033[38;5;55m
 
-UNAME := $(shell uname)
-ifeq ($(UNAME),Darwin)
-	LEAK_TOOL := leaks -atExit --
-else
-	LEAK_TOOL := valgrind --leak-check=full
-endif
-$(info $(OBJECTS))
 
+$(info $(OBJECTS))
 
 .PHONY: all 
 all: $(NAME)

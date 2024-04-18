@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 16:04:15 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/17 19:33:25 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/18 13:07:00 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,17 +99,13 @@ int	command_child_process(char **args, t_minishell *info)
 	return (info->last_exit_status);
 }
 
-#include <stdio.h>
-int execute_non_builtin(char **args, int saved_streams[2], t_minishell *info)
+int execute_non_builtin(char **args, t_minishell *info)
 {
     pid_t     pid;
 
-	(void)saved_streams;
     pid = fork();
     if (pid == 0)
-    {
         command_child_process(args, info);
-    }
     else if (pid < 0)
     {
         info->last_exit_status = errno;

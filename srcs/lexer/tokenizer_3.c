@@ -18,14 +18,10 @@ void	free_token_list(t_token_list *token, char redi, t_minishell *info)
 
 	while (token)
 	{
-		if (redi && token->type == STDIN_HEREDOC)
+		if (redi && token->type == STDIN_HEREDOC && unlink(token->next->str) == -1)
 		{
-			if (token->next && unlink(token->next->str) == -1)
-			{
-				info->last_exit_status = errno;
-				//merde faut faire gaffe au trajet du fichier car cd change
-				ft_fprintf(STDERR_FILENO, "unlink: %s\n", strerror(errno));
-			}
+			info->last_exit_status = errno;
+			ft_fprintf(STDERR_FILENO, "unlink: %s\n", strerror(errno));
 		}
 		next = token->next;
 		token->next = NULL;

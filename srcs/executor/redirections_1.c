@@ -6,13 +6,13 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:48:07 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 22:54:22 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/18 13:01:40 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int    save_std_streams(t_minishell *info)
+int	save_std_streams(t_minishell *info)
 {
     info->saved_streams[0] = dup(0);
     if (info->saved_streams[0] == -1)
