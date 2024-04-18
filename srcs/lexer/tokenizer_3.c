@@ -20,6 +20,7 @@ void	free_token_list(t_token_list *token, char redi, t_minishell *info)
 	{
 		if (redi && token->type == STDIN_HEREDOC && unlink(token->next->str) == -1)
 		{
+			printf("%s\n", token->next->str);
 			info->last_exit_status = errno;
 			ft_fprintf(STDERR_FILENO, "unlink: %s\n", strerror(errno));
 		}
