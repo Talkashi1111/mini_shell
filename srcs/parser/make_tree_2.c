@@ -70,7 +70,7 @@ t_node	*new_tree_node(char type, unsigned int child_nb, unsigned int pipe_nb, t_
 	return (new_node);
 }
 
-void free_tree(t_node *node, t_minishell *info)
+void free_tree(t_node *node)
 {
 	unsigned int	i;
 	
@@ -81,15 +81,15 @@ void free_tree(t_node *node, t_minishell *info)
 		i = 0;
 		while (i < node->child_nb && node->child[i])
 		{
-			free_tree(node->child[i], info);
+			free_tree(node->child[i]);
 			node->child[i] = NULL;
 			i++;
 		}
 		free(node->child);
 		node->child = NULL;
 	}
-	free_token_list(node->redi, 1, info);
-	free_token_list(node->args, 0, info);
+	free_token_list(node->redi);
+	free_token_list(node->args);
 	free(node);
 }
 

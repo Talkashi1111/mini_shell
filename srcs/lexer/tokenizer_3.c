@@ -12,17 +12,30 @@
 
 #include "minishell.h"
 
-void	free_token_list(t_token_list *token, char redi, t_minishell *info)
+void	free_token_list(t_token_list *token)
 {
 	t_token_list	*next;
 
 	while (token)
 	{
-		if (redi && token->type == STDIN_HEREDOC && unlink(token->next->str) == -1)
+		next = token->next;
+		token->next = NULL;
+		free(token->str);
+		free(token);
+		token = next;
+	}
+}
+
+void	free_token_list_and_heredocs(t_token_list *token, t_minishell *info)
+{
+	t_token_list	*next;
+
+	while (token)
+	{
+		if (token->type == HEREDOC && unlink(token->str) == -1)
 		{
-			printf("%s\n", token->next->str);
 			info->last_exit_status = errno;
-			ft_fprintf(STDERR_FILENO, "unlink: %s\n", strerror(errno));
+			ft_fprintf(STDERR_FILENO, "bash: unlink: %s\n", strerror(errno));
 		}
 		next = token->next;
 		token->next = NULL;

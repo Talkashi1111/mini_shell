@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/18 16:34:14 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/18 18:33:12 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
   # define HEREDOC_PATH
 # endif
 
+// # define DEBUG 1
 # ifndef DEBUG
 #  define DEBUG 0
 # endif
@@ -83,6 +84,7 @@ enum token_type
 	OPENPAR,
 	CLOSEPAR,
 	CMD,
+	HEREDOC,
 };
 
 typedef struct s_token_list
@@ -150,7 +152,7 @@ t_token_list	*tokenizer(char *str, t_minishell *info);
 char			get_token_type(char *str);
 void			to_operator_end(char **end);
 void			to_word_end(char **end);
-void			free_token_list(t_token_list *token, char redi, t_minishell *info);
+void			free_token_list(t_token_list *token);
 t_token_list	*create_token(void);
 t_token_list	*copy_token(t_token_list *token, t_minishell *info);
 void			skip_whitespace_start(char **start);
@@ -172,7 +174,6 @@ int				pipe_children(t_token_list *start, t_token_list *end, t_node *pipe_node, 
 int				init_cmd_node(t_token_list *start, t_token_list *end, t_node *cmd_node, t_minishell *info);
 t_node			*tree_maker(t_token_list *start, t_token_list *end, t_minishell *info);
 void			display_tree(t_node *node);
-void			free_tree(t_node *node, t_minishell *info);
 
 /* executor */
 char			**token_list_to_args(t_token_list *token_list, t_minishell *info);
@@ -197,4 +198,6 @@ int				handle_command(t_node *node, t_minishell *info);
 int				heredoc_expander(uintptr_t file_no, char **eof, t_minishell *info);
 char			*ft_itoa_heredoc(uintptr_t n);
 unsigned int	count_pipes(t_token_list *start, t_token_list *end);
+void			free_token_list_and_heredocs(t_token_list *token, t_minishell *info);
+void			free_tree(t_node *node);
 #endif

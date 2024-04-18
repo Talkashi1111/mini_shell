@@ -16,7 +16,7 @@ t_token_list	*tokenizer_error(t_token_list *list, t_token_list *current_token, t
 {
 	info->last_exit_status = errno;
 	ft_fprintf(STDERR_FILENO, "bash: malloc: %s\n", strerror(errno));
-	free_token_list(list, 0, info);
+	free_token_list(list);
 	free(current_token);
 	return (NULL);
 }

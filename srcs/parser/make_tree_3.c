@@ -24,7 +24,7 @@ t_node	*handle_operator(t_token_list *start, t_token_list *end, t_token_list *tm
 	{
 		info->last_exit_status = errno;
 		ft_fprintf(STDERR_FILENO, "bash: malloc: %s\n", strerror(errno));
-		free_tree(new_node, info);
+		free_tree(new_node);
 		return (NULL);
 	}
 	new_node->child[1] = tree_maker(tmp_token->next, end, info);
@@ -32,7 +32,7 @@ t_node	*handle_operator(t_token_list *start, t_token_list *end, t_token_list *tm
 	{
 		info->last_exit_status = errno;
 		ft_fprintf(STDERR_FILENO, "bash: malloc: %s\n", strerror(errno));
-		free_tree(new_node, info);
+		free_tree(new_node);
 		return (NULL);
 	}
 	return (new_node);
@@ -49,7 +49,7 @@ t_node	*handle_pipe(t_token_list *start, t_token_list *end, unsigned int	pipe_nb
 	{
 		info->last_exit_status = errno;
 		ft_fprintf(STDERR_FILENO, "bash: malloc: %s\n", strerror(errno));
-		free_tree(new_node, info);
+		free_tree(new_node);
 		return (NULL);
 	}
 	return (new_node);
@@ -67,7 +67,7 @@ t_node	*handle_parenthesis(t_token_list *start, t_minishell *info)
 	{
 		info->last_exit_status = errno;
 		ft_fprintf(STDERR_FILENO, "bash: malloc: %s\n", strerror(errno));
-		free_tree(new_node, info);
+		free_tree(new_node);
 		return (NULL);
 	}
 	return (new_node);
@@ -82,7 +82,7 @@ t_node	*handle_cmd(t_token_list *start, t_token_list *end, t_minishell *info)
 		return (NULL);
 	if (init_cmd_node(start, end, new_node, info) != OK)
 	{
-		free_tree(new_node, info);
+		free_tree(new_node);
 		return (NULL);
 	}
 	return (new_node);

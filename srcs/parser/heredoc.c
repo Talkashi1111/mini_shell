@@ -6,16 +6,14 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:49:43 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/18 17:14:05 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/18 18:27:19 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	heredoc_expander_error(char *str, char *to_free, int to_close, t_minishell *info)
+int	heredoc_expander_error(char *str, int to_close, t_minishell *info)
 {
-	if (to_free)
-		free(to_free);
 	if (to_close != -1)
 	{
 		if (close(to_close) == -1)
@@ -31,12 +29,25 @@ int	heredoc_expander_error(char *str, char *to_free, int to_close, t_minishell *
 
 int	heredoc_expander_start(uintptr_t file_no, char **path, int *fd, t_minishell *info)
 {
+	t_token_list	*new_heredoc_token;
+
 	*path = ft_itoa_heredoc(file_no);
 	if (!*path)
-		return (heredoc_expander_error("malloc: %s\n", NULL, -1, info));
+		return (heredoc_expander_error("malloc: %s\n", -1, info));
+	new_heredoc_token = new_token(*path, HEREDOC);
+	if (!new_heredoc_token)
+	{
+		free(*path);
+		return (heredoc_expander_error("malloc: %s\n", -1, info));
+	}
 	*fd = open(*path, O_CREAT | O_WRONLY | O_TRUNC | O_APPEND, 0777);
 	if (*fd == -1)
-		return (heredoc_expander_error("open: %s\n", *path, -1, info));
+	{
+		free(new_heredoc_token);
+		free(*path);
+		return (heredoc_expander_error("open: %s\n", -1, info));
+	}
+	add_back_token_list(&info->token_list, new_heredoc_token);
 	return (OK);
 }
 
@@ -73,10 +84,10 @@ int	heredoc_expander(uintptr_t file_no, char **eof, t_minishell *info)
 		if (ft_strncmp(line, *eof, eof_len) == 0 && line[eof_len] == '\0')
 			break ;
 		if (!line)
-			return (heredoc_expander_error("read: %s\n", path, fd, info));
+			return (heredoc_expander_error("read: %s\n", fd, info));
 		if ((write(fd, line, ft_strlen(line)) == -1 && ft_free(line)) || \
 			(write(fd, "\n", 1) == -1 && ft_free(line)))
-			return (heredoc_expander_error("write: %s\n", path, fd, info));
+			return (heredoc_expander_error("write: %s\n", fd, info));
 		free(line);
 	}
 	free(line);

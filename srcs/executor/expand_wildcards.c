@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 21:49:03 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/18 13:55:49 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/18 18:32:21 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int get_wildcard(t_token_list **wildcard_list, char *pattern, t_minishell *info)
 	{
 		info->last_exit_status = errno;
         ft_fprintf(STDERR_FILENO, "opendir: %s\n", strerror(errno));
-		free_token_list((*wildcard_list), 0, info);
+		free_token_list((*wildcard_list));
         return (info->last_exit_status);
     }
 	while (TRUE)
@@ -82,7 +82,7 @@ int get_wildcard(t_token_list **wildcard_list, char *pattern, t_minishell *info)
 		if (!tmp->next)
 		{
 			info->last_exit_status = errno;
-			free_token_list((*wildcard_list)->next, 0, info);
+			free_token_list((*wildcard_list)->next);
 			(*wildcard_list)->next = NULL;
 			break ;
 		}
@@ -96,7 +96,7 @@ int get_wildcard(t_token_list **wildcard_list, char *pattern, t_minishell *info)
 		if (!(*wildcard_list))
 		{
 			info->last_exit_status = errno;
-			free_token_list((*wildcard_list), 0, info);
+			free_token_list((*wildcard_list));
 			return (info->last_exit_status);
 		}//to verify about freeing 
 	}
