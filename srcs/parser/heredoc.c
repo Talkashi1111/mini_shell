@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:49:43 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/18 12:54:40 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/18 16:38:57 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ int	heredoc_expander(uintptr_t file_no, char **eof, t_minishell *info)
 	line = readline(">");
 	if (!line)
 		return (heredoc_expander_error("read: %s\n", path, fd, info));
-	if (write(fd, line, ft_strlen(line)) == -1 && ft_free(line))
+	if ((write(fd, line, ft_strlen(line)) == -1 && ft_free(line)) || \
+		(write(fd, "\n", 1) == -1 && ft_free(line)))
 		return (heredoc_expander_error("write: %s\n", path, fd, info));
 	while (ft_strncmp(line, *eof, eof_len) != 0)
 	{
@@ -78,7 +79,8 @@ int	heredoc_expander(uintptr_t file_no, char **eof, t_minishell *info)
 		line = readline(">");
 		if (!line)
 			return (heredoc_expander_error("read: %s\n", path, fd, info));
-		if (write(fd, line, ft_strlen(line)) == -1 && ft_free(line))
+		if ((write(fd, line, ft_strlen(line)) == -1 && ft_free(line)) || \
+			(write(fd, "\n", 1) == -1 && ft_free(line)))
 			return (heredoc_expander_error("write: %s\n", path, fd, info));
 	}
 	free(line);
