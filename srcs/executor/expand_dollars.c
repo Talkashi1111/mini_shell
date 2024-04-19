@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/18 18:58:44 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/19 11:09:52 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ long long	with_dollar(char **str, char **seq, unsigned int *len, bool *to_free, 
 	long long		i;
 	
 	i = 0;
-	delimiters = " \t\n\v\f\r'*\"$\0";
+	delimiters = " \t\n\v\f\r'*\"$=\0";
 	if ((*str)[i + 1] == '?')
 	{
 		*seq = ft_itoa(info->last_exit_status);
