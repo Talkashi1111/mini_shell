@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 21:49:03 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/18 18:32:21 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/19 20:00:02 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ int	wildcard_handler(t_token_list **args, t_minishell *info, char runtime)
 				return (info->last_exit_status);
 			last = last_list_elem(wildcard_list);
 			last->next = tmp_ptr->next->next;
+			free(tmp_ptr->next);
 			tmp_ptr->next = wildcard_list;
 			tmp_ptr = last;
 		}
