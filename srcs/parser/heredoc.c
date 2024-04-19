@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:49:43 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/19 17:09:46 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/19 18:44:26 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,14 @@ int	heredoc_expander_start(uintptr_t file_no, char **path, int *fd, t_minishell 
 	*path = ft_itoa_heredoc(file_no);
 	if (!*path)
 		return (heredoc_expander_error("malloc: %s\n", -1, info));
-	new_heredoc_token = new_token(*path, HEREDOC);
+	new_heredoc_token = create_token();
 	if (!new_heredoc_token)
 	{
 		free(*path);
 		return (heredoc_expander_error("malloc: %s\n", -1, info));
 	}
+	new_heredoc_token->str = *path;
+	new_heredoc_token->type = HEREDOC;
 	*fd = open(*path, O_CREAT | O_WRONLY | O_TRUNC | O_APPEND, 0777);
 	if (*fd == -1)
 	{
@@ -48,8 +50,6 @@ int	heredoc_expander_start(uintptr_t file_no, char **path, int *fd, t_minishell 
 		return (heredoc_expander_error("open: %s\n", -1, info));
 	}
 	add_back_token_list(&info->token_list, new_heredoc_token);
-	if (path)
-		free(*path);
 	return (OK);
 }
 
