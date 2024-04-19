@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:49:43 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/18 18:27:19 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/19 17:09:46 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int	heredoc_expander_start(uintptr_t file_no, char **path, int *fd, t_minishell 
 		return (heredoc_expander_error("open: %s\n", -1, info));
 	}
 	add_back_token_list(&info->token_list, new_heredoc_token);
+	if (path)
+		free(*path);
 	return (OK);
 }
 

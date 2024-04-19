@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/18 18:51:21 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/19 17:59:05 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,12 @@ char    minishell_loop(t_minishell *info)
             if (syntax_analyser(info->token_list, info) == OK)
             {
                 info->tree = tree_maker(info->token_list, NULL, info);
+             /*    if (!info->tree)//to check if there was an error no?
+                {
+                    info->last_exit_status = errno;
+                    free_tokens_tree_heredocs(info);
+                    //break??
+                } */
                 if (info->tree)
                     ft_run(info->tree, info);
             }
