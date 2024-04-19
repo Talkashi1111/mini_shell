@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/18 18:33:12 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/19 19:18:47 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ int				handle_pipex(t_node *node, t_minishell *info);
 int				handle_subshell(t_node *node, t_minishell *info);
 int				handle_command(t_node *node, t_minishell *info);
 
-int				heredoc_expander(uintptr_t file_no, char **eof, t_minishell *info);
+int				heredoc_expander(uintptr_t file_no, char *eof, t_minishell *info);
 char			*ft_itoa_heredoc(uintptr_t n);
 unsigned int	count_pipes(t_token_list *start, t_token_list *end);
 void			free_token_list_and_heredocs(t_token_list *token, t_minishell *info);
