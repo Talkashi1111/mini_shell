@@ -117,7 +117,7 @@ char    *ft_itoa_heredoc(uintptr_t n)
     while (tab >= 10 && size++)
         tab /= 10;
     size += ft_strlen(HEREDOC_PATH) + 2;
-    tab = (uintptr_t)malloc((size + 1) * sizeof(char));
+    tab = (uintptr_t)calloc(size + 1, sizeof(char));
     if (!tab)
         return (NULL);
     fill_tab((char *)tab, size, n);

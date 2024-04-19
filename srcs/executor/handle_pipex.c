@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:55:31 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/19 21:24:58 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/19 21:51:08 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,6 @@ int	ft_open_pipes(t_node *node, t_minishell *info)
 
 void	ft_child(t_node *node, unsigned int i, t_minishell *info)
 {
-	ft_free_pipes(info);
-	ft_exit(NULL, info);
 	if (i > 0)
 	{
 		if (dup2(info->fd_pipe[i - 1][PIPE_OUT], STDIN_FILENO) < 0)
