@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:49:43 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/19 19:18:44 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/19 19:40:34 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,33 +27,34 @@ int	heredoc_expander_error(char *str, int to_close, t_minishell *info)
 	return (info->last_exit_status);
 }
 
-int	heredoc_expander_start(uintptr_t file_no, char **path, int *fd, t_minishell *info)
+int	heredoc_expander_start(uintptr_t file_no, int *fd, t_minishell *info)
 {
 	t_token_list	*new_heredoc_token;
+	char			*path;
 
-	*path = ft_itoa_heredoc(file_no);
-	if (!*path)
+	path = ft_itoa_heredoc(file_no);
+	if (!path)
 		return (heredoc_expander_error("malloc: %s\n", -1, info));
-	new_heredoc_token = new_token(*path, HEREDOC);
+	new_heredoc_token = new_token(path, HEREDOC);
 	if (!new_heredoc_token)
 	{
-		free(*path);
+		free(path);
 		return (heredoc_expander_error("malloc: %s\n", -1, info));
 	}
-	*fd = open(*path, O_CREAT | O_WRONLY | O_TRUNC | O_APPEND, 0777);
+	*fd = open(path, O_CREAT | O_WRONLY | O_TRUNC | O_APPEND, 0777);
 	if (*fd == -1)
 	{
 		free(new_heredoc_token);
 		free(new_heredoc_token->str);
-		free(*path);
+		free(path);
 		return (heredoc_expander_error("open: %s\n", -1, info));
 	}
-	((t_token_list *)file_no)->str = *path;
+	((t_token_list *)file_no)->str = path;
 	add_back_token_list(&info->token_list, new_heredoc_token);
 	return (OK);
 }
 
-void	heredoc_expander_end(int fd, char *eof, char *path, t_minishell *info)
+void	heredoc_expander_end(int fd, char *eof, t_minishell *info)
 {
 	if (close(fd) == -1)
 	{
@@ -61,7 +62,6 @@ void	heredoc_expander_end(int fd, char *eof, char *path, t_minishell *info)
 		ft_fprintf(STDERR_FILENO, "close: %s\n", strerror(errno));
 	}
 	free(eof);
-	eof = path;
 }
 
 int	ft_free(char *line)
@@ -72,12 +72,11 @@ int	ft_free(char *line)
 
 int	heredoc_expander(uintptr_t file_no, char *eof, t_minishell *info)
 {
-	char			*path;
 	char			*line;
 	unsigned int	eof_len;
 	int				fd;
 
-	if (heredoc_expander_start(file_no, &path, &fd, info) != OK)
+	if (heredoc_expander_start(file_no, &fd, info) != OK)
 		return (info->last_exit_status);
 	eof_len = ft_strlen(eof);
 	while (1)
@@ -93,6 +92,6 @@ int	heredoc_expander(uintptr_t file_no, char *eof, t_minishell *info)
 		free(line);
 	}
 	free(line);
-	heredoc_expander_end(fd, eof, path, info);
+	heredoc_expander_end(fd, eof, info);
 	return (OK);
 }
