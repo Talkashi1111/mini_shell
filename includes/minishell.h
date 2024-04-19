@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/19 19:18:47 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/19 21:36:23 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,12 +118,14 @@ typedef struct s_minishell
 {
 	char				**envp;
 	int					saved_streams[2];
+	struct s_token_list	*heredocs_list;
     struct s_token_list	*token_list;
     struct s_node		*tree;
 	t_builtin			builtins[8];
 	int					last_exit_status;
 	int					(*fd_pipe)[2];
 	unsigned int		pipe_nb;
+
 }	t_minishell;
 
 /* builtins */
@@ -198,6 +200,6 @@ int				handle_command(t_node *node, t_minishell *info);
 int				heredoc_expander(uintptr_t file_no, char *eof, t_minishell *info);
 char			*ft_itoa_heredoc(uintptr_t n);
 unsigned int	count_pipes(t_token_list *start, t_token_list *end);
-void			free_token_list_and_heredocs(t_token_list *token, t_minishell *info);
+void			free_heredocs_list(t_token_list *token, t_minishell *info);
 void			free_tree(t_node *node);
 #endif

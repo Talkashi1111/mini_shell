@@ -26,7 +26,7 @@ void	free_token_list(t_token_list *token)
 	}
 }
 
-void	free_token_list_and_heredocs(t_token_list *token, t_minishell *info)
+void	free_heredocs_list(t_token_list *token, t_minishell *info)
 {
 	t_token_list	*next;
 

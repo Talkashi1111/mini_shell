@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/19 19:50:57 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/19 21:37:02 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ static int minishell_init(t_minishell *info, char **envp)
     info->builtins[6] = (t_builtin){"unset", ft_unset};
     info->builtins[7] = (t_builtin){NULL, NULL};
     info->fd_pipe = NULL;
+	info->heredocs_list = NULL;
     info->pipe_nb = 0;
 	save_std_streams(info);
 	return (OK);
@@ -44,7 +45,9 @@ void    free_tokens_tree_heredocs(t_minishell *info)
 {
     free_tree(info->tree);
     info->tree = NULL;
-    free_token_list_and_heredocs(info->token_list, info);
+    free_heredocs_list(info->heredocs_list, info);
+	info->heredocs_list = NULL;
+	free_token_list(info->token_list);
     info->token_list = NULL;
 }
 

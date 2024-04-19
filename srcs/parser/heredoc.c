@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:49:43 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/19 19:40:34 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/19 21:35:31 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	heredoc_expander_start(uintptr_t file_no, int *fd, t_minishell *info)
 		return (heredoc_expander_error("open: %s\n", -1, info));
 	}
 	((t_token_list *)file_no)->str = path;
-	add_back_token_list(&info->token_list, new_heredoc_token);
+	add_back_token_list(&info->heredocs_list, new_heredoc_token);
 	return (OK);
 }
 

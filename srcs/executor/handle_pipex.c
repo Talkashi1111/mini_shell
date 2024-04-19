@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:55:31 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 22:41:14 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/19 21:24:58 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ int	ft_open_pipes(t_node *node, t_minishell *info)
 
 void	ft_child(t_node *node, unsigned int i, t_minishell *info)
 {
+	ft_free_pipes(info);
+	ft_exit(NULL, info);
 	if (i > 0)
 	{
 		if (dup2(info->fd_pipe[i - 1][PIPE_OUT], STDIN_FILENO) < 0)
@@ -85,7 +87,7 @@ void	ft_child(t_node *node, unsigned int i, t_minishell *info)
 			ft_fprintf(STDERR_FILENO, "dup2(%d, %d): %s\n",
 				info->fd_pipe[i - 1][PIPE_OUT], STDIN_FILENO, strerror(errno));
 			ft_free_pipes(info);
-			exit(info->last_exit_status);
+			ft_exit(NULL, info);
 		}
 	}
 	if (i < info->pipe_nb)
@@ -96,7 +98,7 @@ void	ft_child(t_node *node, unsigned int i, t_minishell *info)
 			ft_fprintf(STDERR_FILENO, "dup2(%d, %d): %s\n",
 				info->fd_pipe[i][PIPE_IN], STDOUT_FILENO, strerror(errno));
 			ft_free_pipes(info);
-			exit(info->last_exit_status);
+			ft_exit(NULL, info);
 		}
 	}
 	ft_free_pipes(info);
