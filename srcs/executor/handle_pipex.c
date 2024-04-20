@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_pipex.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:55:31 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 11:52:57 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 16:51:44 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,7 @@ void	ft_free_pipes(t_minishell *info)
 			ft_fprintf(info->saved_streams[1], "close(%d): %s: %s\n",
 				info->fd_pipe[i][PIPE_OUT], "pipe", strerror(errno));
 		}
-		if (info->fd_pipe[i][PIPE_IN] >= 0 &&
-				close(info->fd_pipe[i][PIPE_IN]) < 0)
-		{
-			info->last_exit_status = errno;
-			ft_fprintf(info->saved_streams[1], "close(%d): %s: %s\n",
-				info->fd_pipe[i][PIPE_IN], "pipe", strerror(errno));
-		}
+		close_pipe_in(info, i);
 		i++;
 	}
 	free(info->fd_pipe);
@@ -50,7 +44,8 @@ int	ft_open_pipes(t_node *node, t_minishell *info)
 	if (!info->fd_pipe)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "failed alloc pipes: %s\n", strerror(errno));
+		ft_fprintf(info->saved_streams[1],
+			"failed alloc pipes: %s\n", strerror(errno));
 		return (info->last_exit_status);
 	}
 	i = 0;
@@ -59,20 +54,7 @@ int	ft_open_pipes(t_node *node, t_minishell *info)
 		info->fd_pipe[i][PIPE_OUT] = -1;
 		info->fd_pipe[i++][PIPE_IN] = -1;
 	}
-	i = 0;
-	while (i < node->pipe_nb)
-	{
-		if (pipe(info->fd_pipe[i]) < 0)
-		{
-			info->last_exit_status = errno;
-			ft_fprintf(info->saved_streams[1], "pipe %d: %s\n", i, strerror(errno));
-			return (info->last_exit_status);
-		}
-		i++;
-	}
-	info->pipe_nb = node->pipe_nb;
-	info->last_exit_status = OK;
-	return (OK);
+	return (ft_open_pipes_util(info, node));
 }
 
 void	ft_child(t_node *node, unsigned int i, t_minishell *info)

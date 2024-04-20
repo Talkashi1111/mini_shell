@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 11:54:34 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 16:48:12 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # include <dirent.h>
 # include <sys/stat.h>
 # include "readline/readline.h"
-# include "readline/history.h" 
+# include "readline/history.h"
 # include <limits.h>
 # include <stdint.h>
 # include "libft.h"
@@ -143,7 +143,7 @@ int 	ft_unset(char *args[], t_minishell *info);
 char	**copy_env(char *envp[]);
 char 	*find_envp_arg(char *envp[], char *var_name, unsigned int var_name_len);
 int		update_or_add_envp(t_minishell *info, char *str, char *new_val);
-int		ft_getcwd(char *path, size_t size);
+int		ft_getcwd(char *path, size_t size, t_minishell *info);
 t_pfunc	is_builtin(char *str, t_builtin *builtin);
 const char *node_type_to_string(enum token_type type);
 
@@ -169,6 +169,8 @@ t_node			*handle_cmd(t_token_list *start, t_token_list *end, t_minishell *info);
 t_node			*handle_parenthesis(t_token_list *start, t_minishell *info);
 t_node			*handle_operator(t_token_list *start, t_token_list *end, t_token_list *tmp_token, t_minishell *info);
 t_node			*handle_pipe(t_token_list *start, t_token_list *end, unsigned int	pipe_nb, t_minishell *info);
+void			close_pipe_in(t_minishell *info, unsigned int i);
+int 			ft_open_pipes_util(t_minishell *info, t_node *node);
 t_node			*new_tree_node(char type, unsigned int child_nb, unsigned int pipe_nb, t_minishell *info);
 void			add_back_token_list(t_token_list **list, t_token_list *token);
 t_token_list	*skip_parenthesis(t_token_list *token);

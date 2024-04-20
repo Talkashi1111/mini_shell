@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pwd_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:30 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 11:52:26 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 16:19:00 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_getcwd(char *path, size_t size)
+int	ft_getcwd(char *path, size_t size, t_minishell *info)
 {
 	int	err;
 
@@ -42,7 +42,7 @@ int	ft_pwd(char *args[], t_minishell *info)
 		ft_printf("%s\n", pwd);
 		return (OK);
 	}
-	err = ft_getcwd(path, sizeof(path));
+	err = ft_getcwd(path, sizeof(path), info);
 	if (err != OK)
 		return (err);
 	err = update_or_add_envp(info, "PWD=", path);

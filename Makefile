@@ -29,6 +29,7 @@ FILES := main.c \
 		executor/handle_cmd_2.c \
 		executor/handle_cmd_3.c \
 		executor/handle_pipex.c \
+		executor/handle_pipex_utils.c \
 		executor/handle_subshell.c \
 		executor/redirections.c \
 		executor/run_tree.c \
@@ -68,7 +69,7 @@ L_PURPLE :=\033[38;5;55m
 
 $(info $(OBJECTS))
 
-.PHONY: all 
+.PHONY: all
 all: $(NAME)
 
 $(NAME): $(OBJECTS) $(LIBFT_DIR)/libft.a
@@ -92,7 +93,7 @@ $(BONUS_DIR)/%.o: $(BONUS_DIR)/%.c
 bonus: $(BONUS_NAME)
 
 $(BONUS_NAME): $(BONUS_OBJ) $(OBJECTS) $(LIBFT_DIR)/libft.a
-	$(CC) $(CFLAGS) $(BONUS_OBJ) $(OBJS_WITHOUT_MAIN) $(LFLAGS) -o $(BONUS_NAME) 
+	$(CC) $(CFLAGS) $(BONUS_OBJ) $(OBJS_WITHOUT_MAIN) $(LFLAGS) -o $(BONUS_NAME)
 
 .PHONY: re
 re: fclean all
