@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/19 11:09:52 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 10:41:41 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ long long	with_dollar(char **str, char **seq, unsigned int *len, bool *to_free, 
 	else
 	{
 		varname_len = 0;
-		while (ft_strchr(delimiters, (*str + 1)[varname_len]) == NULL)
+		while (ft_strchr(delimiters, (*str + 1)[varname_len]) == 0)
 			varname_len++;
 		*seq = find_envp_arg(info->envp, *str + 1 , varname_len);
 		if (*seq)
@@ -108,14 +108,14 @@ char	expand_dollars(t_token_list **args, t_minishell *info, char runtime)
 	*args = tmp_ptr;
 	while (tmp_ptr->next)
 	{
-		to_free = (t_token_list *)tmp_ptr->next->str;
+		to_free = (t_token_list *)(tmp_ptr->next->str);
 		tmp_ptr->next->str = expand_dollar(tmp_ptr->next->str, 0, info);
 		free(to_free);
 		if (!tmp_ptr->next->str)
 		{
-			info->last_exit_status = MALLOC_ERROR;
+			info->last_exit_status = errno;
 			*args = (*args)->next;
-			return (MALLOC_ERROR);
+			return (info->last_exit_status);
 		}
 		else if (tmp_ptr->next->str[0] == '\0')
 		{

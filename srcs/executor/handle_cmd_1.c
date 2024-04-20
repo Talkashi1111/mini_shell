@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:57:47 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/19 21:15:41 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 10:23:11 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ int	parse_cmd(t_node *node, t_minishell *info)
 
 int	pre_execution(t_node *node, char ***args, t_minishell *info, t_pfunc *func)
 {
-	// if (parse_cmd(node, info) != OK)
-	// 	return (info->last_exit_status);
+	if (parse_cmd(node, info) != OK)
+		return (info->last_exit_status);
 	*args = token_list_to_args(node->args, info);
 	if (!args)
 		return (info->last_exit_status);
