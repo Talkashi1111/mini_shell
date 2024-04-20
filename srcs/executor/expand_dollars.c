@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 10:41:41 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:25:02 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	*expand_dollar(char *str, unsigned int len, t_minishell *info)
 		new_str[len] = '\0';
 		if (!new_str)
 		{
-			if (to_free)
+			if (to_free == TRUE)
 				free(seq);
 			return (NULL);
 		}
@@ -92,7 +92,7 @@ char	*expand_dollar(char *str, unsigned int len, t_minishell *info)
 	if (new_str)
 		while (i)
 			new_str[--len] = seq[--i];
-	if (to_free)
+	if (to_free == TRUE)
 		free(seq);
 	return (new_str);
 }
@@ -108,6 +108,11 @@ char	expand_dollars(t_token_list **args, t_minishell *info, char runtime)
 	*args = tmp_ptr;
 	while (tmp_ptr->next)
 	{
+		if (!(ft_strchr(tmp_ptr->next->str, '$') && ft_strlen(tmp_ptr->next->str) > 1))
+		{
+			tmp_ptr = tmp_ptr->next;
+			continue ;
+		}
 		to_free = (t_token_list *)(tmp_ptr->next->str);
 		tmp_ptr->next->str = expand_dollar(tmp_ptr->next->str, 0, info);
 		free(to_free);

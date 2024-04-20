@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 16:04:15 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/18 13:20:00 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 10:54:43 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,10 @@ int	command_child_process(char **args, t_minishell *info)
 	args[0] = path;
 	execve(args[0], args, info->envp);
 	info->last_exit_status = errno;
-	ft_fprintf(STDERR_FILENO, "execve: %s\n", strerror(errno));
+	if (errno == ENOENT)
+		ft_fprintf(STDERR_FILENO, "%s: command not found\n", args[0]);
+	else
+		ft_fprintf(STDERR_FILENO, "execve: %s\n", strerror(errno));
 	free_args(args);
 	ft_exit(NULL, info);
 	return (info->last_exit_status);

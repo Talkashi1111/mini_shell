@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/19 21:37:02 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 10:59:05 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ char    minishell_loop(t_minishell *info)
             if (syntax_analyser(info->token_list, info) == OK)
             {
                 info->tree = tree_maker(info->token_list, NULL, info);
-				display_tree(info->tree);
-				display_token_list(info->token_list);
+				// display_tree(info->tree);
+				// display_token_list(info->token_list);
              /*    if (!info->tree)//to check if there was an error no?
                 {
                     info->last_exit_status = errno;
