@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:56:57 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 22:41:16 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:52:56 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	handle_subshell(t_node *node, t_minishell *info)
 	if (pid == -1)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(STDERR_FILENO, "fork: %s\n", strerror(errno));
+		ft_fprintf(info->saved_streams[1], "fork: %s\n", strerror(errno));
 		return (info->last_exit_status);
 	}
 	if (pid == 0)
@@ -32,7 +32,7 @@ int	handle_subshell(t_node *node, t_minishell *info)
 	if (waitpid(pid, &status, 0) == -1)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(STDERR_FILENO, "waitpid: %s\n", strerror(errno));
+		ft_fprintf(info->saved_streams[1], "waitpid: %s\n", strerror(errno));
 		return (info->last_exit_status);
 	}
 	if (WIFEXITED(status))
@@ -40,6 +40,6 @@ int	handle_subshell(t_node *node, t_minishell *info)
 	else if (WIFSIGNALED(status))
 		info->last_exit_status = 128 + WTERMSIG(status);
 	else
-		ft_fprintf(STDERR_FILENO, "Child process exited with unknown status\n");
+		ft_fprintf(info->saved_streams[1], "Child process exited with unknown status\n");
 	return (info->last_exit_status);
 }

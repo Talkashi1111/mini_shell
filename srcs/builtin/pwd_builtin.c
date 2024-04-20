@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:30 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 19:34:33 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:52:26 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_getcwd(char *path, size_t size)
 	if (getcwd(path, size) == NULL)
 	{
 		err = errno;
-		ft_fprintf(STDERR_FILENO, "pwd: %s\n", strerror(err));
+		ft_fprintf(info->saved_streams[1], "pwd: %s\n", strerror(err));
 		return (err);
 	}
 	return (OK);
@@ -33,7 +33,7 @@ int	ft_pwd(char *args[], t_minishell *info)
 
 	if (args[1])
 	{
-		ft_fprintf(STDERR_FILENO, "pwd: too many arguments\n");
+		ft_fprintf(info->saved_streams[1], "pwd: too many arguments\n");
 		return (USAGE_ERROR);
 	}
 	pwd = find_envp_arg(info->envp, "PWD", ft_strlen("PWD"));

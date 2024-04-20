@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 11:25:02 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:53:05 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ char	expand_dollars(t_token_list **args, t_minishell *info, char runtime)
 	*args = tmp_ptr;
 	while (tmp_ptr->next)
 	{
-		if (!(ft_strchr(tmp_ptr->next->str, '$') && ft_strlen(tmp_ptr->next->str) > 1))
+		if (!(ft_strchr(tmp_ptr->next->str, '$') && tmp_ptr->next->str[0] != '\0' && tmp_ptr->next->str[1] != '\0'))
 		{
 			tmp_ptr = tmp_ptr->next;
 			continue ;

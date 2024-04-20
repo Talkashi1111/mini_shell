@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:49:43 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/19 21:35:31 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:52:43 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ int	heredoc_expander_error(char *str, int to_close, t_minishell *info)
 		if (close(to_close) == -1)
 		{
 			info->last_exit_status = errno;
-			ft_fprintf(STDERR_FILENO, "close: %s\n", strerror(errno));
+			ft_fprintf(info->saved_streams[1], "close: %s\n", strerror(errno));
 		}
 	}
 	info->last_exit_status = errno;
-	ft_fprintf(STDERR_FILENO, str, strerror(errno));
+	ft_fprintf(info->saved_streams[1], str, strerror(errno));
 	return (info->last_exit_status);
 }
 
@@ -59,7 +59,7 @@ void	heredoc_expander_end(int fd, char *eof, t_minishell *info)
 	if (close(fd) == -1)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(STDERR_FILENO, "close: %s\n", strerror(errno));
+		ft_fprintf(info->saved_streams[1], "close: %s\n", strerror(errno));
 	}
 	free(eof);
 }

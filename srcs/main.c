@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 10:59:05 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:54:50 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,13 @@ int	g_signal = 0;
 
 static int minishell_init(t_minishell *info, char **envp)
 {
+	if (save_std_streams(info) != OK)
+		return (info->last_exit_status);
     info->envp = copy_env(envp);
     if (!info->envp || update_or_add_envp(info, "OLDPWD=", "") != OK)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(STDERR_FILENO, "bash: malloc: %s\n", strerror(errno));
+		ft_fprintf(info->saved_streams[1], "bash: malloc: %s\n", strerror(errno));
         return (info->last_exit_status);
 	}
     info->last_exit_status = OK;
@@ -37,7 +39,6 @@ static int minishell_init(t_minishell *info, char **envp)
     info->fd_pipe = NULL;
 	info->heredocs_list = NULL;
     info->pipe_nb = 0;
-	save_std_streams(info);
 	return (OK);
 }
 

@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:55:31 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 11:07:52 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:52:57 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@ void	ft_free_pipes(t_minishell *info)
 				close(info->fd_pipe[i][PIPE_OUT]) < 0)
 		{
 			info->last_exit_status = errno;
-			ft_fprintf(STDERR_FILENO, "close(%d): %s: %s\n",
+			ft_fprintf(info->saved_streams[1], "close(%d): %s: %s\n",
 				info->fd_pipe[i][PIPE_OUT], "pipe", strerror(errno));
 		}
 		if (info->fd_pipe[i][PIPE_IN] >= 0 &&
 				close(info->fd_pipe[i][PIPE_IN]) < 0)
 		{
 			info->last_exit_status = errno;
-			ft_fprintf(STDERR_FILENO, "close(%d): %s: %s\n",
+			ft_fprintf(info->saved_streams[1], "close(%d): %s: %s\n",
 				info->fd_pipe[i][PIPE_IN], "pipe", strerror(errno));
 		}
 		i++;
@@ -50,7 +50,7 @@ int	ft_open_pipes(t_node *node, t_minishell *info)
 	if (!info->fd_pipe)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(STDERR_FILENO, "failed alloc pipes: %s\n", strerror(errno));
+		ft_fprintf(info->saved_streams[1], "failed alloc pipes: %s\n", strerror(errno));
 		return (info->last_exit_status);
 	}
 	i = 0;
@@ -65,7 +65,7 @@ int	ft_open_pipes(t_node *node, t_minishell *info)
 		if (pipe(info->fd_pipe[i]) < 0)
 		{
 			info->last_exit_status = errno;
-			ft_fprintf(STDERR_FILENO, "pipe %d: %s\n", i, strerror(errno));
+			ft_fprintf(info->saved_streams[1], "pipe %d: %s\n", i, strerror(errno));
 			return (info->last_exit_status);
 		}
 		i++;
@@ -82,7 +82,7 @@ void	ft_child(t_node *node, unsigned int i, t_minishell *info)
 		if (dup2(info->fd_pipe[i - 1][PIPE_OUT], STDIN_FILENO) < 0)
 		{
 			info->last_exit_status = errno;
-			ft_fprintf(STDERR_FILENO, "dup2(%d, %d): %s\n",
+			ft_fprintf(info->saved_streams[1], "dup2(%d, %d): %s\n",
 				info->fd_pipe[i - 1][PIPE_OUT], STDIN_FILENO, strerror(errno));
 			ft_free_pipes(info);
 			ft_exit(NULL, info);
@@ -93,7 +93,7 @@ void	ft_child(t_node *node, unsigned int i, t_minishell *info)
 		if (dup2(info->fd_pipe[i][PIPE_IN], STDOUT_FILENO) < 0)
 		{
 			info->last_exit_status = errno;
-			ft_fprintf(STDERR_FILENO, "dup2(%d, %d): %s\n",
+			ft_fprintf(info->saved_streams[1], "dup2(%d, %d): %s\n",
 				info->fd_pipe[i][PIPE_IN], STDOUT_FILENO, strerror(errno));
 			ft_free_pipes(info);
 			ft_exit(NULL, info);
@@ -123,7 +123,7 @@ int	handle_pipex(t_node *node, t_minishell *info)
 		else if (pid < 0)
 		{
 			info->last_exit_status = errno;
-			ft_fprintf(STDERR_FILENO, "fork: %s\n", strerror(errno));
+			ft_fprintf(info->saved_streams[1], "fork: %s\n", strerror(errno));
 			break ;
 		}
 		i++;

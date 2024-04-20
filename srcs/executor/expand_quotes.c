@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 20:44:08 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/18 13:56:25 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:53:22 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ int	remove_quotes(t_token_list *args, t_minishell *info, char runtime)
 		new_str = (char *)malloc((len + 1) * sizeof(char));
 		if (!new_str)
 		{
-			info->last_exit_status = MALLOC_ERROR;
-			return (MALLOC_ERROR);
+			info->last_exit_status = errno;
+			return (info->last_exit_status);
 		}
 		new_str[len] = '\0';
 		fill_without_quotes(args->str, end_ptr, new_str);

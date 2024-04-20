@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:49:54 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/17 19:34:18 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:52:26 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_chdir(t_minishell *info, char *new_path, char *curr_path, char *arg)
 	if (chdir(new_path) == -1)
 	{
 		err = errno;
-		ft_fprintf(STDERR_FILENO, "cd: %s: %s\n", new_path, strerror(err));
+		ft_fprintf(info->saved_streams[1], "cd: %s: %s\n", new_path, strerror(err));
 		return (err);
 	}
 	if (update_or_add_envp(info, "OLDPWD=", curr_path) == MALLOC_ERROR)
@@ -41,7 +41,7 @@ int	ft_cd2(t_minishell *info, char *path, char **new_path)
 		*new_path = find_envp_arg(info->envp, "OLDPWD", ft_strlen("OLDPWD"));
 		if (*new_path == NULL || *new_path[0] == '\0')
 		{
-			ft_fprintf(STDERR_FILENO, "cd: OLDPWD not set\n");
+			ft_fprintf(info->saved_streams[1], "cd: OLDPWD not set\n");
 			return (NOT_FOUND);
 		}
 	}
@@ -64,7 +64,7 @@ int	ft_cd(char *args[], t_minishell *info)
 		new_path = find_envp_arg(info->envp, "HOME", ft_strlen("HOME"));
 		if (new_path == NULL)
 		{
-			ft_fprintf(STDERR_FILENO, "cd: HOME not set\n");
+			ft_fprintf(info->saved_streams[1], "cd: HOME not set\n");
 			return (NOT_FOUND);
 		}
 	}

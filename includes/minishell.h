@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/19 21:36:23 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:54:34 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,6 @@ int				wildcard_handler(t_token_list **token, t_minishell *info, char runtime);
 int				remove_quotes(t_token_list *args, t_minishell *info, char runtime);
 char			expand_dollars(t_token_list **args, t_minishell *info, char runtime);
 int				execute_non_builtin(char **args, t_minishell *info);
-void    		free_tokens_and_tree(t_minishell *info);
 int 			ft_wait_pid(int child_pid, t_minishell *info);
 void			ft_close_fds(int fds[2], t_minishell *info);
 int				check_redirections(t_node *node, t_minishell *info);

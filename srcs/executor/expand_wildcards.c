@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 21:49:03 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/20 11:25:48 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:53:03 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int get_wildcard(t_token_list **wildcard_list, char *pattern, t_minishell *info)
 	if (!dir) 
 	{
 		info->last_exit_status = errno;
-        ft_fprintf(STDERR_FILENO, "opendir: %s\n", strerror(errno));
+        ft_fprintf(info->saved_streams[1], "opendir: %s\n", strerror(errno));
 		free_token_list((*wildcard_list));
         return (info->last_exit_status);
     }
@@ -102,7 +102,7 @@ int get_wildcard(t_token_list **wildcard_list, char *pattern, t_minishell *info)
 	}
 	free(tmp);
 	if (closedir(dir) == -1)
-		ft_fprintf(STDERR_FILENO, "closedir: %s\n", strerror(errno));
+		ft_fprintf(info->saved_streams[1], "closedir: %s\n", strerror(errno));
 	return (OK);
 }
 

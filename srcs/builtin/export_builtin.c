@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:07 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 19:34:31 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:52:26 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	ft_export(char *args[], t_minishell *info)
 	{
 		if (is_valid_export(args[i]) == USAGE_ERROR)
 		{
-			ft_fprintf(STDERR_FILENO, "export: `%s': not a valid identifier\n",
+			ft_fprintf(info->saved_streams[1], "export: `%s': not a valid identifier\n",
 				args[i]);
 			err = USAGE_ERROR;
 			i++;

@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:44:57 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/19 11:27:39 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:52:26 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	ft_env(char *args[], t_minishell *info)
 
 	if (args[1] != NULL)
 	{
-		ft_fprintf(STDERR_FILENO, "env: too many arguments\n");
+		ft_fprintf(info->saved_streams[1], "env: too many arguments\n");
 		return (USAGE_ERROR);
 	}
 	i = 0;

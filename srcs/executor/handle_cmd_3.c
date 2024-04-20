@@ -6,13 +6,13 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 16:04:15 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/20 10:54:43 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:54:16 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_form_path(char *path, char *cmd)
+char	*ft_form_path(char *path, char *cmd, t_minishell *info)
 {
 	char	*tmp;
 	char	*ret;
@@ -20,14 +20,14 @@ char	*ft_form_path(char *path, char *cmd)
 	tmp = ft_strjoin(path, "/");
 	if (!tmp)
 	{
-		ft_fprintf(STDERR_FILENO, "failed alloc path '%s/': %s\n",
+		ft_fprintf(info->saved_streams[1], "failed alloc path '%s/': %s\n",
 			path, strerror(errno));
 		return (NULL);
 	}
 	ret = ft_strjoin(tmp, cmd);
 	if (!ret)
 	{
-		ft_fprintf(STDERR_FILENO, "failed alloc path '%s%s': %s\n",
+		ft_fprintf(info->saved_streams[1], "failed alloc path '%s%s': %s\n",
 			tmp, cmd, strerror(errno));
 		free(tmp);
 		return (NULL);
@@ -36,7 +36,7 @@ char	*ft_form_path(char *path, char *cmd)
 	return (ret);
 }
 
-char *ft_search_in_paths(char **splitted_path, char *cmd)
+char *ft_search_in_paths(char **splitted_path, char *cmd, t_minishell *info)
 {
 	int i;
 	char *path;
@@ -44,7 +44,7 @@ char *ft_search_in_paths(char **splitted_path, char *cmd)
 	i = 0;
 	while (splitted_path[i])
 	{
-		path = ft_form_path(splitted_path[i], cmd);
+		path = ft_form_path(splitted_path[i], cmd, info);
 		if (path && access(path, X_OK) == 0)
 		{
 			free_args(splitted_path);
@@ -71,11 +71,11 @@ char *match_path(char *cmd, t_minishell *info)
 	splitted_path = ft_split(path_value + 5, ':');
 	if (!splitted_path)
 	{
-		ft_fprintf(STDERR_FILENO, "failed to split PATH\n");
+		ft_fprintf(info->saved_streams[1], "failed to split PATH\n");
 		info->last_exit_status = MALLOC_ERROR;
 		return (NULL);
 	}
-	return (ft_search_in_paths(splitted_path, cmd));
+	return (ft_search_in_paths(splitted_path, cmd, info));
 }
 
 int	command_child_process(char **args, t_minishell *info)
@@ -94,9 +94,9 @@ int	command_child_process(char **args, t_minishell *info)
 	execve(args[0], args, info->envp);
 	info->last_exit_status = errno;
 	if (errno == ENOENT)
-		ft_fprintf(STDERR_FILENO, "%s: command not found\n", args[0]);
+		ft_fprintf(info->saved_streams[1], "%s: command not found\n", args[0]);
 	else
-		ft_fprintf(STDERR_FILENO, "execve: %s\n", strerror(errno));
+		ft_fprintf(info->saved_streams[1], "execve: %s\n", strerror(errno));
 	free_args(args);
 	ft_exit(NULL, info);
 	return (info->last_exit_status);
@@ -112,7 +112,7 @@ int execute_non_builtin(char **args, t_minishell *info)
     else if (pid < 0)
     {
         info->last_exit_status = errno;
-        ft_fprintf(STDERR_FILENO, "fork: %s\n", strerror(errno));
+        ft_fprintf(info->saved_streams[1], "fork: %s\n", strerror(errno));
         return (info->last_exit_status);
     }
     return (ft_wait_pid(pid, info));

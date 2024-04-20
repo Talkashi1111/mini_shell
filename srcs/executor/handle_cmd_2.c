@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:59:33 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/17 19:33:29 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:53:00 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int ft_wait_pid(int child_pid, t_minishell *info)
 			if (errno == ECHILD)
 				break ;
 			info->last_exit_status = errno;
-			ft_fprintf(STDERR_FILENO, "waitpid: %s\n", strerror(errno));
+			ft_fprintf(info->saved_streams[1], "waitpid: %s\n", strerror(errno));
 			break ;
 		}
 		if (pid_tmp != child_pid)
@@ -34,7 +34,7 @@ int ft_wait_pid(int child_pid, t_minishell *info)
 		else if (WIFSIGNALED(status))
 			info->last_exit_status = 128 + WTERMSIG(status);
 		else
-			ft_fprintf(STDERR_FILENO, "Child process exited with unknown status\n");
+			ft_fprintf(info->saved_streams[1], "Child process exited with unknown status\n");
 	}
 	return (info->last_exit_status);
 }
@@ -87,14 +87,14 @@ void    ft_close_fds(int fds[2], t_minishell *info)
     if (fds[0] != -1 && close(fds[0]) == -1)
     {
         info->last_exit_status = errno;
-        ft_fprintf(STDERR_FILENO, "close(%d): %s: %s\n",
+        ft_fprintf(info->saved_streams[1], "close(%d): %s: %s\n",
             fds[0], info->token_list->str, strerror(errno));
     }
     fds[0]= -1;
     if (fds[1] != -1 && close(fds[1]) == -1)
     {
         info->last_exit_status = errno;
-        ft_fprintf(STDERR_FILENO, "close(%d): %s: %s\n",
+        ft_fprintf(info->saved_streams[1], "close(%d): %s: %s\n",
             fds[1], info->token_list->str, strerror(errno));
     }
     fds[1] = -1;
