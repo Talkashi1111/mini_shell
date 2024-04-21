@@ -3,74 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   expand_wildcards.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 21:49:03 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/20 11:53:03 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/21 22:15:51 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_match( char *str, char *pattern) 
+void	assign_ptrs(char **str1, char *str2, char **pattern1, char *pattern2)
 {
-    char *s_start;
-    char *wildcard_prev;
-
-    s_start = NULL;
-    wildcard_prev = NULL;
-    while (*str) 
-	{
-        // If the pattern character is '*' or the characters match
-        if (*pattern == '*') 
-        {
-            // Remember this wildcard position in the pattern and the corresponding string position
-            wildcard_prev = pattern++;
-            s_start = str;
-        } 
-        else if (*pattern == *str)
-        {
-            // Characters match, move to the next characters in both the string and the pattern
-            str++;
-            pattern++;
-        }
-		else if (wildcard_prev != NULL) 
-		{
-            // Mismatch, but we have a previous '*' wildcard to backtrack to
-            pattern = wildcard_prev + 1; // Move pattern pointer back to the character after '*'
-            s_start++; // Move string pointer to the next character after the last match attempt
-            str = s_start;  // Advance string pointer to the next character after the last match attempt
-        } 
-		else 
-            return (FALSE);
-    }
-    // Skip over any remaining '*' wildcards in the pattern
-    while (*pattern && *pattern == '*')
-            pattern++;
-    return (*pattern == '\0');
+	*str1 = str2;
+	*pattern1 = pattern2;
 }
 
-int get_wildcard(t_token_list **wildcard_list, char *pattern, t_minishell *info)
+int	is_match( char *str, char *pattern)
 {
-    DIR             *dir;
-    struct dirent   *entry;
+	char	*s_start;
+	char	*wildcard_prev;
+
+	assign_ptrs(&s_start, NULL, &wildcard_prev, NULL);
+	while (*str)
+	{
+		if (*pattern == '*')
+		{
+			wildcard_prev = pattern++;
+			s_start = str;
+		}
+		else if (*pattern == *str)
+			assign_ptrs(&str, str + 1, &pattern, pattern + 1);
+		else if (wildcard_prev != NULL)
+		{
+			pattern = wildcard_prev + 1;
+			s_start++;
+			str = s_start;
+		}
+		else
+			return (FALSE);
+	}
+	while (*pattern && *pattern == '*')
+		pattern++;
+	return (*pattern == '\0');
+}
+
+void	ft_itarate_find(DIR *dir, char *pattern, t_token_list **wildcard_list)
+{
+	struct dirent	*entry;
 	t_token_list	*tmp;
 
-	(*wildcard_list) = create_token();
-	if (!(*wildcard_list))
-	{
-		info->last_exit_status = errno;
-		return (info->last_exit_status);
-	}
 	tmp = (*wildcard_list);
-	dir = opendir(".");
-	if (!dir) 
-	{
-		info->last_exit_status = errno;
-        ft_fprintf(info->saved_streams[1], "opendir: %s\n", strerror(errno));
-		free_token_list((*wildcard_list));
-        return (info->last_exit_status);
-    }
 	while (TRUE)
 	{
 		entry = readdir(dir);
@@ -80,63 +62,52 @@ int get_wildcard(t_token_list **wildcard_list, char *pattern, t_minishell *info)
 			continue ;
 		tmp->next = new_token(entry->d_name, WORD);
 		if (!tmp->next)
-		{
-			info->last_exit_status = errno;
-			free_token_list((*wildcard_list)->next);
-			(*wildcard_list)->next = NULL;
 			break ;
-		}
 		tmp = tmp->next;
 	}
 	tmp = (*wildcard_list);
 	(*wildcard_list) = (*wildcard_list)->next;
-	if ((*wildcard_list) == NULL)
-	{
-		(*wildcard_list) = new_token(pattern, WORD);
-		if (!(*wildcard_list))
-		{
-			info->last_exit_status = errno;
-			free_token_list((*wildcard_list));
-			return (info->last_exit_status);
-		}//to verify about freeing 
-	}
 	free(tmp);
-	if (closedir(dir) == -1)
-		ft_fprintf(info->saved_streams[1], "closedir: %s\n", strerror(errno));
-	return (OK);
 }
 
-t_token_list	*last_list_elem(t_token_list *list)
+int	get_wildcard(t_token_list **wildcard_list, char *pattern, t_minishell *info)
 {
-	if (list)
-		while (list->next)
-			list = list->next;
-	return (list);
+	DIR				*dir;
+
+	(*wildcard_list) = create_token();
+	if (!(*wildcard_list))
+	{
+		info->last_exit_status = errno;
+		return (info->last_exit_status);
+	}
+	dir = opendir(".");
+	if (!dir)
+	{
+		info->last_exit_status = errno;
+		ft_fprintf(info->saved_streams[1], "opendir: %s\n", strerror(errno));
+		free_token_list((*wildcard_list));
+		return (info->last_exit_status);
+	}
+	ft_itarate_find(dir, pattern, wildcard_list);
+	if (no_path_found_and_closedir(info, wildcard_list, pattern, dir) != OK)
+		return (info->last_exit_status);
+	return (OK);
 }
 
 int	wildcard_handler(t_token_list **args, t_minishell *info, char runtime)
 {
 	t_token_list	tmp;
 	t_token_list	*tmp_ptr;
-	t_token_list	*wildcard_list;
-	t_token_list	*last;
 
 	tmp_ptr = &tmp;
 	tmp_ptr->next = *args;
 	*args = tmp_ptr;
-	wildcard_list = NULL;
 	while (tmp_ptr->next)
 	{
 		if (tmp_ptr->next->type == WORD && strchr(tmp_ptr->next->str, '*'))
 		{
-			if(get_wildcard(&wildcard_list, tmp_ptr->next->str, info) != OK)
+			if (assign_to_list_wildcard(info, tmp_ptr) != OK)
 				return (info->last_exit_status);
-			last = last_list_elem(wildcard_list);
-			last->next = tmp_ptr->next->next;
-			free(tmp_ptr->next->str);
-			free(tmp_ptr->next);
-			tmp_ptr->next = wildcard_list;
-			tmp_ptr = last;
 		}
 		else if (runtime && tmp_ptr->next->type == STDIN_HEREDOC)
 			tmp_ptr = tmp_ptr->next->next;

@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 16:48:12 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/21 22:14:52 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,10 @@ int				ft_run(t_node *node, t_minishell *info);
 void			ft_free_pipes(t_minishell *info);
 int				ft_open_pipes(t_node *node, t_minishell *info);
 int				wildcard_handler(t_token_list **token, t_minishell *info, char runtime);
+int				assign_to_list_wildcard(t_minishell *info, t_token_list *tmp_ptr);
+int	no_path_found_and_closedir(t_minishell *info, t_token_list **wildcard_list,
+	char *pattern, DIR *dir);
+int				get_wildcard(t_token_list **wildcard_list, char *pattern, t_minishell *info);
 int				remove_quotes(t_token_list *args, t_minishell *info, char runtime);
 char			expand_dollars(t_token_list **args, t_minishell *info, char runtime);
 int				execute_non_builtin(char **args, t_minishell *info);

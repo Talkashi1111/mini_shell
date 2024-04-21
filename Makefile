@@ -25,6 +25,7 @@ FILES := main.c \
 		executor/expand_dollars.c \
 		executor/expand_quotes.c \
 		executor/expand_wildcards.c \
+		executor/expand_wildcards_utils.c \
 		executor/handle_cmd_1.c \
 		executor/handle_cmd_2.c \
 		executor/handle_cmd_3.c \
