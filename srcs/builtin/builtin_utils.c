@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:44:31 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 11:53:36 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/23 10:40:12 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int	update_or_add_envp(t_minishell *info, char *str, char *new_val)
 		{
 			free(info->envp[i]);
 			info->envp[i] = new_entry;
+			info->last_exit_status = OK;
 			return (OK);
 		}
 		i++;
@@ -104,6 +105,7 @@ int	update_or_add_envp(t_minishell *info, char *str, char *new_val)
 	if (add_envp(info, new_entry) == MALLOC_ERROR)
 	{
 		free(new_entry);
+		info->last_exit_status = MALLOC_ERROR;
 		return (MALLOC_ERROR);
 	}
 	return (OK);

@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:30 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 16:19:00 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/23 11:03:59 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 int	ft_getcwd(char *path, size_t size, t_minishell *info)
 {
-	int	err;
+	/* int	err; */
 
 	if (getcwd(path, size) == NULL)
 	{
-		err = errno;
-		ft_fprintf(info->saved_streams[1], "pwd: %s\n", strerror(err));
-		return (err);
+		info->last_exit_status = ERROR_RET;
+		ft_fprintf(info->saved_streams[1], "pwd: %s\n", strerror(errno));
+		return (info->last_exit_status);
 	}
 	return (OK);
 }
@@ -44,7 +44,7 @@ int	ft_pwd(char *args[], t_minishell *info)
 	}
 	err = ft_getcwd(path, sizeof(path), info);
 	if (err != OK)
-		return (err);
+		return (info->last_exit_status);
 	err = update_or_add_envp(info, "PWD=", path);
 	if (err != OK)
 		return (err);

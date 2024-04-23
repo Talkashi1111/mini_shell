@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_cmd_1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:57:47 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 11:53:01 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/23 11:50:06 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	parse_cmd(t_node *node, t_minishell *info)
 
 int	pre_execution(t_node *node, char ***args, t_minishell *info, t_pfunc *func)
 {
-	if (parse_cmd(node, info) != OK)
+	if (parse_cmd(node, info) != OK)//i don't understand , in this case we cannot parse the $? from last command...
 		return (info->last_exit_status);
 	*args = token_list_to_args(node->args, info);
 	if (!args)
@@ -52,7 +52,7 @@ int	handle_command(t_node *node, t_minishell *info)
 
 	args = NULL;
 	func = NULL;
-	info->last_exit_status = OK;
+	info->last_exit_status = OK; //it ruined the last_exit_status
 	if (pre_execution(node, &args, info, &func) == OK)
 	{
 		if (apply_redirections(node->redi, info) == OK)

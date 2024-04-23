@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/23 10:00:21 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/23 10:52:45 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ enum tokenizer
 enum returns
 {
 	OK,
+	ERROR_RET = 1,
 	SYNTAX_ERROR = -7,
 	MALLOC_ERROR = -8,
 	NOT_FOUND = -9,
@@ -103,6 +104,12 @@ typedef struct s_node
 	unsigned int	child_nb;
 	struct s_node	**child;
 }	t_node;
+
+typedef struct s_dollar_info
+{
+	bool	to_free;
+	char	*seq;
+}	t_dollar_info;
 
 struct s_minishell;
 

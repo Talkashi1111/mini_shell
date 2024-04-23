@@ -3,30 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   expand_dollars.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 11:53:05 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/23 10:26:58 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-long long	with_dollar(char **str, char **seq, unsigned int *len, bool *to_free, t_minishell *info)
+long long	with_dollar(char **str, t_dollar_info *dollar_info, unsigned int *len, t_minishell *info)
 {
 	char			*delimiters;
 	unsigned int	varname_len;
 	long long		i;
-	
+
 	i = 0;
 	delimiters = " \t\n\v\f\r'*\"$=\0";
 	if ((*str)[i + 1] == '?')
 	{
-		*seq = ft_itoa(info->last_exit_status);
-		if (!*seq)
+		(dollar_info->seq) = ft_itoa(info->last_exit_status);
+		if (!(dollar_info->seq) )
 			return (-1);
-		*to_free = TRUE;
-		i = ft_strlen(*seq);
+		dollar_info->to_free = TRUE;
+		i = ft_strlen((dollar_info->seq));
 		*str += 2;
 	}
 	else
@@ -34,9 +34,9 @@ long long	with_dollar(char **str, char **seq, unsigned int *len, bool *to_free, 
 		varname_len = 0;
 		while (ft_strchr(delimiters, (*str + 1)[varname_len]) == 0)
 			varname_len++;
-		*seq = find_envp_arg(info->envp, *str + 1 , varname_len);
-		if (*seq)
-			i = ft_strlen(*seq);
+		(dollar_info->seq)  = find_envp_arg(info->envp, *str + 1 , varname_len);
+		if ((dollar_info->seq) )
+			i = ft_strlen((dollar_info->seq));
 		*str += varname_len + 1;
 	}
 	*len += i;
@@ -52,7 +52,7 @@ long long no_dollar(char **str, char **seq, unsigned int *len)
 	while ((*str)[i] != '$' && (*str)[i] != '\0')
 	{
 		if ((*str)[i] == '\'')
-			i += to_end_of_quote(*str + i) - (*str + i); 
+			i += to_end_of_quote(*str + i) - (*str + i);
 		i++;
 	}
 	*str += i;
@@ -64,16 +64,17 @@ long long no_dollar(char **str, char **seq, unsigned int *len)
 char	*expand_dollar(char *str, unsigned int len, t_minishell *info)
 {
 	char		*new_str;
-	char		*seq;
-	bool		to_free;
+	/* char		*seq;
+	bool		to_free; */
+	t_dollar_info	dollar_info;
 	long long	i;
 
-	to_free = FALSE;
+	dollar_info.to_free = FALSE;
 	new_str = NULL;
 	if (str[0] == '$')
-		i = with_dollar(&str, &seq, &len, &to_free, info);
+		i = with_dollar(&str, &dollar_info, &len, info);
 	else
-		i = no_dollar(&str, &seq, &len);
+		i = no_dollar(&str, &(dollar_info.seq), &len);
 	if (i == -1)
 		return (NULL);
 	if (*str == '\0')
@@ -82,8 +83,8 @@ char	*expand_dollar(char *str, unsigned int len, t_minishell *info)
 		new_str[len] = '\0';
 		if (!new_str)
 		{
-			if (to_free == TRUE)
-				free(seq);
+			if (dollar_info.to_free == TRUE)
+				free(dollar_info.seq);
 			return (NULL);
 		}
 	}
@@ -91,9 +92,9 @@ char	*expand_dollar(char *str, unsigned int len, t_minishell *info)
 		new_str = expand_dollar(str, len, info);
 	if (new_str)
 		while (i)
-			new_str[--len] = seq[--i];
-	if (to_free == TRUE)
-		free(seq);
+			new_str[--len] = dollar_info.seq[--i];
+	if (dollar_info.to_free == TRUE)
+		free(dollar_info.seq);
 	return (new_str);
 }
 

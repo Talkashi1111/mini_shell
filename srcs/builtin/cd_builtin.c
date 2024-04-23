@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:49:54 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/20 16:18:46 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/23 11:02:51 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,18 @@
 
 int	ft_chdir(t_minishell *info, char *new_path, char *curr_path, char *arg)
 {
-	int	err;
 
 	if (chdir(new_path) == -1)
 	{
-		err = errno;
-		ft_fprintf(info->saved_streams[1], "cd: %s: %s\n", new_path, strerror(err));
-		return (err);
+		info->last_exit_status = ERROR_RET;
+		ft_fprintf(info->saved_streams[1], "cd: %s: %s\n", new_path, strerror(errno));
+		return (info->last_exit_status);
 	}
 	if (update_or_add_envp(info, "OLDPWD=", curr_path) == MALLOC_ERROR)
 		return (MALLOC_ERROR);
-	err = ft_getcwd(curr_path, PATH_MAX, info);
-	if (err != OK)
-		return (err);
+	info->last_exit_status = ft_getcwd(curr_path, PATH_MAX, info);
+	if (info->last_exit_status != OK)
+		return (info->last_exit_status);
 	if (update_or_add_envp(info, "PWD=", curr_path) == MALLOC_ERROR)
 		return (MALLOC_ERROR);
 	if (arg && ft_strncmp(arg, "-", sizeof("-")) == 0)
@@ -42,7 +41,8 @@ int	ft_cd2(t_minishell *info, char *path, char **new_path)
 		if (*new_path == NULL || *new_path[0] == '\0')
 		{
 			ft_fprintf(info->saved_streams[1], "cd: OLDPWD not set\n");
-			return (NOT_FOUND);
+			info->last_exit_status = ERROR_RET;
+			return (ERROR_RET);
 		}
 	}
 	else
@@ -65,13 +65,14 @@ int	ft_cd(char *args[], t_minishell *info)
 		if (new_path == NULL)
 		{
 			ft_fprintf(info->saved_streams[1], "cd: HOME not set\n");
-			return (NOT_FOUND);
+			info->last_exit_status = ERROR_RET;
+			return (ERROR_RET);
 		}
 	}
 	else if (args[1] != NULL)
 	{
-		if (ft_cd2(info, args[1], &new_path) == NOT_FOUND)
-			return (NOT_FOUND);
+		if (ft_cd2(info, args[1], &new_path) != OK)
+			return (info->last_exit_status);
 	}
 	return (ft_chdir(info, new_path, curr_path, args[1]));
 }
