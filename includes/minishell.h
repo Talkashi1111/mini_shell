@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/21 22:14:52 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/23 10:00:21 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,18 +73,18 @@ enum returns
 
 enum token_type
 {
-	WORD,
-	STDIN,
-	STDIN_HEREDOC,
-	STDOUT,
-	STDOUT_APPEND,
-	OR,
-	AND,
-	PIPE,
-	OPENPAR,
-	CLOSEPAR,
-	CMD,
-	HEREDOC,
+    WORD,
+    STDIN,
+    STDIN_HEREDOC,
+    STDOUT,
+    STDOUT_APPEND,
+    OR,
+    AND,
+    PIPE,
+    CLOSEPAR,
+    OPENPAR,
+    CMD,
+    HEREDOC,
 };
 
 typedef struct s_token_list
@@ -196,6 +196,7 @@ int				execute_non_builtin(char **args, t_minishell *info);
 int 			ft_wait_pid(int child_pid, t_minishell *info);
 void			ft_close_fds(int fds[2], t_minishell *info);
 int				check_redirections(t_node *node, t_minishell *info);
+void			close_saved_streams(t_minishell *info, int fd);
 int    			save_std_streams(t_minishell *info);
 int				restore_std_streams(int saved_std[2], t_minishell *info);
 int				handle_pipex(t_node *node, t_minishell *info);

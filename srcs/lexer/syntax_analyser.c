@@ -21,32 +21,23 @@ char	syntax_error(char *str, t_minishell *info)
 
 char	analyse_middle_token(t_token_list *token, unsigned int *openpar_count, unsigned int *closepar_count)
 {
-	if ((token->type == OR || token->type == AND || token->type == PIPE) &&
-		(token->next->type == OR || token->next->type == AND || \
-		token->next->type == PIPE || token->next->type == CLOSEPAR))
+	if (token->type >= OR && token->type <= PIPE && \
+		token->next->type >= OR && token->next->type <= CLOSEPAR)
 		return (SYNTAX_ERROR);
-	else if ((token->type == STDIN || token->type == STDIN_HEREDOC || \
-			token->type == STDOUT || token->type == STDOUT_APPEND) && \
+	else if (token->type >= STDIN && token->type <= STDOUT_APPEND && \
 			token->next->type != WORD)
 		return (SYNTAX_ERROR);
-	else if (token->type == OPENPAR)
-	{
-		(*openpar_count)++;
-		if (token->next->type == AND || token->next->type == OR || \
-		token->next->type == PIPE || token->next->type == CLOSEPAR)
-			return (SYNTAX_ERROR);
-	}
-	else if (token->type == CLOSEPAR)
-	{
-		(*closepar_count)++;
-		if (token->next->type == STDIN || \
-		token->next->type == STDIN_HEREDOC || token->next->type == STDOUT || \
-		token->next->type == STDOUT_APPEND || token->next->type == WORD)
-			return (SYNTAX_ERROR);
-	}
+	else if (token->type == OPENPAR && ((*openpar_count)++ || 1) && \
+			token->next->type >= OR && token->next->type <= CLOSEPAR)
+		return (SYNTAX_ERROR);
+	else if ((token->type == CLOSEPAR && ((*closepar_count)++ || 1) && \
+			(token->next->type >= WORD && token->next->type <= STDOUT_APPEND)) \
+			|| token->next->type == OPENPAR)
+		return (SYNTAX_ERROR);
+	else if (token->type == WORD && token->next->type == OPENPAR)
+		return (SYNTAX_ERROR);
 	return (OK);
 }
-
 /**
  * Checks the syntax of a token list.
  * on check l'ordre de gauche a droite donc on fait jamais de verif avec ce qu'il y a a gauche
@@ -64,8 +55,7 @@ char	syntax_analyser(t_token_list *token, t_minishell *info)
 
 	openpar_count = 0;
 	closepar_count = 0;
-	if (token->type == OR || token->type == AND || token->type == PIPE || \
-		token->type == CLOSEPAR)
+	if (token->type >= OR && token->type <= CLOSEPAR)
 		return (syntax_error(token->str, info));
 	while (token->next)
 	{

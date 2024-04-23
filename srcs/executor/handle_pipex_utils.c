@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 16:48:46 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/20 16:52:29 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/23 10:00:26 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,13 @@ int	ft_open_pipes_util(t_minishell *info, t_node *node)
 	info->pipe_nb = node->pipe_nb;
 	info->last_exit_status = OK;
 	return (OK);
+}
+
+void	close_saved_streams(t_minishell *info, int fd)
+{
+	if (close(fd) == -1)
+	{
+		info->last_exit_status = errno;
+		ft_fprintf(info->saved_streams[1], "close: %s\n", strerror(errno));
+	}
 }
