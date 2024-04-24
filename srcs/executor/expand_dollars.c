@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/23 23:56:06 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/24 14:43:50 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,23 +66,22 @@ long long	no_dollar(char **str, char **seq, unsigned int *len)
 	return (i);
 }
 
-int	assign_null_var(t_minishell *info, unsigned int len, char **new_str, t_dollar_info *dollar_info)
+int	assign_null_var(t_minishell *info, unsigned int len,
+	char **new_str, t_dollar_info *dollar_info)
 {
-		*new_str = (char *)ft_calloc((len + 1), sizeof(char));
-
-		if (!(*new_str))
+	*new_str = (char *)ft_calloc((len + 1), sizeof(char));
+	if (!(*new_str))
+	{
+		info->last_exit_status = errno;
+		if (dollar_info->to_free == TRUE)
 		{
-			info->last_exit_status = errno;
-			if (dollar_info->to_free == TRUE)
-			{
-				free(dollar_info->seq);
-				dollar_info->seq = NULL;
-			}
-			return (MALLOC_ERROR);
+			free(dollar_info->seq);
+			dollar_info->seq = NULL;
 		}
-		(*new_str)[len] = '\0';
-		return (OK);
-
+		return (MALLOC_ERROR);
+	}
+	(*new_str)[len] = '\0';
+	return (OK);
 }
 
 char	*expand_dollar(char *str, unsigned int len, t_minishell *info)
@@ -103,14 +102,6 @@ char	*expand_dollar(char *str, unsigned int len, t_minishell *info)
 	{
 		if (assign_null_var(info, len, &new_str, &dollar_info) != OK)
 			return (NULL);
-/* 		new_str = (char *)malloc((len + 1) * sizeof(char));
-		new_str[len] = '\0';
-		if (!new_str)
-		{
-			if (dollar_info.to_free == TRUE)
-				free(dollar_info.seq);
-			return (NULL);
-		} */
 	}
 	else
 		new_str = expand_dollar(str, len, info);
@@ -133,7 +124,9 @@ char	expand_dollars(t_token_list **args, t_minishell *info, char runtime)
 	*args = tmp_ptr;
 	while (tmp_ptr->next)
 	{
-		if (!(ft_strchr(tmp_ptr->next->str, '$') && tmp_ptr->next->str[0] != '\0' && tmp_ptr->next->str[1] != '\0'))
+		if (!(ft_strchr(tmp_ptr->next->str, '$')
+				&& tmp_ptr->next->str[0] != '\0'
+				&& tmp_ptr->next->str[1] != '\0'))
 		{
 			tmp_ptr = tmp_ptr->next;
 			continue ;
