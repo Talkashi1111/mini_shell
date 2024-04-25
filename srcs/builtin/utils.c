@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:47 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 13:16:49 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:47:17 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-const char	*node_type_to_string_expand(enum token_type type)
+const char	*node_type_to_string_expand(enum e_token_type type)
 {
 	if (type == AND)
 		return ("AND");
@@ -28,7 +28,7 @@ const char	*node_type_to_string_expand(enum token_type type)
 		return ("UNKNOWN");
 }
 
-const char	*node_type_to_string(enum token_type type)
+const char	*node_type_to_string(enum e_token_type type)
 {
 	if (type == WORD)
 		return ("WORD");
