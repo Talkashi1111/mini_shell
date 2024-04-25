@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 14:04:31 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/25 20:21:37 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,14 @@ void	free_tokens_tree_heredocs(t_minishell *info)
 	info->token_list = NULL;
 }
 
+/**
+ * The main function that runs the minishell loop.
+ * to display tree run make with DEBUG=1 and add the following after tree
+ * display_tree(info->tree);
+ * @param info The t_minishell structure containing
+ * information about the minishell.
+ * @return The exit status of the minishell.
+ */
 char	minishell_loop(t_minishell *info)
 {
 	char	*line;

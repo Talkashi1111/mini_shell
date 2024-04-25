@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 14:46:01 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/25 19:13:28 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,10 @@ typedef struct s_minishell
 int				minishell_init(t_minishell *info, char **envp);
 void			builtin_init(t_minishell *info);
 void			no_line(t_minishell *info, char *line);
+
+/*debug*/
+void			display_token_list(t_token_list *token);
+void			display_2(t_node *node, int depth, int *siblings);
 
 /* builtins */
 int				count_args(char **args);

@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:56:57 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 16:49:51 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/25 19:23:59 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,6 @@ int	handle_subshell(t_node *node, t_minishell *info)
 	else if (WIFSIGNALED(status))
 		info->last_exit_status = 128 + WTERMSIG(status);
 	else
-		ft_fprintf(info->saved_streams[1], "Child process exited with unknown status\n");
+		ft_fprintf(info->saved_streams[1], "Child process exited unknown\n");
 	return (info->last_exit_status);
 }

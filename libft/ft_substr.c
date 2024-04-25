@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 19:09:53 by tkashi            #+#    #+#             */
-/*   Updated: 2024/03/31 18:01:08 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/25 14:50:13 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,14 @@
  * @param s The string from which to extract the substring.
  * @param start The starting index of the substring in the string.
  * @param len The maximum length of the substring.
- * @return The extracted substring, or NULL if memory allocation fails or if s is NULL.
+ * @return The extracted substring,
+ * or NULL if memory allocation fails or if s is NULL.
  */
-char *ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	size_t res_len;
-	char *sub;
-	size_t s_len;
+	size_t	res_len;
+	char	*sub;
+	size_t	s_len;
 
 	if (s == NULL)
 		return (NULL);
