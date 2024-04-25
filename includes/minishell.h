@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/23 10:52:45 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/25 09:36:35 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,11 @@ typedef struct s_minishell
 	unsigned int		pipe_nb;
 
 }	t_minishell;
+
+/* minishell init*/
+int	minishell_init(t_minishell *info, char **envp);
+void	builtin_init(t_minishell *info);
+void	no_line(t_minishell *info, char *line);
 
 /* builtins */
 int		count_args(char **args);

@@ -6,6 +6,7 @@ INCLUDE_DIR := includes
 SRC_DIR := srcs
 BONUS_DIR := bonus
 FILES := main.c \
+		init_minishell.c \
 		builtin/cd_builtin.c \
 		builtin/echo_builtin.c \
 		builtin/env_builtin.c \
@@ -19,6 +20,7 @@ FILES := main.c \
 		lexer/tokenizer_1.c \
 		lexer/tokenizer_2.c \
 		lexer/tokenizer_3.c \
+		lexer/tokenizer_utils.c \
 		parser/make_tree_1.c \
 		parser/make_tree_2.c \
 		parser/make_tree_3.c \

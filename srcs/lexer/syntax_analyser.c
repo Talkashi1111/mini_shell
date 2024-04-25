@@ -19,7 +19,8 @@ char	syntax_error(char *str, t_minishell *info)
 	return (info->last_exit_status);
 }
 
-char	analyse_middle_token(t_token_list *token, unsigned int *openpar_count, unsigned int *closepar_count)
+char	analyse_middle_token(t_token_list *token,
+	unsigned int *openpar_count, unsigned int *closepar_count)
 {
 	if (token->type >= OR && token->type <= PIPE && \
 		token->next->type >= OR && token->next->type <= CLOSEPAR)
@@ -38,10 +39,11 @@ char	analyse_middle_token(t_token_list *token, unsigned int *openpar_count, unsi
 		return (SYNTAX_ERROR);
 	return (OK);
 }
+
 /**
  * Checks the syntax of a token list.
- * on check l'ordre de gauche a droite donc on fait jamais de verif avec ce qu'il y a a gauche
- *
+ * on check l'ordre de gauche a droite donc on
+ * fait jamais de verif avec ce qu'il y a a gauche
  * @param token The token list to analyze.
  * @return The result of the syntax analysis.
  *         - NOT_FOUND if the token list is NULL.

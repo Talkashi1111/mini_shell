@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 13:36:32 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 11:52:45 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/24 14:49:36 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	to_word_end(char **end)
 			*end = to_end_of_quote(*end);
 		else if (ft_isspace(**end))
 			break ;
-		else if (**end == '&' && *((*end) + 1) == '&') 
+		else if (**end == '&' && *((*end) + 1) == '&')
 			break ;
 		else if (**end == '|')
 			break ;

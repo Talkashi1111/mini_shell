@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 21:49:03 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/21 22:15:51 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/25 10:34:48 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ int	wildcard_handler(t_token_list **args, t_minishell *info, char runtime)
 		{
 			if (assign_to_list_wildcard(info, tmp_ptr) != OK)
 				return (info->last_exit_status);
+			tmp_ptr = tmp_ptr->next;
 		}
 		else if (runtime && tmp_ptr->next->type == STDIN_HEREDOC)
 			tmp_ptr = tmp_ptr->next->next;
