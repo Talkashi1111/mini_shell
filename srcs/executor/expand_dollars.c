@@ -6,83 +6,11 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 13:16:52 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/25 20:56:08 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	search_var_len_dollar(t_minishell *info, char **str,
-	t_dollar_info *dollar_info, long long *i)
-{
-	unsigned int	varname_len;
-	char			*delimiters;
-
-	delimiters = " \t\n\v\f\r'*\"$=\0";
-	varname_len = 0;
-	while (ft_strchr(delimiters, (*str + 1)[varname_len]) == 0)
-		varname_len++;
-	(dollar_info->seq) = find_envp_arg(info->envp, *str + 1, varname_len);
-	if ((dollar_info->seq))
-		*i = ft_strlen((dollar_info->seq));
-	*str += varname_len + 1;
-}
-
-long long	with_dollar(char **str, t_dollar_info *dollar_info,
-	unsigned int *len, t_minishell *info)
-{
-	long long		i;
-
-	i = 0;
-	if ((*str)[i + 1] == '?')
-	{
-		(dollar_info->seq) = ft_itoa(info->last_exit_status);
-		if (!(dollar_info->seq))
-			return (-1);
-		dollar_info->to_free = TRUE;
-		i = ft_strlen((dollar_info->seq));
-		*str += 2;
-	}
-	else
-		search_var_len_dollar(info, str, dollar_info, &i);
-	*len += i;
-	return (i);
-}
-
-long long	no_dollar(char **str, char **seq, unsigned int *len)
-{
-	long long	i;
-
-	*seq = *str;
-	i = 0;
-	while ((*str)[i] != '$' && (*str)[i] != '\0')
-	{
-		if ((*str)[i] == '\'')
-			i += to_end_of_quote(*str + i) - (*str + i);
-		i++;
-	}
-	*str += i;
-	*len += i;
-	return (i);
-}
-
-int	assign_null_var(t_minishell *info, unsigned int len,
-	char **new_str, t_dollar_info *dollar_info)
-{
-	*new_str = (char *)ft_calloc((len + 1), sizeof(char));
-	if (!(*new_str))
-	{
-		info->last_exit_status = errno;
-		if (dollar_info->to_free == TRUE)
-		{
-			free(dollar_info->seq);
-			dollar_info->seq = NULL;
-		}
-		return (MALLOC_ERROR);
-	}
-	(*new_str)[len] = '\0';
-	return (OK);
-}
 
 char	*expand_dollar(char *str, unsigned int len, t_minishell *info)
 {
@@ -113,6 +41,35 @@ char	*expand_dollar(char *str, unsigned int len, t_minishell *info)
 	return (new_str);
 }
 
+void	remove_this_node(t_token_list *tmp_ptr)
+{
+	t_token_list	*to_free;
+
+	to_free = tmp_ptr->next;
+	tmp_ptr->next = tmp_ptr->next->next;
+	free(to_free->str);
+	free(to_free);
+}
+
+int	ft_is_skipable(t_token_list **tmp_ptr)
+{
+	if (!(ft_strchr((*tmp_ptr)->next->str, '$') && \
+		(*tmp_ptr)->next->str[0] != '\0' && \
+		(*tmp_ptr)->next->str[1] != '\0'))
+	{
+		(*tmp_ptr) = (*tmp_ptr)->next;
+		return (1);
+	}
+	return (0);
+}
+
+int	dollar_expansion_error(t_token_list **args, t_minishell *info)
+{
+	info->last_exit_status = errno;
+	*args = (*args)->next;
+	return (info->last_exit_status);
+}
+
 char	expand_dollars(t_token_list **args, t_minishell *info, char runtime)
 {
 	t_token_list	tmp;
@@ -124,29 +81,15 @@ char	expand_dollars(t_token_list **args, t_minishell *info, char runtime)
 	*args = tmp_ptr;
 	while (tmp_ptr->next)
 	{
-		if (!(ft_strchr(tmp_ptr->next->str, '$')
-				&& tmp_ptr->next->str[0] != '\0'
-				&& tmp_ptr->next->str[1] != '\0'))
-		{
-			tmp_ptr = tmp_ptr->next;
+		if (ft_is_skipable(&tmp_ptr))
 			continue ;
-		}
 		to_free = (t_token_list *)(tmp_ptr->next->str);
 		tmp_ptr->next->str = expand_dollar(tmp_ptr->next->str, 0, info);
 		free(to_free);
 		if (!tmp_ptr->next->str)
-		{
-			info->last_exit_status = errno;
-			*args = (*args)->next;
-			return (info->last_exit_status);
-		}
+			return (dollar_expansion_error(args, info));
 		else if (tmp_ptr->next->str[0] == '\0')
-		{
-			to_free = tmp_ptr->next;
-			tmp_ptr->next = tmp_ptr->next->next;
-			free(to_free->str);
-			free(to_free);
-		}
+			remove_this_node(tmp_ptr);
 		else if (runtime && tmp_ptr->next->type == STDIN_HEREDOC)
 			tmp_ptr = tmp_ptr->next->next;
 		else

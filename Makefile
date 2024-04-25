@@ -25,6 +25,7 @@ FILES := main.c \
 		parser/make_tree_2.c \
 		parser/make_tree_3.c \
 		executor/expand_dollars.c \
+		executor/expand_dollars_utils.c \
 		executor/expand_quotes.c \
 		executor/expand_wildcards.c \
 		executor/expand_wildcards_utils.c \

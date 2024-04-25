@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 19:13:28 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/25 20:54:32 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,6 +207,13 @@ void			free_heredocs_list(t_token_list *token, t_minishell *info);
 void			free_tree(t_node *node);
 
 /* executor */
+void			search_var_len_dollar(t_minishell *info, char **str, \
+				t_dollar_info *dollar_info, long long *i);
+long long		with_dollar(char **str, t_dollar_info *dollar_info, \
+				unsigned int *len, t_minishell *info);
+int				assign_null_var(t_minishell *info, unsigned int len, \
+				char **new_str, t_dollar_info *dollar_info);
+long long		no_dollar(char **str, char **seq, unsigned int *len);
 char			**token_list_to_args(t_token_list *token_list,
 					t_minishell *info);
 int				apply_redirections(t_token_list *redi, t_minishell *info);

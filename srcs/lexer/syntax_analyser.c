@@ -32,8 +32,8 @@ char	analyse_middle_token(t_token_list *token,
 			token->next->type >= OR && token->next->type <= CLOSEPAR)
 		return (SYNTAX_ERROR);
 	else if (token->type == CLOSEPAR && ((*closepar_count)++ || 1) && \
-			((token->next->type >= WORD && token->next->type <= STDOUT_APPEND)\
-			 || token->next->type == OPENPAR))
+			((token->next->type >= WORD && token->next->type <= \
+			STDOUT_APPEND) || token->next->type == OPENPAR))
 		return (SYNTAX_ERROR);
 	else if (token->type == WORD && token->next->type == OPENPAR)
 		return (SYNTAX_ERROR);
