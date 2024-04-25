@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:49:43 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 13:36:37 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:59:17 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,6 @@ void	heredoc_expander_end(int fd, char *eof, t_minishell *info)
 		ft_fprintf(info->saved_streams[1], "close: %s\n", strerror(errno));
 	}
 	free(eof);
-}
-
-int	ft_free(char *line)
-{
-	free(line);
-	return (1);
 }
 
 int	heredoc_expander(uintptr_t file_no, char *eof, t_minishell *info)

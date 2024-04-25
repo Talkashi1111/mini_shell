@@ -63,7 +63,8 @@ t_node	*new_tree_node(char type, unsigned int child_nb, \
 		if (!new_node->child)
 		{
 			info->last_exit_status = errno;
-			ft_fprintf(info->saved_streams[1], "malloc: %s\n", strerror(errno));
+			ft_fprintf(info->saved_streams[1], "malloc: %s\n", \
+			strerror(errno));
 			free(new_node);
 			return (NULL);
 		}
@@ -71,10 +72,10 @@ t_node	*new_tree_node(char type, unsigned int child_nb, \
 	return (new_node);
 }
 
-void free_tree(t_node *node)
+void	free_tree(t_node *node)
 {
 	unsigned int	i;
-	
+
 	if (!node)
 		return ;
 	if (node->child_nb)

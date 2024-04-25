@@ -37,6 +37,7 @@ FILES := main.c \
 		executor/redirections.c \
 		executor/run_tree.c \
 		parser/heredoc.c \
+		parser/heredoc_utils.c \
 		debug.c
 SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
 CFLAGS := -Wall -Wextra -Werror -DHEREDOC_PATH='"$(shell pwd)"'
