@@ -3,28 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   handle_cmd_2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:59:33 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 13:16:58 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:28:18 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_wait_pid(int child_pid, t_minishell *info)
+int	ft_wait_pid(int child_pid, t_minishell *info)
 {
-	int pid_tmp;
-	int status;
+	int	pid_tmp;
+	int	status;
 
 	while (TRUE)
 	{
 		pid_tmp = waitpid(-1, &status, 0);
-		if (pid_tmp == -1) {
+		if (pid_tmp == -1)
+		{
 			if (errno == ECHILD)
 				break ;
 			info->last_exit_status = errno;
-			ft_fprintf(info->saved_streams[1], "waitpid: %s\n", strerror(errno));
+			ft_fprintf(info->saved_streams[1],
+				"waitpid: %s\n", strerror(errno));
 			break ;
 		}
 		if (pid_tmp != child_pid)
@@ -34,7 +36,7 @@ int ft_wait_pid(int child_pid, t_minishell *info)
 		else if (WIFSIGNALED(status))
 			info->last_exit_status = 128 + WTERMSIG(status);
 		else
-			ft_fprintf(info->saved_streams[1], "Child process exited with unknown status\n");
+			ft_fprintf(info->saved_streams[1], "Child process exited\n");
 	}
 	return (info->last_exit_status);
 }
@@ -81,21 +83,20 @@ char	**token_list_to_args(t_token_list *token_list, t_minishell *info)
 	return (args);
 }
 
-
-void    ft_close_fds(int fds[2], t_minishell *info)
+void	ft_close_fds(int fds[2], t_minishell *info)
 {
-    if (fds[0] != -1 && close(fds[0]) == -1)
-    {
-        info->last_exit_status = errno;
-        ft_fprintf(info->saved_streams[1], "close(%d): %s: %s\n",
-            fds[0], info->token_list->str, strerror(errno));
-    }
-    fds[0]= -1;
-    if (fds[1] != -1 && close(fds[1]) == -1)
-    {
-        info->last_exit_status = errno;
-        ft_fprintf(info->saved_streams[1], "close(%d): %s: %s\n",
-            fds[1], info->token_list->str, strerror(errno));
-    }
-    fds[1] = -1;
+	if (fds[0] != -1 && close(fds[0]) == -1)
+	{
+		info->last_exit_status = errno;
+		ft_fprintf(info->saved_streams[1], "close(%d): %s: %s\n",
+			fds[0], info->token_list->str, strerror(errno));
+	}
+	fds[0] = -1;
+	if (fds[1] != -1 && close(fds[1]) == -1)
+	{
+		info->last_exit_status = errno;
+		ft_fprintf(info->saved_streams[1], "close(%d): %s: %s\n",
+			fds[1], info->token_list->str, strerror(errno));
+	}
+	fds[1] = -1;
 }

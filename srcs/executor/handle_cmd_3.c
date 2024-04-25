@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_cmd_3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 16:04:15 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/25 13:17:00 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:30:56 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ char	*ft_form_path(char *path, char *cmd, t_minishell *info)
 	return (ret);
 }
 
-char *ft_search_in_paths(char **splitted_path, char *cmd, t_minishell *info)
+char	*ft_search_in_paths(char **splitted_path, char *cmd, t_minishell *info)
 {
-	int i;
-	char *path;
+	int		i;
+	char	*path;
 
 	i = 0;
 	while (splitted_path[i])
@@ -57,13 +57,13 @@ char *ft_search_in_paths(char **splitted_path, char *cmd, t_minishell *info)
 	return (ft_strdup(cmd));
 }
 
-char *match_path(char *cmd, t_minishell *info)
+char	*match_path(char *cmd, t_minishell *info)
 {
-	char 	*path_value;
+	char	*path_value;
 	char	**splitted_path;
 
-	if (!cmd || cmd[0] == '/' || !ft_strncmp(cmd, "./", 2) ||
-		!ft_strncmp(cmd, "../", 3))
+	if (!cmd || cmd[0] == '/' || !ft_strncmp(cmd, "./", 2)
+		|| !ft_strncmp(cmd, "../", 3))
 		return (ft_strdup(cmd));
 	path_value = find_envp_arg(info->envp, "PATH", 4);
 	if (!path_value)
@@ -102,18 +102,18 @@ int	command_child_process(char **args, t_minishell *info)
 	return (info->last_exit_status);
 }
 
-int execute_non_builtin(char **args, t_minishell *info)
+int	execute_non_builtin(char **args, t_minishell *info)
 {
-    pid_t     pid;
+	pid_t	pid;
 
-    pid = fork();
-    if (pid == 0)
-        command_child_process(args, info);
-    else if (pid < 0)
-    {
-        info->last_exit_status = errno;
-        ft_fprintf(info->saved_streams[1], "fork: %s\n", strerror(errno));
-        return (info->last_exit_status);
-    }
-    return (ft_wait_pid(pid, info));
+	pid = fork();
+	if (pid == 0)
+		command_child_process(args, info);
+	else if (pid < 0)
+	{
+		info->last_exit_status = errno;
+		ft_fprintf(info->saved_streams[1], "fork: %s\n", strerror(errno));
+		return (info->last_exit_status);
+	}
+	return (ft_wait_pid(pid, info));
 }
