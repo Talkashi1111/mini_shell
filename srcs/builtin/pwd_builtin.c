@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:30 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 13:16:43 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:04:14 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 int	ft_getcwd(char *path, size_t size, t_minishell *info)
 {
-	/* int	err; */
-
 	if (getcwd(path, size) == NULL)
 	{
 		info->last_exit_status = ERROR_RET;

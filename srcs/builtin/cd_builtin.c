@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:49:54 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/25 13:16:30 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:02:34 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ int	ft_chdir(t_minishell *info, char *new_path, char *curr_path, char *arg)
 	if (chdir(new_path) == -1)
 	{
 		info->last_exit_status = ERROR_RET;
-		ft_fprintf(info->saved_streams[1], "cd: %s: %s\n", new_path, strerror(errno));
+		ft_fprintf(info->saved_streams[1], "cd: %s: %s\n", new_path, \
+		strerror(errno));
 		return (info->last_exit_status);
 	}
 	if (update_or_add_envp(info, "OLDPWD=", curr_path) == MALLOC_ERROR)

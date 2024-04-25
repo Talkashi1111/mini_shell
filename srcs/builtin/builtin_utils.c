@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:44:31 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 13:16:29 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:02:50 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ t_pfunc	is_builtin(char *str, t_builtin *builtin)
 	while (builtin[i].name)
 	{
 		name_len = ft_strlen(builtin[i].name);
-		if (ft_strncmp(str, builtin[i].name, name_len) == 0 && str[name_len] == '\0')
+		if (ft_strncmp(str, builtin[i].name, name_len) == 0 && \
+			str[name_len] == '\0')
 			return (builtin[i].func);
 		i++;
 	}
