@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:49:54 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/23 11:02:51 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/25 13:16:30 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	ft_chdir(t_minishell *info, char *new_path, char *curr_path, char *arg)
 {
+	int	ret;
 
 	if (chdir(new_path) == -1)
 	{
@@ -23,9 +24,12 @@ int	ft_chdir(t_minishell *info, char *new_path, char *curr_path, char *arg)
 	}
 	if (update_or_add_envp(info, "OLDPWD=", curr_path) == MALLOC_ERROR)
 		return (MALLOC_ERROR);
-	info->last_exit_status = ft_getcwd(curr_path, PATH_MAX, info);
-	if (info->last_exit_status != OK)
+	ret = ft_getcwd(curr_path, PATH_MAX, info);
+	if (ret != OK)
+	{
+		info->last_exit_status = ret;
 		return (info->last_exit_status);
+	}
 	if (update_or_add_envp(info, "PWD=", curr_path) == MALLOC_ERROR)
 		return (MALLOC_ERROR);
 	if (arg && ft_strncmp(arg, "-", sizeof("-")) == 0)

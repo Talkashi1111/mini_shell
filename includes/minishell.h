@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 09:36:35 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/25 13:07:47 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ enum returns
 	MALLOC_ERROR = -8,
 	NOT_FOUND = -9,
 	USAGE_ERROR = -10,
+	AMBIGOUS_REDI_ERROR = -11,
 };
 
 enum token_type

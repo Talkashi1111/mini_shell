@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_wildcards.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 21:49:03 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/25 10:34:48 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/25 13:26:20 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,5 +116,5 @@ int	wildcard_handler(t_token_list **args, t_minishell *info, char runtime)
 			tmp_ptr = tmp_ptr->next;
 	}
 	*args = (*args)->next;
-	return (info->last_exit_status);
+	return (OK);
 }

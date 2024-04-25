@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:48:07 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/23 10:00:27 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/25 13:29:45 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,10 @@ int	apply_redirections(t_token_list *redi, t_minishell *info)
 int	check_redirections(t_node *node, t_minishell *info)
 {
 	t_token_list	*index;
+	int				ambiguity;
 
 	index = node->redi;
-	info->last_exit_status = OK;
+	ambiguity = OK;
 	if (index)
 	{
 		while (index->next)
@@ -107,13 +108,14 @@ int	check_redirections(t_node *node, t_minishell *info)
 			if (((index->type >= STDIN && index->type <= STDOUT_APPEND) && \
 			(index->next->type >= STDIN && index->next->type <= STDOUT_APPEND))
 				|| (index->type == WORD && index->next->type == WORD))
-				info->last_exit_status = 1;
+				ambiguity = AMBIGOUS_REDI_ERROR;
 			index = index->next;
 		}
 		if (index->type >= STDIN && index->type <= STDOUT_APPEND)
-			info->last_exit_status = 1;
+			ambiguity = AMBIGOUS_REDI_ERROR;
 	}
-	if (info->last_exit_status != OK)
+	if (ambiguity != OK)
 		ft_fprintf(info->saved_streams[1], "bash: ambigous redirection\n");
+	info->last_exit_status = ambiguity;
 	return (info->last_exit_status);
 }

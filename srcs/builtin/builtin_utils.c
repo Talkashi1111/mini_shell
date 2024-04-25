@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:44:31 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/23 10:40:12 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/25 13:16:29 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ int	update_or_add_envp(t_minishell *info, char *str, char *new_val)
 		{
 			free(info->envp[i]);
 			info->envp[i] = new_entry;
-			info->last_exit_status = OK;
 			return (OK);
 		}
 		i++;

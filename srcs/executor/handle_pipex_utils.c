@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_pipex_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 16:48:46 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/23 10:00:26 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/25 13:17:01 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	ft_open_pipes_util(t_minishell *info, t_node *node)
 		i++;
 	}
 	info->pipe_nb = node->pipe_nb;
-	info->last_exit_status = OK;
 	return (OK);
 }
 
