@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:57:47 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 13:24:04 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:43:47 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,21 +33,12 @@ int	parse_cmd(t_node *node, t_minishell *info)
 int	pre_execution(t_node *node, char ***args, t_minishell *info, t_pfunc *func)
 {
 	if (parse_cmd(node, info) != OK)//i don't understand , in this case we cannot parse the $? from last command...
-	{
-		printf("1\n");
 		return (info->last_exit_status);
-	}
 	*args = token_list_to_args(node->args, info);
 	if (!args)
-	{
-		printf("2\n");
 		return (info->last_exit_status);
-	}
 	if (check_redirections(node, info) != OK)
-	{
-		printf("3\n");
 		return (info->last_exit_status);
-	}
 	*func = is_builtin((*args)[0], info->builtins);
 	return (OK);
 }
@@ -61,10 +52,8 @@ int	handle_command(t_node *node, t_minishell *info)
 
 	args = NULL;
 	func = NULL;
-	printf("YOOO\n");
 	if (pre_execution(node, &args, info, &func) == OK)
 	{
-		printf("YOOO\n");
 		info->last_exit_status = apply_redirections(node->redi, info);
 		if (info->last_exit_status == OK)
 		{

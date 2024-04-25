@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_token_list	*search_operator(t_token_list *start, t_token_list *end)//end est l'element juste apres le dernier, ca peut etre NULL
+t_token_list	*search_operator(t_token_list *start, t_token_list *end)
 {
 	t_token_list	*token;
 	t_token_list	*saved_token;
@@ -30,7 +30,8 @@ t_token_list	*search_operator(t_token_list *start, t_token_list *end)//end est l
 	return (saved_token);
 }
 
-int	pipe_children(t_token_list *start, t_token_list *end, t_node *pipe_node, t_minishell *info)
+int	pipe_children(t_token_list *start, t_token_list *end, \
+	t_node *pipe_node, t_minishell *info)
 {
 	t_token_list	*token;
 	int				i;
@@ -59,7 +60,8 @@ int	pipe_children(t_token_list *start, t_token_list *end, t_node *pipe_node, t_m
 	return (OK);
 }
 
-int	init_cmd_node_redi(t_token_list *start, t_node *cmd_node, t_token_list *token_1, t_minishell *info)
+int	init_cmd_node_redi(t_token_list *start, t_node *cmd_node, \
+	t_token_list *token_1, t_minishell *info)
 {
 	t_token_list	*token_2;
 
@@ -87,7 +89,8 @@ int	init_cmd_node_redi(t_token_list *start, t_node *cmd_node, t_token_list *toke
 	return (OK);
 }
 
-int	init_cmd_node(t_token_list *start, t_token_list *end, t_node *cmd_node, t_minishell *info)
+int	init_cmd_node(t_token_list *start, t_token_list *end, \
+	t_node *cmd_node, t_minishell *info)
 {
 	t_token_list	*token;
 

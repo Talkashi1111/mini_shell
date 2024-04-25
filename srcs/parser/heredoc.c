@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:49:43 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/20 11:52:43 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:36:37 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,8 @@ int	heredoc_expander(uintptr_t file_no, char *eof, t_minishell *info)
 			break ;
 		if (!line && ft_free(eof))
 			return (heredoc_expander_error("read: %s\n", fd, info));
-		if ((write(fd, line, ft_strlen(line)) == -1 && ft_free(line) && ft_free(eof)) || \
+		if ((write(fd, line, ft_strlen(line)) == -1 && ft_free(line) && \
+			ft_free(eof)) || \
 			(write(fd, "\n", 1) == -1 && ft_free(line) && ft_free(eof)))
 			return (heredoc_expander_error("write: %s\n", fd, info));
 		free(line);

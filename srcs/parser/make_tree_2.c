@@ -42,7 +42,8 @@ t_token_list	*skip_parenthesis(t_token_list *token)
 	}
 }
 
-t_node	*new_tree_node(char type, unsigned int child_nb, unsigned int pipe_nb, t_minishell *info)
+t_node	*new_tree_node(char type, unsigned int child_nb, \
+	unsigned int pipe_nb, t_minishell *info)
 {
 	t_node	*new_node;
 
@@ -50,7 +51,8 @@ t_node	*new_tree_node(char type, unsigned int child_nb, unsigned int pipe_nb, t_
 	if (!new_node)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "bash: malloc: %s\n", strerror(errno));
+		ft_fprintf(info->saved_streams[1], "bash: malloc: %s\n", \
+		strerror(errno));
 		return (NULL);
 	}
 	new_node->type = type;
@@ -62,7 +64,8 @@ t_node	*new_tree_node(char type, unsigned int child_nb, unsigned int pipe_nb, t_
 		if (!new_node->child)
 		{
 			info->last_exit_status = errno;
-			ft_fprintf(info->saved_streams[1], "bash: malloc: %s\n", strerror(errno));
+			ft_fprintf(info->saved_streams[1], "bash: malloc: %s\n", \
+			strerror(errno));
 			free(new_node);
 			return (NULL);
 		}
