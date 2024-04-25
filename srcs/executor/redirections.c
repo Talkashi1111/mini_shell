@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:48:07 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 13:29:45 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:49:42 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	check_redirections(t_node *node, t_minishell *info)
 			ambiguity = AMBIGOUS_REDI_ERROR;
 	}
 	if (ambiguity != OK)
-		ft_fprintf(info->saved_streams[1], "bash: ambigous redirection\n");
+		ft_fprintf(info->saved_streams[1], "Ambigous redirection !\n");
 	info->last_exit_status = ambiguity;
 	return (info->last_exit_status);
 }

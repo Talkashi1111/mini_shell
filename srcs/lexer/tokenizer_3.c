@@ -21,7 +21,7 @@ void	free_heredocs_list(t_token_list *token, t_minishell *info)
 		if (token->type == HEREDOC && unlink(token->str) == -1)
 		{
 			info->last_exit_status = errno;
-			ft_fprintf(info->saved_streams[1], "bash: unlink: %s\n", strerror(errno));
+			ft_fprintf(info->saved_streams[1], "unlink: %s\n", strerror(errno));
 		}
 		next = token->next;
 		token->next = NULL;
@@ -56,14 +56,14 @@ t_token_list	*copy_token(t_token_list *token, t_minishell *info)
 	if (!new_node)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "bash: malloc: %s\n", strerror(errno));
+		ft_fprintf(info->saved_streams[1], "malloc: %s\n", strerror(errno));
 		return (NULL);
 	}
 	new_node->str = ft_strdup(token->str);
 	if (!new_node->str)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "bash: malloc: %s\n", strerror(errno));
+		ft_fprintf(info->saved_streams[1], "malloc: %s\n", strerror(errno));
 		free(new_node);
 		return (NULL);
 	}
