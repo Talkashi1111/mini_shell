@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 20:54:32 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/26 14:46:38 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <limits.h>
 # include <stdint.h>
 # include "libft.h"
+# include <termios.h>
 
 # ifndef HEREDOC_PATH
 #  define HEREDOC_PATH
@@ -128,13 +129,14 @@ typedef struct s_minishell
 	int					last_exit_status;
 	int					(*fd_pipe)[2];
 	unsigned int		pipe_nb;
-
+	bool				term;
 }	t_minishell;
 
 /* minishell init*/
 int				minishell_init(t_minishell *info, char **envp);
 void			builtin_init(t_minishell *info);
 void			no_line(t_minishell *info, char *line);
+void			remove_terminal_echo(t_minishell *info);
 
 /*debug*/
 void			display_token_list(t_token_list *token);

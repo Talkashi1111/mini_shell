@@ -6,11 +6,27 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 09:35:17 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/25 14:04:09 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/26 15:03:37 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	remove_terminal_echo(t_minishell *info)
+{
+	struct termios			tty_attrs_new;
+	static struct termios	tty_attrs_old;
+
+	if (info->term == 0)
+	{
+		tcgetattr(STDIN_FILENO, &tty_attrs_old);
+		tty_attrs_new = tty_attrs_old;
+		tty_attrs_new.c_lflag &= ~(ECHOCTL);
+		tcsetattr(STDIN_FILENO, TCSANOW, &tty_attrs_new);
+	}
+	else
+		tcsetattr(STDIN_FILENO, TCSANOW, &tty_attrs_old);
+}
 
 void	builtin_init(t_minishell *info)
 {
@@ -36,6 +52,8 @@ int	minishell_init(t_minishell *info, char **envp)
 			strerror(errno));
 		return (info->last_exit_status);
 	}
+	info->term = 0;
+	remove_terminal_echo(info);
 	info->last_exit_status = OK;
 	info->token_list = NULL;
 	info->tree = NULL;

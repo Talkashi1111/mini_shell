@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/26 11:04:04 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/26 15:45:32 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	g_signal = 0;
 
 void	free_tokens_tree_heredocs(t_minishell *info)
 {
@@ -57,28 +55,24 @@ void	minishell_loop(t_minishell *info, char *line)
 		}
 		free(line);
 		free_tokens_tree_heredocs(info);
+		getchar();
 	}
 }
 
 void	signal_handler(int sig)
 {
-	printf("%d\n", g_signal);
-	if (sig == SIGINT && g_var == 0)
+	if (sig == SIGINT)
 	{
 		rl_replace_line("", 0);
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
 	}
-	else if (sig == SIGTSTP)
-	{
-		sleep(5);
-		g_signal++;
-		printf("\n\nHEY\n\n");
-	}
 	else if (sig == SIGQUIT)
 	{
-		
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
 	}
 }
 
@@ -92,7 +86,9 @@ int	main(int argc, char **argv, char **envp)
 	sa.sa_handler = &signal_handler;
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGQUIT, &sa, NULL);
+	signal(SIGINT, &signal_handler);
+	signal(SIGQUIT, &signal_handler);
+	sigaction(SIGQUIT, &sa, NULL);//??
 	sigaction(SIGTSTP, &sa, NULL);
 	if (minishell_init(&info, envp) != OK)
 		return (info.last_exit_status);

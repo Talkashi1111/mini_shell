@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:49:54 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/25 14:02:34 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/26 14:01:34 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int	ft_cd(char *args[], t_minishell *info)
 	char	*new_path;
 	char	curr_path[PATH_MAX];
 
+	new_path = NULL;
 	err = ft_getcwd(curr_path, PATH_MAX, info);
 	if (err != OK)
 		return (err);
