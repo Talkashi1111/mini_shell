@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 21:02:31 by achappui         ###   ########.fr       */
+/*   Updated: 2024/04/26 11:04:04 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,15 @@ void	free_tokens_tree_heredocs(t_minishell *info)
  * information about the minishell.
  * @return The exit status of the minishell.
  */
-char	minishell_loop(t_minishell *info)
+void	minishell_loop(t_minishell *info, char *line)
 {
-	char	*line;
-
 	while (TRUE)
 	{
 		line = readline(COLOR_GREEN "minishell ~ " COLOR_RESET);
 		no_line(info, line);
 		info->token_list = tokenizer(line, info);
+		if (DEBUG == 1)
+			display_token_list(info->token_list);
 		if (info->token_list)
 		{
 			add_history(line);
@@ -49,6 +49,8 @@ char	minishell_loop(t_minishell *info)
 			if (syntax_analyser(info->token_list, info) == OK)
 			{
 				info->tree = tree_maker(info->token_list, NULL, info);
+				if (DEBUG == 1)
+					display_tree(info->tree);
 				if (info->tree)
 					ft_run(info->tree, info);
 			}
@@ -60,12 +62,23 @@ char	minishell_loop(t_minishell *info)
 
 void	signal_handler(int sig)
 {
-	if (sig == SIGINT)
+	printf("%d\n", g_signal);
+	if (sig == SIGINT && g_var == 0)
 	{
 		rl_replace_line("", 0);
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
+	}
+	else if (sig == SIGTSTP)
+	{
+		sleep(5);
+		g_signal++;
+		printf("\n\nHEY\n\n");
+	}
+	else if (sig == SIGQUIT)
+	{
+		
 	}
 }
 
@@ -80,9 +93,9 @@ int	main(int argc, char **argv, char **envp)
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
-	sigaction(SIGTERM, &sa, NULL);
+	sigaction(SIGTSTP, &sa, NULL);
 	if (minishell_init(&info, envp) != OK)
 		return (info.last_exit_status);
-	minishell_loop(&info);
+	minishell_loop(&info, NULL);
 	return (OK);
 }
