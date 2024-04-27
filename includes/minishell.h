@@ -6,7 +6,7 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/26 14:46:38 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/27 16:50:04 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,12 @@ enum e_token_type
 	OPENPAR,
 	CMD,
 	HEREDOC,
+};
+
+enum e_shell_state
+{
+	INREADLINE,
+	INEXECUTION,
 };
 
 typedef struct s_token_list

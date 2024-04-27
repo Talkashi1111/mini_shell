@@ -6,11 +6,13 @@
 /*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/26 15:45:32 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/04/27 17:16:03 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+enum e_shell_state	g_state;
 
 void	free_tokens_tree_heredocs(t_minishell *info)
 {
@@ -34,11 +36,11 @@ void	minishell_loop(t_minishell *info, char *line)
 {
 	while (TRUE)
 	{
+		g_state = INREADLINE;
 		line = readline(COLOR_GREEN "minishell ~ " COLOR_RESET);
+		g_state = INEXECUTION;
 		no_line(info, line);
 		info->token_list = tokenizer(line, info);
-		if (DEBUG == 1)
-			display_token_list(info->token_list);
 		if (info->token_list)
 		{
 			add_history(line);
@@ -55,7 +57,6 @@ void	minishell_loop(t_minishell *info, char *line)
 		}
 		free(line);
 		free_tokens_tree_heredocs(info);
-		getchar();
 	}
 }
 
@@ -63,17 +64,15 @@ void	signal_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
+		if (g_state == INEXECUTION)
+			return ;
 		rl_replace_line("", 0);
-		write(1, "\n", 1);
+		ft_fprintf(2, "\n");
 		rl_on_new_line();
 		rl_redisplay();
 	}
-	else if (sig == SIGQUIT)
-	{
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-	}
+	else
+		ft_fprintf(2, "got unexpected signal: %d\n", sig);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -84,12 +83,10 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	sa.sa_handler = &signal_handler;
+	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
-	signal(SIGINT, &signal_handler);
-	signal(SIGQUIT, &signal_handler);
-	sigaction(SIGQUIT, &sa, NULL);//??
-	sigaction(SIGTSTP, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
 	if (minishell_init(&info, envp) != OK)
 		return (info.last_exit_status);
 	minishell_loop(&info, NULL);
