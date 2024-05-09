@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_cmd_2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:59:33 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 13:28:18 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/05/07 14:46:08 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_wait_pid(int child_pid, t_minishell *info)
 			if (errno == ECHILD)
 				break ;
 			info->last_exit_status = errno;
-			ft_fprintf(info->saved_streams[1],
+			ft_fprintf(STDERR_FILENO,
 				"waitpid: %s\n", strerror(errno));
 			break ;
 		}
@@ -36,7 +36,7 @@ int	ft_wait_pid(int child_pid, t_minishell *info)
 		else if (WIFSIGNALED(status))
 			info->last_exit_status = 128 + WTERMSIG(status);
 		else
-			ft_fprintf(info->saved_streams[1], "Child process exited\n");
+			ft_fprintf(STDERR_FILENO, "Child process exited\n");
 	}
 	return (info->last_exit_status);
 }
@@ -88,14 +88,14 @@ void	ft_close_fds(int fds[2], t_minishell *info)
 	if (fds[0] != -1 && close(fds[0]) == -1)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "close(%d): %s: %s\n",
+		ft_fprintf(STDERR_FILENO, "close(%d): %s: %s\n",
 			fds[0], info->token_list->str, strerror(errno));
 	}
 	fds[0] = -1;
 	if (fds[1] != -1 && close(fds[1]) == -1)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "close(%d): %s: %s\n",
+		ft_fprintf(STDERR_FILENO, "close(%d): %s: %s\n",
 			fds[1], info->token_list->str, strerror(errno));
 	}
 	fds[1] = -1;

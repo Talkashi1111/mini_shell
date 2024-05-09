@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:49:54 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/26 14:01:34 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/05/07 14:44:54 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_chdir(t_minishell *info, char *new_path, char *curr_path, char *arg)
 	if (chdir(new_path) == -1)
 	{
 		info->last_exit_status = ERROR_RET;
-		ft_fprintf(info->saved_streams[1], "cd: %s: %s\n", new_path, \
+		ft_fprintf(STDERR_FILENO, "cd: %s: %s\n", new_path, \
 		strerror(errno));
 		return (info->last_exit_status);
 	}
@@ -45,7 +45,7 @@ int	ft_cd2(t_minishell *info, char *path, char **new_path)
 		*new_path = find_envp_arg(info->envp, "OLDPWD", ft_strlen("OLDPWD"));
 		if (*new_path == NULL || *new_path[0] == '\0')
 		{
-			ft_fprintf(info->saved_streams[1], "cd: OLDPWD not set\n");
+			ft_fprintf(STDERR_FILENO, "cd: OLDPWD not set\n");
 			info->last_exit_status = ERROR_RET;
 			return (ERROR_RET);
 		}
@@ -70,7 +70,7 @@ int	ft_cd(char *args[], t_minishell *info)
 		new_path = find_envp_arg(info->envp, "HOME", ft_strlen("HOME"));
 		if (new_path == NULL)
 		{
-			ft_fprintf(info->saved_streams[1], "cd: HOME not set\n");
+			ft_fprintf(STDERR_FILENO, "cd: HOME not set\n");
 			info->last_exit_status = ERROR_RET;
 			return (ERROR_RET);
 		}

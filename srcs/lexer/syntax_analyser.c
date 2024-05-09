@@ -15,7 +15,7 @@
 char	syntax_error(char *str, t_minishell *info)
 {
 	info->last_exit_status = SYNTAX_ERROR;
-	ft_fprintf(info->saved_streams[1], "sh: syntax error near '%s'\n", str);
+	ft_fprintf(STDERR_FILENO, "sh: syntax error near '%s'\n", str);
 	return (info->last_exit_status);
 }
 

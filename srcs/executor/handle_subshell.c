@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:56:57 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 21:02:23 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:47:23 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	handle_subshell_error(char *str, t_minishell *info)
 {
 	info->last_exit_status = errno;
-	ft_fprintf(info->saved_streams[1], str, strerror(errno));
+	ft_fprintf(STDERR_FILENO, str, strerror(errno));
 	return (info->last_exit_status);
 }
 
@@ -39,6 +39,6 @@ int	handle_subshell(t_node *node, t_minishell *info)
 	else if (WIFSIGNALED(status))
 		info->last_exit_status = 128 + WTERMSIG(status);
 	else
-		ft_fprintf(info->saved_streams[1], "Child process exited unknown\n");
+		ft_fprintf(STDERR_FILENO, "Child process exited unknown\n");
 	return (info->last_exit_status);
 }

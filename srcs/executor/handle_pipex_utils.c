@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_pipex_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 16:48:46 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/25 13:22:05 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/05/07 14:46:54 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	close_pipe_in(t_minishell *info, unsigned int i)
 		close(info->fd_pipe[i][PIPE_IN]) < 0)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "close(%d): %s: %s\n",
+		ft_fprintf(STDERR_FILENO, "close(%d): %s: %s\n",
 			info->fd_pipe[i][PIPE_IN], "pipe", strerror(errno));
 	}
 }
@@ -33,7 +33,7 @@ int	ft_open_pipes_util(t_minishell *info, t_node *node)
 		if (pipe(info->fd_pipe[i]) < 0)
 		{
 			info->last_exit_status = errno;
-			ft_fprintf(info->saved_streams[1],
+			ft_fprintf(STDERR_FILENO,
 				"pipe %d: %s\n", i, strerror(errno));
 			return (info->last_exit_status);
 		}
@@ -48,6 +48,6 @@ void	close_saved_streams(t_minishell *info, int fd)
 	if (close(fd) == -1)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "close: %s\n", strerror(errno));
+		ft_fprintf(STDERR_FILENO, "close: %s\n", strerror(errno));
 	}
 }
