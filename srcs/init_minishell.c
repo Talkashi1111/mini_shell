@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 09:35:17 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/26 15:03:37 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/05/07 14:49:52 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	minishell_init(t_minishell *info, char **envp)
 	if (!info->envp || update_or_add_envp(info, "OLDPWD=", "") != OK)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "malloc: %s\n",
+		ft_fprintf(STDERR_FILENO, "malloc: %s\n",
 			strerror(errno));
 		return (info->last_exit_status);
 	}

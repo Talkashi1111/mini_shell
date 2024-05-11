@@ -24,7 +24,7 @@ t_node	*handle_operator(t_token_list *start, t_token_list *end, \
 	if (!new_node->child[0])
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "malloc: %s\n", strerror(errno));
+		ft_fprintf(STDERR_FILENO, "malloc: %s\n", strerror(errno));
 		free_tree(new_node);
 		return (NULL);
 	}
@@ -32,7 +32,7 @@ t_node	*handle_operator(t_token_list *start, t_token_list *end, \
 	if (!new_node->child[1])
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "malloc: %s\n", strerror(errno));
+		ft_fprintf(STDERR_FILENO, "malloc: %s\n", strerror(errno));
 		free_tree(new_node);
 		return (NULL);
 	}
@@ -50,7 +50,7 @@ t_node	*handle_pipe(t_token_list *start, t_token_list *end, \
 	if (pipe_children(start, end, new_node, info) != OK)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "malloc: %s\n", strerror(errno));
+		ft_fprintf(STDERR_FILENO, "malloc: %s\n", strerror(errno));
 		free_tree(new_node);
 		return (NULL);
 	}
@@ -68,7 +68,7 @@ t_node	*handle_parenthesis(t_token_list *start, t_minishell *info)
 	if (!new_node->child[0])
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "malloc: %s\n", strerror(errno));
+		ft_fprintf(STDERR_FILENO, "malloc: %s\n", strerror(errno));
 		free_tree(new_node);
 		return (NULL);
 	}

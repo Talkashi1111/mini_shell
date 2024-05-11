@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/27 17:16:03 by tkashi           ###   ########.fr       */
+/*   Updated: 2024/05/09 21:08:19 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,13 @@ void	signal_handler(int sig)
 		rl_on_new_line();
 		rl_redisplay();
 	}
+	else if (sig == SIGQUIT)
+	{
+		if (g_state == INEXECUTION)
+			return ;
+		rl_on_new_line();
+		rl_redisplay();
+	}
 	else
 		ft_fprintf(2, "got unexpected signal: %d\n", sig);
 }
@@ -86,7 +93,7 @@ int	main(int argc, char **argv, char **envp)
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
+	sigaction(SIGQUIT, &sa, NULL);
 	if (minishell_init(&info, envp) != OK)
 		return (info.last_exit_status);
 	minishell_loop(&info, NULL);

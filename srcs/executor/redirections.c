@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:48:07 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 13:49:42 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:48:16 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ int	save_std_streams(t_minishell *info)
 	if (info->saved_streams[0] == -1)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "dup: %s\n", strerror(errno));
+		ft_fprintf(STDERR_FILENO, "dup: %s\n", strerror(errno));
 		return (info->last_exit_status);
 	}
 	info->saved_streams[1] = dup(1);
 	if (info->saved_streams[1] == -1)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "dup: %s\n", strerror(errno));
+		ft_fprintf(STDERR_FILENO, "dup: %s\n", strerror(errno));
 		return (info->last_exit_status);
 	}
 	return (OK);
@@ -36,13 +36,13 @@ int	restore_std_streams(int saved_streams[2], t_minishell *info)
 	if (dup2(saved_streams[0], 0) == -1)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "dup2: %s\n", strerror(errno));
+		ft_fprintf(STDERR_FILENO, "dup2: %s\n", strerror(errno));
 		return (info->last_exit_status);
 	}
 	if (dup2(saved_streams[1], 1) == -1)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "dup2: %s\n", strerror(errno));
+		ft_fprintf(STDERR_FILENO, "dup2: %s\n", strerror(errno));
 		return (info->last_exit_status);
 	}
 	return (OK);
@@ -56,13 +56,13 @@ int	redirect(int redi_fd, char *path, int flags, t_minishell *info)
 	if (fd == -1)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "open: %s\n", strerror(errno));
+		ft_fprintf(STDERR_FILENO, "open: %s\n", strerror(errno));
 		return (info->last_exit_status);
 	}
 	if (dup2(fd, redi_fd) == -1)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "dup2: %s\n", strerror(errno));
+		ft_fprintf(STDERR_FILENO, "dup2: %s\n", strerror(errno));
 		close_saved_streams(info, fd);
 		return (info->last_exit_status);
 	}
@@ -115,7 +115,7 @@ int	check_redirections(t_node *node, t_minishell *info)
 			ambiguity = AMBIGOUS_REDI_ERROR;
 	}
 	if (ambiguity != OK)
-		ft_fprintf(info->saved_streams[1], "Ambigous redirection !\n");
+		ft_fprintf(STDERR_FILENO, "Ambigous redirection !\n");
 	info->last_exit_status = ambiguity;
 	return (info->last_exit_status);
 }

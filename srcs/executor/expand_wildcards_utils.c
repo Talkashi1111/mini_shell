@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 22:12:34 by tkashi            #+#    #+#             */
-/*   Updated: 2024/04/25 13:26:22 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:45:40 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	no_path_found_and_closedir(t_minishell *info, t_token_list **wildcard_list,
 	if (closedir(dir) == -1)
 	{
 		info->last_exit_status = errno;
-		ft_fprintf(info->saved_streams[1], "closedir: %s\n", strerror(errno));
+		ft_fprintf(STDERR_FILENO, "closedir: %s\n", strerror(errno));
 	}
 	return (OK);
 }
