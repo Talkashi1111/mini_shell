@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_builtin.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkashi <tkashi@student.42lausanne.ch>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:07 by achappui          #+#    #+#             */
-/*   Updated: 2024/05/07 14:45:18 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/16 15:18:08 by tkashi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	ft_export(char *args[], t_minishell *info)
 		print_sorted_envp(info->envp);
 		return (OK);
 	}
-	err = OK;
+	err = TRUE;
 	i = 1;
 	while (args[i])
 	{
@@ -100,7 +100,7 @@ int	ft_export(char *args[], t_minishell *info)
 			ft_fprintf(\
 			STDERR_FILENO, "export: `%s': not a valid identifier\n", \
 			args[i]);
-			err = USAGE_ERROR;
+			err = FALSE;
 			i++;
 			continue ;
 		}
