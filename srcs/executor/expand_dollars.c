@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:43:53 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 20:56:08 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/16 17:38:02 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,10 @@ void	remove_this_node(t_token_list *tmp_ptr)
 
 int	ft_is_skipable(t_token_list **tmp_ptr)
 {
-	if (!(ft_strchr((*tmp_ptr)->next->str, '$') && \
-		(*tmp_ptr)->next->str[0] != '\0' && \
-		(*tmp_ptr)->next->str[1] != '\0'))
+	if (ft_strchr((*tmp_ptr)->next->str, '$') == NULL || \
+		(*tmp_ptr)->next->str[0] == '\0' || \
+		(*tmp_ptr)->next->str[1] == '\0' || \
+		ft_strncmp((*tmp_ptr)->next->str, "\"$\"", 4) == 0)
 	{
 		(*tmp_ptr) = (*tmp_ptr)->next;
 		return (1);

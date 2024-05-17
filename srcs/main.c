@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/05/09 21:08:19 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/17 11:25:25 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ void	signal_handler(int sig)
 		rl_on_new_line();
 		rl_redisplay();
 	}
+	else if (sig == SIGHUP)
+		return ;
 	else
 		ft_fprintf(2, "got unexpected signal: %d\n", sig);
 }
@@ -94,6 +96,7 @@ int	main(int argc, char **argv, char **envp)
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
+	sigaction(SIGHUP, &sa, NULL);
 	if (minishell_init(&info, envp) != OK)
 		return (info.last_exit_status);
 	minishell_loop(&info, NULL);

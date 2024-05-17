@@ -42,7 +42,7 @@ FILES := main.c \
 		debug.c \
 		debug_2.c
 SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
-CFLAGS := -Wall -Wextra -Werror -DHEREDOC_PATH='"$(shell pwd)"'
+CFLAGS := -Wall -Wextra -Werror -DHEREDOC_PATH='"$(shell pwd)/heredocs"'
 ifdef DEBUG
     CFLAGS += -DDEBUG=1 -g
 endif
