@@ -15,9 +15,34 @@
 
 ## Introduction
 
-The minimal version of a shell
+This program was created by Aiko Achappui and Tal Kashi as part of the 42 school curriculum. Minishell supports both Linux and macOS. It is a minimal version of a shell.
+
 
 ## Features
+
+1. Logical Operators: Supports logical operators such as && (AND) and || (OR).
+2. Allows the use of multiple pipes (|) for chaining commands.
+3. Supports parenthesis () to create subshells for grouped command execution.
+4. Redirections:
+	- Input redirection with <.
+	- Output redirection with >.
+	- Heredoc redirection with <<.
+	- Append redirection with >>.
+
+5. Environment Variables: Use $ to access and manipulate environment variables within commands.
+6. Wildcard Support: Supports the use of * wildcards to match patterns within the current directory.( Examples include .* and *c**a, without using relative paths.)
+7. Quoting Mechanisms: Single quotes (') to treat enclosed text as a literal string.
+8. Double quotes (") to cancel metadata charachters.
+9. Builtin Functions: Implements several built-in shell functions:
+	- echo: Print arguments to the standard output.
+	- pwd: Print the current working directory.
+	- env: Display the environment variables.
+	- cd: Change the current directory.
+	- export: Set environment variables.
+	- unset: Unset environment variables.
+	- exit: Exit the shell.
+
+## Explanations
 
 a short explanation of the process the line goes through :
 1. tokenizer: returning a pointer to a head of a linked list. a basic "split" function that defines the type of the token. its skips whitespaces and stops when encountering one of the following : "||" "&&" "|" "(" ")".
@@ -36,18 +61,42 @@ In order to run minishell, first clone the project using
 git clone https://github.com/your-username/repo-name.git
 ```
 than cd to the repository and run make command to build the Minishell program:
-```bash
-make
-```
-for the bonuses use
+
+
+- Regular build:
+	```sh
+	make
+	```
+- Installation:
+	```sh
+	git clone https://github.com/your-username/repo-name.git
+	cd repo-name
+	make
+	```
+- You can also test for memory leaks using your own arguments or the default ones by running:
 
 ```bash
-make bonus
+make leak
 ```
+The project's Makefile automatically configures the memory leak detection tool based on the operating system:
 
+<b>- Linux:</b> By default, the tool is set to valgrind.
+
+<b>- Mac:</b>  The tool is set to leaks with the --atexit option.
 ## Debugging
+
+- A debugging mode is available to visualize the command tree structure.
+- Enable debugging by running `DEBUG=1 make re` during installation.
+
 ```bash
 DEBUG=1 make re
 ```
 
-## Usage
+3. **Run the Program**:
+```bash
+./minishell
+```
+
+---
+
+Thank you for using **MyProgram**! If you have any questions or issues, please open an issue in the repository.
