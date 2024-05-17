@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 14:25:52 by achappui          #+#    #+#             */
-/*   Updated: 2024/04/25 21:02:34 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/17 18:51:47 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,23 @@ long long	with_dollar(char **str, t_dollar_info *dollar_info,
 long long	no_dollar(char **str, char **seq, unsigned int *len)
 {
 	long long	i;
+	long long	quote_seq_len;
+	bool		first_quote_layer_removed;
 
+	first_quote_layer_removed = 0;
 	*seq = *str;
 	i = 0;
 	while ((*str)[i] != '$' && (*str)[i] != '\0')
 	{
-		if ((*str)[i] == '\'')
-			i += to_end_of_quote(*str + i) - (*str + i);
+		if (((*str)[i] == '\"' || (*str)[i] == '\'') && \
+			first_quote_layer_removed == 0)
+		{
+			quote_seq_len = to_end_of_quote(*str + i) - (*str + i);
+			if (quote_seq_len)
+				first_quote_layer_removed = 1;
+			if ((*str)[i] == '\'')
+				i += quote_seq_len;
+		}
 		i++;
 	}
 	*str += i;

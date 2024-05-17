@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/05/17 11:25:25 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/17 18:32:26 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,17 @@ void	signal_handler(int sig)
 		if (g_state == INEXECUTION)
 			return ;
 		rl_replace_line("", 0);
-		ft_fprintf(2, "\n");
+		ft_fprintf(1, "\n");
 		rl_on_new_line();
 		rl_redisplay();
 	}
 	else if (sig == SIGQUIT)
 	{
 		if (g_state == INEXECUTION)
+		{
+			ft_fprintf(1, "Quit: 3.\n");
 			return ;
+		}
 		rl_on_new_line();
 		rl_redisplay();
 	}

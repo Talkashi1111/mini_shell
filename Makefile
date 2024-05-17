@@ -42,7 +42,7 @@ FILES := main.c \
 		debug.c \
 		debug_2.c
 SRCS := $(addprefix $(SRC_DIR)/, $(FILES))
-CFLAGS := -Wall -Wextra -Werror -DHEREDOC_PATH='"$(shell pwd)/heredocs"'
+CFLAGS := -Wall -Wextra -Werror -DHEREDOC_PATH='"$(shell pwd)/.heredocs"'
 ifdef DEBUG
     CFLAGS += -DDEBUG=1 -g
 endif
@@ -72,13 +72,12 @@ GREEN := \033[32m
 BOLD := \033[1m
 L_PURPLE :=\033[38;5;55m
 
-
 $(info $(OBJECTS))
 
-.PHONY: all
 all: $(NAME)
 
 $(NAME): $(OBJECTS) $(LIBFT_DIR)/libft.a
+	mkdir -p .heredocs
 	$(CC) $(CFLAGS) $(OBJECTS) $(LFLAGS) -o $(NAME)
 
 $(LIBFT_DIR)/libft.a:
@@ -94,27 +93,24 @@ $(OBJECT_DIR)/%.o: $(SRC_DIR)/%.c
 $(BONUS_DIR)/%.o: $(BONUS_DIR)/%.c
 	$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
 
-
-.PHONY: bonus
 bonus: $(BONUS_NAME)
 
 $(BONUS_NAME): $(BONUS_OBJ) $(OBJECTS) $(LIBFT_DIR)/libft.a
 	$(CC) $(CFLAGS) $(BONUS_OBJ) $(OBJS_WITHOUT_MAIN) $(LFLAGS) -o $(BONUS_NAME)
 
-.PHONY: re
 re: fclean all
 
-.PHONY: clean
 clean:
 	rm -rf $(OBJECT_DIR)
 	rm -f $(BONUS_OBJ)
 	$(MAKE) -C $(LIBFT_DIR) clean
 
-.PHONY: fclean
 fclean: clean
+	rm -rf .heredocs
 	rm -f $(NAME) $(BONUS_NAME)
 	$(MAKE) -C $(LIBFT_DIR) fclean
 
-.PHONY: leak
 leak: $(NAME)
 	$(LEAK_TOOL) ./$(NAME)
+
+.PHONY: all bonus re clean fclean leak

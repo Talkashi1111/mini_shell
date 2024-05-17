@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 09:35:17 by tkashi            #+#    #+#             */
-/*   Updated: 2024/05/07 14:49:52 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/17 18:31:47 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void	no_line(t_minishell *info, char *line)
 	if (!line)
 	{
 		info->last_exit_status = OK;
-		ft_printf("exit\n");
 		ft_exit(NULL, info);
 	}
 }
