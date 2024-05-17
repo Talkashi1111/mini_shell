@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/05/17 18:32:26 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/17 19:00:25 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,10 @@ void	signal_handler(int sig)
 	if (sig == SIGINT)
 	{
 		if (g_state == INEXECUTION)
+		{
+			ft_fprintf(2, "^C\n");
 			return ;
+		}
 		rl_replace_line("", 0);
 		ft_fprintf(1, "\n");
 		rl_on_new_line();
@@ -75,7 +78,7 @@ void	signal_handler(int sig)
 	{
 		if (g_state == INEXECUTION)
 		{
-			ft_fprintf(1, "Quit: 3.\n");
+			ft_fprintf(2, "^\\Quit: 3\n");
 			return ;
 		}
 		rl_on_new_line();
@@ -83,8 +86,6 @@ void	signal_handler(int sig)
 	}
 	else if (sig == SIGHUP)
 		return ;
-	else
-		ft_fprintf(2, "got unexpected signal: %d\n", sig);
 }
 
 int	main(int argc, char **argv, char **envp)
