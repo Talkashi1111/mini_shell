@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/05/07 14:44:05 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/22 11:00:43 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,6 +215,7 @@ void			free_heredocs_list(t_token_list *token, t_minishell *info);
 void			free_tree(t_node *node);
 
 /* executor */
+void			check_path_validity(char **args, t_minishell *info);
 void			search_var_len_dollar(t_minishell *info, char **str, \
 				t_dollar_info *dollar_info, long long *i);
 long long		with_dollar(char **str, t_dollar_info *dollar_info, \

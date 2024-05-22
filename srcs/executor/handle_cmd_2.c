@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:59:33 by achappui          #+#    #+#             */
-/*   Updated: 2024/05/07 14:46:08 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/22 11:02:36 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,23 @@ void	ft_close_fds(int fds[2], t_minishell *info)
 			fds[1], info->token_list->str, strerror(errno));
 	}
 	fds[1] = -1;
+}
+
+void	check_path_validity(char **args, t_minishell *info)
+{
+	if (args[0][0] == '/' || ft_strncmp(args[0], "./", 2) == 0 || \
+		ft_strncmp(args[0], "../", 3) == 0)
+	{
+		execve(args[0], args, info->envp);
+		info->last_exit_status = errno;
+		if (errno == ENOENT)
+			ft_fprintf(STDERR_FILENO, "%s: command not found\n", args[0]);
+		else
+			ft_fprintf(STDERR_FILENO, "execve: %s\n", strerror(errno));
+	}
+	else
+	{
+		info->last_exit_status = ENOENT;
+		ft_fprintf(STDERR_FILENO, "%s: command not found\n", args[0]);
+	}
 }
