@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:45:30 by achappui          #+#    #+#             */
-/*   Updated: 2024/05/07 14:45:25 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/22 11:04:59 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,7 @@ int	ft_pwd(char *args[], t_minishell *info)
 	int		err;
 	char	*pwd;
 
-	if (args[1])
-	{
-		ft_fprintf(STDERR_FILENO, "pwd: too many arguments\n");
-		return (USAGE_ERROR);
-	}
+	(void)args;
 	pwd = find_envp_arg(info->envp, "PWD", ft_strlen("PWD"));
 	if (pwd)
 	{
