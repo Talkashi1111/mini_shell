@@ -6,13 +6,13 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:38:15 by achappui          #+#    #+#             */
-/*   Updated: 2024/05/17 19:00:25 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/26 14:24:56 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-enum e_shell_state	g_state;
+enum e_shell_state	g_signal;
 
 void	free_tokens_tree_heredocs(t_minishell *info)
 {
@@ -22,6 +22,14 @@ void	free_tokens_tree_heredocs(t_minishell *info)
 	info->heredocs_list = NULL;
 	free_token_list(info->token_list);
 	info->token_list = NULL;
+}
+
+void	signal_printer(void)
+{
+	if (g_signal == INEXECUTION_SIGINT)
+		ft_fprintf(2, "^C\n");
+	else if (g_signal == INEXECUTION_SIGQUIT)
+		ft_fprintf(2, "^\\Quit: 3\n");
 }
 
 /**
@@ -36,9 +44,10 @@ void	minishell_loop(t_minishell *info, char *line)
 {
 	while (TRUE)
 	{
-		g_state = INREADLINE;
+		signal_printer();
+		g_signal = INREADLINE;
 		line = readline(COLOR_GREEN "minishell ~ " COLOR_RESET);
-		g_state = INEXECUTION;
+		g_signal = INEXECUTION;
 		no_line(info, line);
 		info->token_list = tokenizer(line, info);
 		if (info->token_list)
@@ -62,28 +71,22 @@ void	minishell_loop(t_minishell *info, char *line)
 
 void	signal_handler(int sig)
 {
-	if (sig == SIGINT)
+	if (sig == SIGINT && g_signal == INREADLINE)
 	{
-		if (g_state == INEXECUTION)
-		{
-			ft_fprintf(2, "^C\n");
-			return ;
-		}
 		rl_replace_line("", 0);
 		ft_fprintf(1, "\n");
 		rl_on_new_line();
 		rl_redisplay();
 	}
-	else if (sig == SIGQUIT)
+	else if (sig == SIGQUIT && g_signal == INREADLINE)
 	{
-		if (g_state == INEXECUTION)
-		{
-			ft_fprintf(2, "^\\Quit: 3\n");
-			return ;
-		}
 		rl_on_new_line();
 		rl_redisplay();
 	}
+	else if (sig == SIGINT && g_signal == INEXECUTION)
+		g_signal = INEXECUTION_SIGINT;
+	else if (sig == SIGQUIT && g_signal == INEXECUTION)
+		g_signal = INEXECUTION_SIGQUIT;
 	else if (sig == SIGHUP)
 		return ;
 }

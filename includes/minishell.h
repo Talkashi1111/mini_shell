@@ -6,7 +6,7 @@
 /*   By: achappui <achappui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:37:04 by achappui          #+#    #+#             */
-/*   Updated: 2024/05/22 11:00:43 by achappui         ###   ########.fr       */
+/*   Updated: 2024/05/26 14:27:20 by achappui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ enum e_shell_state
 {
 	INREADLINE,
 	INEXECUTION,
+	INEXECUTION_SIGQUIT,
+	INEXECUTION_SIGINT,
 };
 
 typedef struct s_token_list
