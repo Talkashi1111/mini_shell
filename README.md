@@ -14,8 +14,12 @@
 - [Usage](#usage)
 
 ## Introduction
+This program was created by Aiko Achappui and Tal Kashi as part of the 42 school curriculum. Minishell is a minimal version of a shell that supports both Linux and macOS.
 
-This program was created by Aiko Achappui and Tal Kashi as part of the 42 school curriculum. Minishell supports both Linux and macOS. It is a minimal version of a shell.
+For parsing and execution, we utilized an Abstract Syntax Tree (AST). The AST processes commands recursively until it reaches the simplest level(smallest leaves), known as a "simple command," such as
+```bash
+cat file.c
+```
 
 
 ## Features
@@ -53,24 +57,19 @@ looks for the righest operator he finds ( || or && ) and with each one it encoun
 a command line includes the redirections.
 (include here the template)
 
+
 ## Installation
 
 In order to run minishell, first clone the project using
 
 ```bash
-git clone https://github.com/your-username/repo-name.git
+git clone git@github.com:Talkashi1111/mini_shell.git
 ```
 than cd to the repository and run make command to build the Minishell program:
 
 
 - Regular build:
 	```sh
-	make
-	```
-- Installation:
-	```sh
-	git clone https://github.com/your-username/repo-name.git
-	cd repo-name
 	make
 	```
 - You can also test for memory leaks using your own arguments or the default ones by running:
@@ -99,4 +98,4 @@ DEBUG=1 make re
 
 ---
 
-Thank you for using **MyProgram**! If you have any questions or issues, please open an issue in the repository.
+Thank you for looking through our ***Minishell***! If you have any questions or issues, or ideas to improve it, don't hesitate to contact me ( or Aiko).
